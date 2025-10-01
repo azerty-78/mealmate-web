@@ -799,6 +799,201 @@ const server = http.createServer((req, res) => {
       res.end(JSON.stringify(removed));
     }
   }
+
+  // Routes pour les dossiers diabétiques
+  else if (pathname.startsWith('/diabeticRecords')) {
+    const segments = pathname.split('/').filter(Boolean);
+    const id = segments[1] ? Number(segments[1]) : null;
+
+    if (req.method === 'GET') {
+      const { userId } = query;
+      if (userId) {
+        const records = (db.diabeticRecords || []).filter(r => r.userId === Number(userId));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify(records));
+      }
+      if (id) {
+        const record = (db.diabeticRecords || []).find(r => r.id === id) || null;
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify(record));
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify(db.diabeticRecords || []));
+    }
+
+    if (req.method === 'POST' && segments.length === 1) {
+      let body = '';
+      req.on('data', chunk => { body += chunk.toString(); });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          if (!db.diabeticRecords) db.diabeticRecords = [];
+          const nextId = db.diabeticRecords.length ? Math.max(...db.diabeticRecords.map(r => r.id || 0)) + 1 : 1;
+          const now = new Date().toISOString();
+          const newRecord = { id: nextId, createdAt: now, updatedAt: now, ...payload };
+          db.diabeticRecords.push(newRecord);
+          try { fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf8'); } catch {}
+          res.writeHead(201, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(newRecord));
+        } catch (error) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid JSON' }));
+        }
+      });
+      return;
+    }
+
+    if ((req.method === 'PUT' || req.method === 'PATCH') && id) {
+      let body = '';
+      req.on('data', chunk => { body += chunk.toString(); });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const recordIndex = (db.diabeticRecords || []).findIndex(r => r.id === id);
+          if (recordIndex === -1) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ error: 'Record not found' }));
+          }
+          db.diabeticRecords[recordIndex] = { ...db.diabeticRecords[recordIndex], ...payload, updatedAt: new Date().toISOString() };
+          try { fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf8'); } catch {}
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(db.diabeticRecords[recordIndex]));
+        } catch (error) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid JSON' }));
+        }
+      });
+      return;
+    }
+
+    if (req.method === 'DELETE' && id) {
+      const recordIndex = (db.diabeticRecords || []).findIndex(r => r.id === id);
+      if (recordIndex === -1) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ error: 'Record not found' }));
+      }
+      db.diabeticRecords.splice(recordIndex, 1);
+      try { fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf8'); } catch {}
+      res.writeHead(204);
+      res.end();
+      return;
+    }
+  }
+
+  // Routes pour les lectures de glycémie
+  else if (pathname.startsWith('/glucoseReadings')) {
+    const segments = pathname.split('/').filter(Boolean);
+    const id = segments[1] ? Number(segments[1]) : null;
+
+    if (req.method === 'GET') {
+      const { userId } = query;
+      if (userId) {
+        const readings = (db.glucoseReadings || []).filter(r => r.userId === Number(userId));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify(readings));
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify(db.glucoseReadings || []));
+    }
+
+    if (req.method === 'POST' && segments.length === 1) {
+      let body = '';
+      req.on('data', chunk => { body += chunk.toString(); });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          if (!db.glucoseReadings) db.glucoseReadings = [];
+          const nextId = db.glucoseReadings.length ? Math.max(...db.glucoseReadings.map(r => r.id || 0)) + 1 : 1;
+          const newReading = { id: nextId, ...payload };
+          db.glucoseReadings.push(newReading);
+          try { fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf8'); } catch {}
+          res.writeHead(201, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(newReading));
+        } catch (error) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid JSON' }));
+        }
+      });
+      return;
+    }
+  }
+
+  // Routes pour les repas
+  else if (pathname.startsWith('/meals')) {
+    const segments = pathname.split('/').filter(Boolean);
+    const id = segments[1] ? Number(segments[1]) : null;
+
+    if (req.method === 'GET') {
+      const { userId } = query;
+      if (userId) {
+        const meals = (db.meals || []).filter(m => m.userId === Number(userId));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify(meals));
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify(db.meals || []));
+    }
+
+    if (req.method === 'POST' && segments.length === 1) {
+      let body = '';
+      req.on('data', chunk => { body += chunk.toString(); });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          if (!db.meals) db.meals = [];
+          const nextId = db.meals.length ? Math.max(...db.meals.map(m => m.id || 0)) + 1 : 1;
+          const newMeal = { id: nextId, ...payload };
+          db.meals.push(newMeal);
+          try { fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf8'); } catch {}
+          res.writeHead(201, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(newMeal));
+        } catch (error) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid JSON' }));
+        }
+      });
+      return;
+    }
+  }
+
+  // Routes pour les logs de médicaments
+  else if (pathname.startsWith('/medicationLogs')) {
+    const segments = pathname.split('/').filter(Boolean);
+    const id = segments[1] ? Number(segments[1]) : null;
+
+    if (req.method === 'GET') {
+      const { userId } = query;
+      if (userId) {
+        const logs = (db.medicationLogs || []).filter(l => l.userId === Number(userId));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify(logs));
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify(db.medicationLogs || []));
+    }
+
+    if (req.method === 'POST' && segments.length === 1) {
+      let body = '';
+      req.on('data', chunk => { body += chunk.toString(); });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          if (!db.medicationLogs) db.medicationLogs = [];
+          const nextId = db.medicationLogs.length ? Math.max(...db.medicationLogs.map(l => l.id || 0)) + 1 : 1;
+          const newLog = { id: nextId, ...payload };
+          db.medicationLogs.push(newLog);
+          try { fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf8'); } catch {}
+          res.writeHead(201, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(newLog));
+        } catch (error) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid JSON' }));
+        }
+      });
+      return;
+    }
+  }
+
   // Route de test
   else if (pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
