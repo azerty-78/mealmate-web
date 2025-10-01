@@ -29,7 +29,7 @@ const SettingsPage: React.FC = memo(() => {
 
   // Charger les paramètres depuis localStorage au montage
   useEffect(() => {
-    const savedSettings = localStorage.getItem('mimaa-settings');
+    const savedSettings = localStorage.getItem('mealmate-settings');
     if (savedSettings) {
       try {
         const parsedSettings = JSON.parse(savedSettings);
@@ -43,7 +43,7 @@ const SettingsPage: React.FC = memo(() => {
 
   // Sauvegarder les paramètres dans localStorage
   useEffect(() => {
-    localStorage.setItem('mimaa-settings', JSON.stringify(settings));
+    localStorage.setItem('mealmate-settings', JSON.stringify(settings));
   }, [settings]);
 
   const toggleSetting = (key: keyof Settings) => {

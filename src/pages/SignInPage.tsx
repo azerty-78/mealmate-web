@@ -63,11 +63,11 @@ const SignInPage: React.FC = () => {
           {/* Présentation de l'application */}
           <div className="space-y-6">
             <h2 className="text-4xl font-bold text-gray-800 leading-tight">
-              Accompagnement personnalisé pour votre grossesse
+              Accompagnement personnalisé pour la gestion du diabète
             </h2>
             
             <p className="text-xl text-gray-600 leading-relaxed">
-              MIMA'A est votre compagnon de confiance pour suivre chaque étape de votre grossesse 
+              MEALMATE est votre compagnon de confiance pour gérer votre diabète 
               avec sérénité et professionnalisme.
             </p>
             
@@ -115,7 +115,7 @@ const SignInPage: React.FC = () => {
             <div className="lg:hidden text-center mb-8">
               <MealmateLogo size="lg" showText={true} />
               <p className="text-gray-600 text-sm mt-4">
-                Votre compagnon de grossesse
+                Votre compagnon pour le diabète
               </p>
             </div>
 
@@ -272,4 +272,4 @@ const SignInPage: React.FC = () => {
   );
 };
 
-export default SignInPage
+export default SignInPage;

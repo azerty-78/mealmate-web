@@ -804,7 +804,7 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ 
       status: 'OK', 
-      message: 'Serveur MIMAA en cours d\'exécution',
+      message: 'Serveur MEALMATE en cours d\'exécution',
       users: db.users?.length || 0
     }));
   }
@@ -816,7 +816,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Serveur MIMAA démarré sur http://localhost:${PORT}`);
+  console.log(`🚀 Serveur MEALMATE démarré sur http://localhost:${PORT}`);
   console.log(`📊 Base de données chargée avec ${db.users?.length || 0} utilisateurs`);
   console.log(`🔗 Test: http://localhost:${PORT}/health`);
 });

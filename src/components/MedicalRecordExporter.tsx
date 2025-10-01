@@ -95,7 +95,7 @@ const MedicalRecordExporter: React.FC<MedicalRecordExporterProps> = ({
       })),
       exportInfo: {
         exportedAt: new Date().toISOString(),
-        exportedBy: 'Système MIMAA',
+        exportedBy: 'Système MEALMATE',
         version: '1.0',
         format: 'JSON'
       }

@@ -4,7 +4,7 @@ import { useNavigation } from '../contexts/NavigationContext';
 import { useAuth } from '../hooks/useAuth';
 import { assignRandomDoctor } from '../services/api';
 import SlideTransition from '../components/SlideTransition';
-import MimaaLogo from '../components/MimaaLogo';
+import MealmateLogo from '../components/MealmateLogo';
 
 const SignUpPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -100,8 +100,8 @@ const SignUpPage: React.FC = () => {
       
       const success = await register(userData);
       if (success) {
-        // Si c'est une femme enceinte, assigner automatiquement un médecin
-        if (formData.profileType === 'pregnant_woman') {
+        // Si c'est une personne diabétique, assigner automatiquement un médecin
+        if (formData.profileType === 'diabetic_person') {
           try {
             // Attendre un peu pour que l'utilisateur soit créé et stocké
             setTimeout(async () => {
@@ -148,17 +148,17 @@ const SignUpPage: React.FC = () => {
         <div className="relative z-10">
           {/* Logo et nom de l'application */}
           <div className="mb-8">
-            <MimaaLogo size="xl" showText={true} />
+            <MealmateLogo size="xl" showText={true} />
           </div>
           
           {/* Présentation de l'application */}
           <div className="space-y-6">
             <h2 className="text-4xl font-bold text-gray-800 leading-tight">
-              Rejoignez la communauté MIMA'A
+              Rejoignez la communauté MEALMATE
             </h2>
             
             <p className="text-xl text-gray-600 leading-relaxed">
-              Créez votre compte et commencez votre parcours de suivi de grossesse 
+              Créez votre compte et commencez votre parcours de gestion du diabète 
               avec l'accompagnement de professionnels de santé qualifiés.
             </p>
             
@@ -204,9 +204,9 @@ const SignUpPage: React.FC = () => {
           <div className="w-full max-w-md">
             {/* Header mobile */}
             <div className="lg:hidden text-center mb-8">
-              <MimaaLogo size="lg" showText={true} />
+              <MealmateLogo size="lg" showText={true} />
               <p className="text-gray-600 text-sm mt-4">
-                Votre compagnon de grossesse
+                Votre compagnon pour le diabète
               </p>
             </div>
 
@@ -381,19 +381,19 @@ const SignUpPage: React.FC = () => {
                 required
               >
                 <option value="">Sélectionnez votre profil</option>
-                <option value="pregnant_woman">Femme enceinte</option>
+                <option value="diabetic_person">Personne diabétique</option>
                 <option value="doctor">Médecin</option>
               </select>
               
-              {/* Message d'information pour les femmes enceintes */}
-              {formData.profileType === 'pregnant_woman' && (
+              {/* Message d'information pour les personnes diabétiques */}
+              {formData.profileType === 'diabetic_person' && (
                 <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                   <div className="flex items-start space-x-2">
                     <LocalHospital className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div className="text-sm text-blue-800">
                       <p className="font-medium">Assignation automatique d'un médecin</p>
                       <p className="text-blue-600">
-                        Un médecin sera automatiquement assigné à votre compte pour vous accompagner pendant votre grossesse.
+                        Un médecin sera automatiquement assigné à votre compte pour vous accompagner dans la gestion de votre diabète.
                       </p>
                     </div>
                   </div>

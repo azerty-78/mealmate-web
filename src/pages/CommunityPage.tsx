@@ -24,7 +24,7 @@ const CommunityPage: React.FC = memo(() => {
     {
       id: 'ai-coach',
       title: 'Coach IA Médical',
-      description: 'Conseils médicaux personnalisés pour femmes enceintes 24/7',
+      description: 'Conseils médicaux personnalisés pour personnes diabétiques 24/7',
       icon: SmartToy,
       color: 'from-blue-500 to-blue-600',
       bgColor: 'bg-blue-50',
@@ -41,7 +41,7 @@ const CommunityPage: React.FC = memo(() => {
     },
     {
       id: 'community',
-      title: 'Communauté MIMAA',
+      title: 'Communauté MEALMATE',
       description: 'Échangez avec d\'autres membres de communauté',
       icon: Favorite,
       color: 'from-purple-500 to-purple-600',
