@@ -87,9 +87,9 @@ const DoctorDashboardPage: React.FC = () => {
       console.log('👤 Tous les utilisateurs:', allPatients);
       console.log('👤 Types des IDs utilisateurs:', allPatients.map(p => ({ id: p.id, type: typeof p.id })));
       const doctorPatients = allPatients.filter(patient => 
-        patientIds.includes(patient.id) && patient.profileType === 'pregnant_woman'
+        patientIds.includes(patient.id) && patient.profileType === 'diabetic_person'
       );
-      console.log('🤰 Patients femmes enceintes du médecin:', doctorPatients);
+      console.log('🩺 Patients diabétiques du médecin:', doctorPatients);
       setPatients(doctorPatients);
       
       // Récupérer les dossiers médicaux
@@ -299,8 +299,8 @@ const DoctorDashboardPage: React.FC = () => {
                 console.log('Utilisateurs:', users);
                 const doctors = users.filter(u => u.profileType === 'doctor');
                 console.log('Médecins:', doctors);
-                const pregnant = users.filter(u => u.profileType === 'pregnant_woman');
-                console.log('Femmes enceintes:', pregnant);
+                const diabetic = users.filter(u => u.profileType === 'diabetic_person');
+                console.log('Personnes diabétiques:', diabetic);
               });
             }}
           >

@@ -48,7 +48,7 @@ const ProfilePage: React.FC = memo(() => {
 
   useEffect(() => {
     const load = async () => {
-      if (!user || user.profileType !== 'pregnant_woman') return;
+      if (!user || user.profileType !== 'diabetic_person') return;
       const pr = await pregnancyApi.getByUserId(user.id);
       setRecord(pr);
       setMedParamsForm({
@@ -217,8 +217,8 @@ const ProfilePage: React.FC = memo(() => {
 
   const getProfileTypeLabel = (profileType: string) => {
     switch (profileType) {
-      case 'pregnant_woman':
-        return 'Femme enceinte';
+      case 'diabetic_person':
+        return 'Personne diabétique';
       case 'doctor':
         return 'Médecin';
       case 'administrator':
@@ -549,8 +549,8 @@ const ProfilePage: React.FC = memo(() => {
           </div>
         )}
 
-        {/* Section Paramètres médicaux (visible pour femme enceinte) */}
-        {user.profileType === 'pregnant_woman' && (
+        {/* Section Paramètres médicaux (visible pour personne diabétique) */}
+        {user.profileType === 'diabetic_person' && (
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5">
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center">Paramètres médicaux</h3>
             <div className="grid grid-cols-2 gap-3">

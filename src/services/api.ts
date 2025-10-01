@@ -34,7 +34,7 @@ export interface User {
   username: string;
   email: string;
   password: string;
-  profileType: 'pregnant_woman' | 'doctor' | 'administrator';
+  profileType: 'diabetic_person' | 'doctor' | 'administrator';
   profileImage: string | null;
   firstName: string;
   lastName: string;
@@ -586,17 +586,17 @@ export const assignRandomDoctor = async (patientId?: number): Promise<DoctorPati
     let actualPatientId = patientId;
     if (!actualPatientId) {
       const allUsers = await userApi.getAll();
-      const pregnantWomen = allUsers.filter(user => 
-        user.profileType === 'pregnant_woman' && user.isActive
+      const diabeticPersons = allUsers.filter(user => 
+        user.profileType === 'diabetic_person' && user.isActive
       );
       
-      if (pregnantWomen.length === 0) {
-        console.warn('Aucune femme enceinte trouvée pour assignation');
+      if (diabeticPersons.length === 0) {
+        console.warn('Aucune personne diabétique trouvée pour assignation');
         return null;
       }
       
-      // Prendre la dernière femme enceinte créée
-      actualPatientId = pregnantWomen[pregnantWomen.length - 1].id;
+      // Prendre la dernière personne diabétique créée
+      actualPatientId = diabeticPersons[diabeticPersons.length - 1].id;
     }
     
     // Récupérer tous les médecins actifs

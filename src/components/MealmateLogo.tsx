@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/mealmate.jpg';
+import { Person } from '@mui/icons-material';
 
 interface MealmateLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -28,12 +28,15 @@ const MealmateLogo: React.FC<MealmateLogoProps> = ({
 
   return (
     <div className={`flex flex-col items-center ${className}`}>
-      {/* Logo image */}
-      <div className={`${sizeClasses[size]} relative`}>
-        <img 
-          src={logo} 
-          alt="Logo MEALMATE" 
-          className="w-full h-full object-contain rounded-2xl shadow-md"
+      {/* Logo icon */}
+      <div className={`${sizeClasses[size]} relative flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-md`}>
+        <Person 
+          className="text-white" 
+          style={{ 
+            fontSize: size === 'sm' ? '24px' : 
+                     size === 'md' ? '32px' : 
+                     size === 'lg' ? '48px' : '64px' 
+          }} 
         />
       </div>
       

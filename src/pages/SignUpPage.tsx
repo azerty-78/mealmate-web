@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, Person, Visibility, VisibilityOff, ArrowBack, CameraAlt, LocalHospital, PregnantWoman, Security } from '@mui/icons-material';
+import { Mail, Lock, Person, Visibility, VisibilityOff, ArrowBack, CameraAlt, LocalHospital, Favorite, Security } from '@mui/icons-material';
 import { useNavigation } from '../contexts/NavigationContext';
 import { useAuth } from '../hooks/useAuth';
 import { assignRandomDoctor } from '../services/api';
@@ -89,7 +89,7 @@ const SignUpPage: React.FC = () => {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-        profileType: formData.profileType as 'pregnant_woman' | 'doctor',
+        profileType: formData.profileType as 'diabetic_person' | 'doctor',
         profileImage: profileImageBase64,
         firstName: formData.username.split(' ')[0] || '',
         lastName: formData.username.split(' ').slice(1).join(' ') || '',
@@ -166,7 +166,7 @@ const SignUpPage: React.FC = () => {
             <div className="grid grid-cols-1 gap-4 mt-8">
               <div className="flex items-center space-x-4 p-4 bg-white/60 backdrop-blur-sm rounded-xl">
                 <div className="p-3 bg-pink-100 rounded-full">
-                  <PregnantWoman className="w-6 h-6 text-pink-600" />
+                  <Favorite className="w-6 h-6 text-pink-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800">Suivi personnalisé</h3>

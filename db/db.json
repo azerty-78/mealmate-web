@@ -20,7 +20,7 @@
       "username": "Marie Hélène",
       "email": "marie.helene@gmail.com",
       "password": "user1234",
-      "profileType": "pregnant_woman",
+      "profileType": "diabetic_person",
       "profileImage": null,
       "firstName": "Marie",
       "lastName": "Hélène",
@@ -158,7 +158,7 @@
           "available": false
         }
       },
-      "bio": "Médecin généraliste dédiée à la santé des femmes et des enfants. Avec 5 ans d'expérience, je me spécialise dans les soins préventifs et le suivi de grossesse.",
+      "bio": "Médecin généraliste dédiée à la santé des personnes diabétiques. Avec 5 ans d'expérience, je me spécialise dans les soins préventifs et la gestion du diabète.",
       "education": [
         {
           "degree": "Doctorat en Médecine",
@@ -379,7 +379,7 @@
       "patientId": 2,
       "assignedAt": "2024-01-20T10:00:00.000Z",
       "status": "active",
-      "notes": "Patient suivie pour grossesse normale"
+      "notes": "Patient suivie pour diabète de type 2"
     },
     {
       "id": 2,
@@ -540,8 +540,8 @@
       "title": "Consultation prénatale - 24 semaines",
       "date": "2025-09-30T10:00:00.000Z",
       "content": {
-        "chiefComplaint": "Contrôle de routine de grossesse",
-        "history": "Patient de 28 ans, primigeste, grossesse normale jusqu'à présent",
+        "chiefComplaint": "Contrôle de routine du diabète",
+        "history": "Patient de 28 ans, diabétique de type 2, suivi régulier depuis 2 ans",
         "examination": {
           "vitalSigns": {
             "bloodPressure": "112/72 mmHg",
@@ -596,7 +596,7 @@
             "status": "normal"
           }
         ],
-        "interpretation": "Analyses normales pour le terme de grossesse"
+        "interpretation": "Analyses normales pour le suivi du diabète"
       },
       "attachments": [
         {
@@ -649,7 +649,7 @@
           "name": "Acide Folique",
           "dosage": "400 µg",
           "frequency": "1 comprimé par jour",
-          "duration": "Jusqu'à la fin de la grossesse",
+          "duration": "Traitement continu du diabète",
           "instructions": "À prendre le matin avec un verre d'eau"
         },
         {
@@ -660,7 +660,7 @@
           "instructions": "À prendre le soir, de préférence à jeun"
         }
       ],
-      "notes": "Prescription de routine pour grossesse normale",
+      "notes": "Prescription de routine pour diabète de type 2",
       "createdAt": "2025-09-30T10:00:00.000Z"
     }
   ],
@@ -765,9 +765,9 @@
       "region": "Centre",
       "phone": "+237 222 22 33 44",
       "email": "maternite@clinique-yaounde.cm",
-      "description": "Clinique spécialisée dans le suivi de grossesse et l'accouchement",
+      "description": "Clinique spécialisée dans la gestion du diabète et les soins endocrinologiques",
       "services": [
-        "Suivi de grossesse",
+        "Gestion du diabète",
         "Accouchement",
         "Échographie",
         "Consultations prénatales",
@@ -800,14 +800,14 @@
       "description": "Centre de santé communautaire offrant des services de base et de suivi de grossesse",
       "services": [
         "Consultations générales",
-        "Suivi de grossesse",
+        "Gestion du diabète",
         "Vaccination",
         "Planning familial",
         "Laboratoire"
       ],
       "specialties": [
         "Médecine générale",
-        "Suivi de grossesse",
+        "Gestion du diabète",
         "Pédiatrie"
       ],
       "capacity": 50,
@@ -870,7 +870,7 @@
       "services": [
         "Consultations spécialisées",
         "Échographie 3D",
-        "Suivi de grossesse",
+        "Gestion du diabète",
         "Accouchement",
         "Chirurgie gynécologique"
       ],
@@ -901,7 +901,7 @@
       "description": "Centre de santé de proximité pour le suivi de grossesse en zone rurale",
       "services": [
         "Consultations",
-        "Suivi de grossesse",
+        "Gestion du diabète",
         "Vaccination",
         "Planning familial",
         "Urgences de base"

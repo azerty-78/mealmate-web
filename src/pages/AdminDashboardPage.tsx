@@ -50,7 +50,7 @@ const AdminDashboardPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'campaigns' | 'users' | 'healthCenters'>('campaigns');
   const [userSearch, setUserSearch] = useState('');
-  const [userFilter, setUserFilter] = useState<'all' | 'active' | 'inactive' | 'pregnant_woman' | 'doctor' | 'administrator'>('all');
+  const [userFilter, setUserFilter] = useState<'all' | 'active' | 'inactive' | 'diabetic_person' | 'doctor' | 'administrator'>('all');
   const [healthCenterSearch, setHealthCenterSearch] = useState('');
   const [healthCenterFilter, setHealthCenterFilter] = useState<'all' | 'hospital' | 'clinic' | 'health_center' | 'maternity'>('all');
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
@@ -250,10 +250,10 @@ const AdminDashboardPage: React.FC = () => {
   const userStats = useMemo(() => {
     const total = users.length;
     const active = users.filter(u => u.isActive).length;
-    const pregnant = users.filter(u => u.profileType === 'pregnant_woman').length;
+    const diabetic = users.filter(u => u.profileType === 'diabetic_person').length;
     const doctors = users.filter(u => u.profileType === 'doctor').length;
     const admins = users.filter(u => u.profileType === 'administrator').length;
-    return { total, active, pregnant, doctors, admins };
+    return { total, active, diabetic, doctors, admins };
   }, [users]);
 
   const healthCenterStats = useMemo(() => {
@@ -499,8 +499,8 @@ const AdminDashboardPage: React.FC = () => {
             </div>
             <div className="bg-white rounded-xl shadow p-4 text-center">
               <Person className="w-8 h-8 text-pink-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-800">{userStats.pregnant}</div>
-              <div className="text-sm text-gray-600">Femmes enceintes</div>
+              <div className="text-2xl font-bold text-gray-800">{userStats.diabetic}</div>
+              <div className="text-sm text-gray-600">Personnes diabétiques</div>
             </div>
             <div className="bg-white rounded-xl shadow p-4 text-center">
               <Person className="w-8 h-8 text-blue-600 mx-auto mb-2" />
@@ -537,7 +537,7 @@ const AdminDashboardPage: React.FC = () => {
                   <option value="all">Tous les utilisateurs</option>
                   <option value="active">Actifs uniquement</option>
                   <option value="inactive">Inactifs uniquement</option>
-                  <option value="pregnant_woman">Femmes enceintes</option>
+                  <option value="diabetic_person">Personnes diabétiques</option>
                   <option value="doctor">Médecins</option>
                   <option value="administrator">Administrateurs</option>
                 </select>
@@ -690,7 +690,7 @@ const AdminDashboardPage: React.FC = () => {
                         'bg-pink-100 text-pink-800'
                       }`}>
                         {user.profileType === 'administrator' ? 'Administrateur' :
-                         user.profileType === 'doctor' ? 'Médecin' : 'Femme enceinte'}
+                         user.profileType === 'doctor' ? 'Médecin' : 'Personne diabétique'}
                       </span>
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'

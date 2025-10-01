@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, Visibility, VisibilityOff, LocalHospital, PregnantWoman, Security } from '@mui/icons-material';
+import { Mail, Lock, Visibility, VisibilityOff, LocalHospital, Favorite, Security } from '@mui/icons-material';
 import { useNavigation } from '../contexts/NavigationContext';
 import { useAuth } from '../hooks/useAuth';
 import SlideTransition from '../components/SlideTransition';
@@ -75,11 +75,11 @@ const SignInPage: React.FC = () => {
             <div className="grid grid-cols-1 gap-4 mt-8">
               <div className="flex items-center space-x-4 p-4 bg-white/60 backdrop-blur-sm rounded-xl">
                 <div className="p-3 bg-pink-100 rounded-full">
-                  <PregnantWoman className="w-6 h-6 text-pink-600" />
+                  <Favorite className="w-6 h-6 text-pink-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800">Suivi médical complet</h3>
-                  <p className="text-sm text-gray-600">Consultations, échographies et paramètres vitaux</p>
+                  <p className="text-sm text-gray-600">Consultations, analyses et paramètres vitaux</p>
                 </div>
               </div>
               
