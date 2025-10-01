@@ -11,7 +11,7 @@ const HomePage = lazy(() => import('../pages/HomePage'));
 const DashboardPage = lazy(() => import('../pages/DashboardPage'));
 const DoctorDashboardPage = lazy(() => import('../pages/DoctorDashboardPage'));
 const AdminDashboardPage = lazy(() => import('../pages/AdminDashboardPage'));
-const PregnancyDashboardPage = lazy(() => import('../pages/PregnancyDashboardPage'));
+const DiabeticDashboardPage = lazy(() => import('../pages/DiabeticDashboardPage'));
 const CommunityPage = lazy(() => import('../pages/CommunityPage'));
 const SettingsPage = lazy(() => import('../pages/SettingsPage'));
 const ProfilePage = lazy(() => import('../pages/ProfilePage'));
@@ -83,8 +83,8 @@ const MainLayout: React.FC = memo(() => {
               <AdminDashboardPage />
             ) : user?.profileType === 'doctor' ? (
               <DoctorDashboardPage />
-            ) : user?.profileType === 'pregnant_woman' ? (
-              <PregnancyDashboardPage />
+            ) : user?.profileType === 'diabetic_person' ? (
+              <DiabeticDashboardPage />
             ) : (
               <DashboardPage />
             )}
@@ -150,10 +150,10 @@ const MainLayout: React.FC = memo(() => {
             <CommunityChatPage />
           </Suspense>
         );
-      case 'pregnant-dashboard':
+      case 'diabetic-dashboard':
         return (
           <Suspense fallback={<LoadingSpinner />}>
-            <PregnancyDashboardPage />
+            <DiabeticDashboardPage />
           </Suspense>
         );
       default:
