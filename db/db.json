@@ -28,7 +28,43 @@
       "region": "Centre",
       "isActive": true,
       "createdAt": "2024-01-15T10:30:00.000Z",
-      "updatedAt": "2025-09-30T10:20:25.231Z"
+      "updatedAt": "2025-09-30T10:20:25.231Z",
+      "diabeticProfile": {
+        "diabetesType": "type2",
+        "diagnosisDate": "2023-06-15T00:00:00.000Z",
+        "currentMedications": [
+          {
+            "name": "Metformine",
+            "dosage": "500mg",
+            "frequency": "2 fois par jour",
+            "times": ["08:00", "20:00"],
+            "isActive": true
+          },
+          {
+            "name": "Insuline rapide",
+            "dosage": "8 UI",
+            "frequency": "Avant repas",
+            "times": ["12:00", "19:00"],
+            "isActive": true
+          }
+        ],
+        "bloodGlucoseTargets": {
+          "fasting": { "min": 80, "max": 130 },
+          "beforeMeals": { "min": 80, "max": 130 },
+          "afterMeals": { "min": 80, "max": 180 }
+        },
+        "hba1cTarget": 7.0,
+        "lastHbA1c": 6.8,
+        "lastHbA1cDate": "2024-09-15T00:00:00.000Z",
+        "emergencyContacts": [
+          {
+            "name": "Dr Djeff Djadi Leteta",
+            "phone": "+237 6XX XX XX XX",
+            "relationship": "Médecin traitant"
+          }
+        ],
+        "notes": "Patient suivie pour diabète de type 2, bon contrôle glycémique"
+      }
     },
     {
       "id": 3,
@@ -473,6 +509,170 @@
         "riskFlags": []
       },
       "notes": "Grossesse sans complication à ce stade."
+    }
+  ],
+  "diabeticRecords": [
+    {
+      "id": 1,
+      "userId": 2,
+      "diabetesType": "type2",
+      "diagnosisDate": "2023-06-15T00:00:00.000Z",
+      "currentMedications": [
+        {
+          "name": "Metformine",
+          "dosage": "500mg",
+          "frequency": "2 fois par jour",
+          "times": ["08:00", "20:00"],
+          "isActive": true
+        },
+        {
+          "name": "Insuline rapide",
+          "dosage": "8 UI",
+          "frequency": "Avant repas",
+          "times": ["12:00", "19:00"],
+          "isActive": true
+        }
+      ],
+      "bloodGlucoseTargets": {
+        "fasting": { "min": 80, "max": 130 },
+        "beforeMeals": { "min": 80, "max": 130 },
+        "afterMeals": { "min": 80, "max": 180 }
+      },
+      "hba1cTarget": 7.0,
+      "lastHbA1c": 6.8,
+      "lastHbA1cDate": "2024-09-15T00:00:00.000Z",
+      "emergencyContacts": [
+        {
+          "name": "Dr Djeff Djadi Leteta",
+          "phone": "+237 6XX XX XX XX",
+          "relationship": "Médecin traitant"
+        }
+      ],
+      "notes": "Patient suivie pour diabète de type 2, bon contrôle glycémique",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-09-15T10:30:00.000Z"
+    }
+  ],
+  "glucoseReadings": [
+    {
+      "id": 1,
+      "userId": 2,
+      "value": 95,
+      "type": "fasting",
+      "timestamp": "2024-12-19T06:30:00.000Z",
+      "notes": "Glycémie à jeun normale"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "value": 135,
+      "type": "before_meal",
+      "timestamp": "2024-12-19T08:30:00.000Z",
+      "notes": "Avant petit-déjeuner"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "value": 110,
+      "type": "after_meal",
+      "timestamp": "2024-12-19T12:00:00.000Z",
+      "notes": "2h après petit-déjeuner"
+    },
+    {
+      "id": 4,
+      "userId": 2,
+      "value": 155,
+      "type": "after_meal",
+      "timestamp": "2024-12-19T14:00:00.000Z",
+      "notes": "2h après déjeuner - légèrement élevée"
+    },
+    {
+      "id": 5,
+      "userId": 2,
+      "value": 105,
+      "type": "before_meal",
+      "timestamp": "2024-12-19T18:00:00.000Z",
+      "notes": "Avant dîner"
+    }
+  ],
+  "meals": [
+    {
+      "id": 1,
+      "userId": 2,
+      "name": "Eru aux légumes",
+      "type": "breakfast",
+      "timestamp": "2024-12-19T07:30:00.000Z",
+      "calories": 280,
+      "carbs": 30,
+      "glucoseBefore": 135,
+      "glucoseAfter": 135,
+      "notes": "Petit-déjeuner traditionnel"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "name": "Ndolé aux légumes",
+      "type": "lunch",
+      "timestamp": "2024-12-19T12:30:00.000Z",
+      "calories": 320,
+      "carbs": 35,
+      "glucoseBefore": 110,
+      "glucoseAfter": 155,
+      "notes": "Déjeuner avec légumes verts"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "name": "Poisson à la sauce tomate",
+      "type": "dinner",
+      "timestamp": "2024-12-19T19:00:00.000Z",
+      "calories": 250,
+      "carbs": 20,
+      "glucoseBefore": 105,
+      "glucoseAfter": 145,
+      "notes": "Dîner léger"
+    }
+  ],
+  "medicationLogs": [
+    {
+      "id": 1,
+      "userId": 2,
+      "medicationName": "Metformine",
+      "dosage": "500mg",
+      "scheduledTime": "2024-12-19T08:00:00.000Z",
+      "takenTime": "2024-12-19T08:05:00.000Z",
+      "taken": true,
+      "notes": "Prise normale"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "medicationName": "Insuline rapide",
+      "dosage": "8 UI",
+      "scheduledTime": "2024-12-19T12:00:00.000Z",
+      "takenTime": "2024-12-19T12:02:00.000Z",
+      "taken": true,
+      "notes": "Avant déjeuner"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "medicationName": "Insuline rapide",
+      "dosage": "8 UI",
+      "scheduledTime": "2024-12-19T19:00:00.000Z",
+      "takenTime": null,
+      "taken": false,
+      "notes": "À prendre avant dîner"
+    },
+    {
+      "id": 4,
+      "userId": 2,
+      "medicationName": "Metformine",
+      "dosage": "500mg",
+      "scheduledTime": "2024-12-19T20:00:00.000Z",
+      "takenTime": null,
+      "taken": false,
+      "notes": "À prendre ce soir"
     }
   ],
   "appointments": [

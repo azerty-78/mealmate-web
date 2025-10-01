@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { diabeticApi, glucoseApi, mealApi, medicationLogApi, type DiabeticRecord, type GlucoseReading, type Meal, type MedicationLog } from '../services/api';
 import { 
   Favorite, 
   Info, 
@@ -44,44 +45,26 @@ const DiabeticDashboardPage: React.FC = memo(() => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState<'today' | '7days' | '30days'>('today');
+  
+  // États pour les données réelles
+  const [diabeticRecord, setDiabeticRecord] = useState<DiabeticRecord | null>(null);
+  const [glucoseReadings, setGlucoseReadings] = useState<GlucoseReading[]>([]);
+  const [meals, setMeals] = useState<Meal[]>([]);
+  const [medicationLogs, setMedicationLogs] = useState<MedicationLog[]>([]);
 
-  // Données simulées pour l'interface
-  const currentGlucose = 118;
-  const hba1c = 6.8;
-  const glucoseChange = -2.5;
-  const hba1cChange = -0.3;
+  // Données calculées
+  const currentGlucose = glucoseReadings.length > 0 ? glucoseReadings[glucoseReadings.length - 1].value : 0;
+  const hba1c = diabeticRecord?.lastHbA1c || 0;
+  const glucoseChange = 0; // À calculer selon les données
+  const hba1cChange = 0; // À calculer selon les données
 
-  const glucoseReadings = [
-    { time: '06:30', value: 95, status: 'normal' },
-    { time: '08:30', value: 135, status: 'normal' },
-    { time: '12:00', value: 110, status: 'normal' },
-    { time: '14:00', value: 155, status: 'high' },
-    { time: '18:00', value: 105, status: 'normal' }
-  ];
-
-  const meals = [
-    { name: 'Eru aux légumes', time: '07:30', calories: 280, glucose: 135, carbs: 30 },
-    { name: 'Ndolé aux légumes', time: '12:30', calories: 320, glucose: 155, carbs: 35 },
-    { name: 'Poisson à la sauce tomate', time: '19:00', calories: 250, glucose: 145, carbs: 20 }
-  ];
-
-  const medications = [
-    { name: 'Metformine', dosage: '500mg', time: '08:00', taken: true },
-    { name: 'Insuline rapide', dosage: '8 UI', time: '12:00', taken: true },
-    { name: 'Insuline lente', dosage: '20 UI', time: '22:00', taken: false }
-  ];
-
+  // Alertes générées dynamiquement
   const alerts = [
-    { type: 'warning', message: 'Glycémie élevée après le déjeuner', time: '14:15' },
-    { type: 'info', message: 'Rappel: Prise de médicament dans 30min', time: '21:30' },
-    { type: 'success', message: 'Objectif glycémique atteint ce matin', time: '08:30' }
-  ];
-
-  const weeklyTrends = [
-    { day: 'Lun', value: 117, status: 'normal' },
-    { day: 'Mar', value: 123, status: 'normal' },
-    { day: 'Mer', value: 116, status: 'normal' },
-    { day: 'Je', value: 113, status: 'normal' }
+    ...(currentGlucose > 180 ? [{ type: 'warning', message: 'Glycémie élevée détectée', time: new Date().toLocaleTimeString() }] : []),
+    ...(medicationLogs.filter(log => !log.taken && new Date(log.scheduledTime) <= new Date()).length > 0 ? 
+      [{ type: 'info', message: 'Médicament en retard', time: new Date().toLocaleTimeString() }] : []),
+    ...(currentGlucose >= 80 && currentGlucose <= 130 ? 
+      [{ type: 'success', message: 'Glycémie dans la normale', time: new Date().toLocaleTimeString() }] : [])
   ];
 
   const recommendedMeals = [
@@ -90,9 +73,34 @@ const DiabeticDashboardPage: React.FC = memo(() => {
   ];
 
   useEffect(() => {
-    // Simulation du chargement
-    setTimeout(() => setLoading(false), 1000);
-  }, []);
+    const loadData = async () => {
+      if (!user) return;
+      
+      try {
+        setLoading(true);
+        
+        // Charger les données en parallèle
+        const [diabeticData, glucoseData, mealsData, medicationData] = await Promise.all([
+          diabeticApi.getByUserId(user.id),
+          glucoseApi.getByUserId(user.id),
+          mealApi.getByUserId(user.id),
+          medicationLogApi.getByUserId(user.id)
+        ]);
+
+        setDiabeticRecord(diabeticData);
+        setGlucoseReadings(glucoseData);
+        setMeals(mealsData);
+        setMedicationLogs(medicationData);
+        
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [user]);
 
   if (loading) {
     return (
@@ -118,31 +126,6 @@ const DiabeticDashboardPage: React.FC = memo(() => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header avec profil utilisateur */}
-      <div className="bg-white px-4 py-4 border-b border-gray-100">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">B</span>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Salut !</p>
-              <p className="font-semibold text-gray-800" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
-                {user.firstName} {user.lastName}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-              <span className="text-gray-600">🔍</span>
-            </div>
-            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-              <span className="text-gray-600">🔔</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="px-4 py-6 space-y-6">
         {/* Titre principal */}
         <div className="text-center">
@@ -217,18 +200,25 @@ const DiabeticDashboardPage: React.FC = memo(() => {
           
           {/* Graphique en barres */}
           <div className="flex items-end justify-between space-x-2 h-32">
-            {glucoseReadings.map((reading, index) => (
-              <div key={index} className="flex flex-col items-center flex-1">
-                <div 
-                  className={`w-full rounded-t-lg mb-2 ${
-                    reading.status === 'high' ? 'bg-orange-400' : 'bg-green-400'
-                  }`}
-                  style={{ height: `${(reading.value / 200) * 100}px` }}
-                />
-                <div className="text-xs text-gray-600">{reading.value}</div>
-                <div className="text-xs text-gray-500">{reading.time}</div>
-              </div>
-            ))}
+            {glucoseReadings.slice(-5).map((reading, index) => {
+              const isHigh = reading.value > 140;
+              const time = new Date(reading.timestamp).toLocaleTimeString('fr-FR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+              });
+              return (
+                <div key={reading.id} className="flex flex-col items-center flex-1">
+                  <div 
+                    className={`w-full rounded-t-lg mb-2 ${
+                      isHigh ? 'bg-orange-400' : 'bg-green-400'
+                    }`}
+                    style={{ height: `${Math.min((reading.value / 200) * 100, 100)}px` }}
+                  />
+                  <div className="text-xs text-gray-600">{reading.value}</div>
+                  <div className="text-xs text-gray-500">{time}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -238,44 +228,36 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             Repas du Jour
           </h3>
           <div className="space-y-3">
-            {meals.map((meal, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">{meal.carbs}</span>
+            {meals.slice(-3).map((meal) => {
+              const time = new Date(meal.timestamp).toLocaleTimeString('fr-FR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+              });
+              const glucoseAfter = meal.glucoseAfter || 0;
+              return (
+                <div key={meal.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">{meal.carbs}</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
+                        {meal.name}
+                      </p>
+                      <p className="text-sm text-gray-600">{time} • {meal.calories} kcal</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-800" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
-                      {meal.name}
-                    </p>
-                    <p className="text-sm text-gray-600">{meal.time} • {meal.calories} kcal</p>
+                  <div className={`text-sm font-medium ${
+                    glucoseAfter > 140 ? 'text-orange-600' : 'text-green-600'
+                  }`}>
+                    {glucoseAfter} mg/dL
                   </div>
                 </div>
-                <div className={`text-sm font-medium ${
-                  meal.glucose > 140 ? 'text-orange-600' : 'text-green-600'
-                }`}>
-                  {meal.glucose} mg/dL
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Tendances hebdomadaires */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold text-gray-800 mb-4" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
-            Tendances Hebdomadaires
-          </h3>
-          <div className="flex justify-between">
-            {weeklyTrends.map((trend, index) => (
-              <div key={index} className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-gradient-to-t from-blue-200 via-green-200 to-purple-200 rounded-lg mb-2"></div>
-                <div className="text-sm font-medium text-green-600">{trend.value}</div>
-                <div className="text-xs text-gray-500">{trend.day}</div>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Médicaments */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
@@ -283,25 +265,31 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             Médicaments
           </h3>
           <div className="space-y-3">
-            {medications.map((med, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                    med.taken ? 'bg-green-500' : 'bg-orange-100'
-                  }`}>
-                    {med.taken ? (
-                      <CheckCircle className="w-4 h-4 text-white" />
-                    ) : (
-                      <Schedule className="w-4 h-4 text-orange-600" />
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-800">{med.name}</p>
-                    <p className="text-sm text-gray-600">{med.dosage} • {med.time}</p>
+            {medicationLogs.slice(-3).map((med) => {
+              const time = new Date(med.scheduledTime).toLocaleTimeString('fr-FR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+              });
+              return (
+                <div key={med.id} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                      med.taken ? 'bg-green-500' : 'bg-orange-100'
+                    }`}>
+                      {med.taken ? (
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      ) : (
+                        <Schedule className="w-4 h-4 text-orange-600" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800">{med.medicationName}</p>
+                      <p className="text-sm text-gray-600">{med.dosage} • {time}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -311,7 +299,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             Alertes
           </h3>
           <div className="space-y-3">
-            {alerts.map((alert, index) => (
+            {alerts.length > 0 ? alerts.map((alert, index) => (
               <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl">
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                   alert.type === 'warning' ? 'bg-orange-100' :
@@ -330,7 +318,9 @@ const DiabeticDashboardPage: React.FC = memo(() => {
                   <p className="text-xs text-gray-500">{alert.time}</p>
                 </div>
               </div>
-            ))}
+            )) : (
+              <p className="text-gray-500 text-center py-4">Aucune alerte pour le moment</p>
+            )}
           </div>
         </div>
 

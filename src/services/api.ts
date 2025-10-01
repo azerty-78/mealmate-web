@@ -71,6 +71,32 @@ export interface User {
     year: number;
     organization: string;
   }>;
+  // Profil diabétique pour les personnes diabétiques
+  diabeticProfile?: {
+    diabetesType: 'type1' | 'type2';
+    diagnosisDate: string;
+    currentMedications: Array<{
+      name: string;
+      dosage: string;
+      frequency: string;
+      times: string[];
+      isActive: boolean;
+    }>;
+    bloodGlucoseTargets: {
+      fasting: { min: number; max: number };
+      beforeMeals: { min: number; max: number };
+      afterMeals: { min: number; max: number };
+    };
+    hba1cTarget: number;
+    lastHbA1c: number | null;
+    lastHbA1cDate: string | null;
+    emergencyContacts: Array<{
+      name: string;
+      phone: string;
+      relationship: string;
+    }>;
+    notes: string;
+  };
 }
 
 export interface DoctorPatient {
@@ -162,6 +188,69 @@ export interface PregnancyRecord {
   };
   medicalParams?: MedicalParams;
   notes: string;
+}
+
+export interface DiabeticRecord {
+  id: number;
+  userId: number;
+  diabetesType: 'type1' | 'type2';
+  diagnosisDate: string;
+  currentMedications: Array<{
+    name: string;
+    dosage: string;
+    frequency: string;
+    times: string[];
+    isActive: boolean;
+  }>;
+  bloodGlucoseTargets: {
+    fasting: { min: number; max: number };
+    beforeMeals: { min: number; max: number };
+    afterMeals: { min: number; max: number };
+  };
+  hba1cTarget: number;
+  lastHbA1c: number | null;
+  lastHbA1cDate: string | null;
+  emergencyContacts: Array<{
+    name: string;
+    phone: string;
+    relationship: string;
+  }>;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GlucoseReading {
+  id: number;
+  userId: number;
+  value: number;
+  type: 'fasting' | 'before_meal' | 'after_meal' | 'random';
+  timestamp: string;
+  notes?: string;
+}
+
+export interface Meal {
+  id: number;
+  userId: number;
+  name: string;
+  type: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+  timestamp: string;
+  calories: number;
+  carbs: number;
+  glucoseBefore: number | null;
+  glucoseAfter: number | null;
+  notes?: string;
+}
+
+export interface MedicationLog {
+  id: number;
+  userId: number;
+  medicationName: string;
+  dosage: string;
+  scheduledTime: string;
+  takenTime: string | null;
+  taken: boolean;
+  notes?: string;
 }
 
 export interface Appointment {
@@ -577,6 +666,85 @@ export const emergencyContactApi = {
     }),
   delete: (id: number): Promise<void> =>
     request<void>(`/emergencyContacts/${id}`, { method: 'DELETE' }),
+};
+
+// API pour les dossiers diabétiques
+export const diabeticApi = {
+  getByUserId: (userId: number): Promise<DiabeticRecord | null> =>
+    request<DiabeticRecord[]>(`/diabeticRecords?userId=${userId}`).then(records => records?.[0] || null),
+  create: (data: Omit<DiabeticRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<DiabeticRecord> =>
+    request<DiabeticRecord>('/diabeticRecords', {
+      method: 'POST',
+      body: JSON.stringify({
+        ...data,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }),
+    }),
+  update: (id: number, data: Partial<DiabeticRecord>): Promise<DiabeticRecord> =>
+    request<DiabeticRecord>(`/diabeticRecords/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        ...data,
+        updatedAt: new Date().toISOString(),
+      }),
+    }),
+  delete: (id: number): Promise<void> =>
+    request<void>(`/diabeticRecords/${id}`, { method: 'DELETE' }),
+};
+
+// API pour les lectures de glycémie
+export const glucoseApi = {
+  getByUserId: (userId: number): Promise<GlucoseReading[]> =>
+    request<GlucoseReading[]>(`/glucoseReadings?userId=${userId}`),
+  create: (data: Omit<GlucoseReading, 'id'>): Promise<GlucoseReading> =>
+    request<GlucoseReading>('/glucoseReadings', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (id: number, data: Partial<GlucoseReading>): Promise<GlucoseReading> =>
+    request<GlucoseReading>(`/glucoseReadings/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (id: number): Promise<void> =>
+    request<void>(`/glucoseReadings/${id}`, { method: 'DELETE' }),
+};
+
+// API pour les repas
+export const mealApi = {
+  getByUserId: (userId: number): Promise<Meal[]> =>
+    request<Meal[]>(`/meals?userId=${userId}`),
+  create: (data: Omit<Meal, 'id'>): Promise<Meal> =>
+    request<Meal>('/meals', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (id: number, data: Partial<Meal>): Promise<Meal> =>
+    request<Meal>(`/meals/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (id: number): Promise<void> =>
+    request<void>(`/meals/${id}`, { method: 'DELETE' }),
+};
+
+// API pour les logs de médicaments
+export const medicationLogApi = {
+  getByUserId: (userId: number): Promise<MedicationLog[]> =>
+    request<MedicationLog[]>(`/medicationLogs?userId=${userId}`),
+  create: (data: Omit<MedicationLog, 'id'>): Promise<MedicationLog> =>
+    request<MedicationLog>('/medicationLogs', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (id: number, data: Partial<MedicationLog>): Promise<MedicationLog> =>
+    request<MedicationLog>(`/medicationLogs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (id: number): Promise<void> =>
+    request<void>(`/medicationLogs/${id}`, { method: 'DELETE' }),
 };
 
 // Fonction pour assigner automatiquement un médecin à une femme enceinte

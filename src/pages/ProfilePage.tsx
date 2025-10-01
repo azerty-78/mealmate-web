@@ -1,7 +1,7 @@
 import React, { useState, memo, useEffect } from 'react';
 import { Edit, Person, Email, Phone, LocationOn, CameraAlt, Save, Close, Verified, TrendingUp, Message, Campaign, PictureAsPdf, Work, School, Star, Language, AccessTime, AttachMoney, MedicalServices, EmojiEvents } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth';
-import { pregnancyApi, type PregnancyRecord } from '../services/api';
+import { pregnancyApi, diabeticApi, glucoseApi, mealApi, medicationLogApi, type PregnancyRecord, type DiabeticRecord, type GlucoseReading, type Meal, type MedicationLog } from '../services/api';
 import { useToast } from '../components/ToastProvider';
 
 const ProfilePage: React.FC = memo(() => {
@@ -32,6 +32,10 @@ const ProfilePage: React.FC = memo(() => {
     awards: user?.awards || []
   });
   const [record, setRecord] = useState<PregnancyRecord | null>(null);
+  const [diabeticRecord, setDiabeticRecord] = useState<DiabeticRecord | null>(null);
+  const [glucoseReadings, setGlucoseReadings] = useState<GlucoseReading[]>([]);
+  const [meals, setMeals] = useState<Meal[]>([]);
+  const [medicationLogs, setMedicationLogs] = useState<MedicationLog[]>([]);
   const [medParamsForm, setMedParamsForm] = useState({
     systolicMmHg: '',
     diastolicMmHg: '',
@@ -40,7 +44,19 @@ const ProfilePage: React.FC = memo(() => {
     babyName: '',
     weightKg: '',
   });
+  const [diabeticForm, setDiabeticForm] = useState({
+    glucoseValue: '',
+    glucoseType: 'fasting' as 'fasting' | 'before_meal' | 'after_meal' | 'random',
+    mealName: '',
+    mealType: 'breakfast' as 'breakfast' | 'lunch' | 'dinner' | 'snack',
+    mealCalories: '',
+    mealCarbs: '',
+    medicationName: '',
+    medicationDosage: '',
+    medicationTime: '',
+  });
   const [savingMedical, setSavingMedical] = useState(false);
+  const [savingDiabetic, setSavingDiabetic] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
