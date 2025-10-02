@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowBack, Send, SmartToy, MoreVert, Refresh, Delete, AttachFile, EmojiEmotions, Close } from '@mui/icons-material';
 import { useNavigation } from '../contexts/NavigationContext';
+import { useAuth } from '../hooks/useAuth';
 import { geminiService } from '../services/geminiService';
 
 interface Message {
@@ -14,6 +15,7 @@ interface Message {
 
 const AICoachChatPage: React.FC = () => {
   const { navigateTo } = useNavigation();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -50,8 +52,19 @@ const AICoachChatPage: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Vérification de l'authentification
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      console.log('❌ Utilisateur non authentifié, redirection vers la connexion');
+      navigateTo('login');
+      return;
+    }
+  }, [isLoading, isAuthenticated, navigateTo]);
+
   // Initialisation du chat
   useEffect(() => {
+    if (!isAuthenticated || isLoading) return;
+    
     const initializeChat = async () => {
       try {
         console.log('🚀 Initialisation du chat IA...');
@@ -66,7 +79,7 @@ const AICoachChatPage: React.FC = () => {
     };
 
     initializeChat();
-  }, []);
+  }, [isAuthenticated, isLoading]);
 
   // Fermer le menu quand on clique à l'extérieur
   useEffect(() => {
@@ -297,6 +310,42 @@ Conseil court et pratique sur la grossesse.`;
     }, 100);
   };
 
+
+  // Vérification de l'authentification
+  if (isLoading) {
+    return (
+      <div className="h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <SmartToy className="w-8 h-8 text-white animate-pulse" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Vérification de l'authentification</h2>
+          <p className="text-gray-600 mb-4">Veuillez patienter...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <SmartToy className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Accès non autorisé</h2>
+          <p className="text-gray-600 mb-4">Vous devez être connecté pour accéder au chat IA.</p>
+          <button
+            onClick={() => navigateTo('login')}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Se connecter
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Écran de chargement pendant l'initialisation
   if (isInitializing) {

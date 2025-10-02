@@ -17,7 +17,7 @@ const DoctorChatPage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Bonjour ! Je suis le Dr. Djeff Djadi Leteta, votre médecin traitant. Comment puis-je vous aider ?',
+      text: 'Bonjour ! Je suis le Dr. Bernard Arnaud, votre médecin traitant. Comment puis-je vous aider ?',
       isUser: false,
       timestamp: new Date(),
       isRead: true
@@ -103,7 +103,7 @@ const DoctorChatPage: React.FC = () => {
           <LocalHospital className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="font-semibold">Dr. Djeff Djadi Leteta</h1>
+          <h1 className="font-semibold">Dr. Bernard Arnaud</h1>
           <p className="text-xs text-green-100">Médecin Traitant</p>
         </div>
       </div>
