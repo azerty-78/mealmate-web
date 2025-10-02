@@ -675,6 +675,292 @@
       "notes": "À prendre ce soir"
     }
   ],
+  "meals": [
+    {
+      "id": 1,
+      "name": "Ndolé aux légumes",
+      "description": "Plat national camerounais aux légumes verts, arachides et poisson",
+      "category": "plat_principal",
+      "cuisine": "camerounaise",
+      "difficulty": "moyen",
+      "prepTime": 45,
+      "cookTime": 30,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Feuilles de ndolé",
+          "quantity": "500g",
+          "type": "légume"
+        },
+        {
+          "name": "Arachides décortiquées",
+          "quantity": "200g",
+          "type": "protéine"
+        },
+        {
+          "name": "Poisson frais",
+          "quantity": "300g",
+          "type": "protéine"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "2 pièces",
+          "type": "aromatique"
+        },
+        {
+          "name": "Ail",
+          "quantity": "3 gousses",
+          "type": "aromatique"
+        },
+        {
+          "name": "Gingembre",
+          "quantity": "1 morceau",
+          "type": "aromatique"
+        },
+        {
+          "name": "Huile de palme",
+          "quantity": "3 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 320,
+        "proteins": 18,
+        "carbs": 25,
+        "fats": 15,
+        "fiber": 8,
+        "sugar": 5,
+        "sodium": 400,
+        "glycemicIndex": 35
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["riche_en_fibres", "faible_ig", "protéines", "légumes"],
+      "instructions": [
+        "Nettoyer et laver les feuilles de ndolé",
+        "Faire griller les arachides et les piler",
+        "Faire revenir les oignons, ail et gingembre",
+        "Ajouter le poisson et les arachides",
+        "Incorporer les feuilles de ndolé",
+        "Laisser mijoter 30 minutes"
+      ],
+      "tips": "Excellent pour le contrôle glycémique grâce aux fibres et au faible indice glycémique",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Eru aux légumes",
+      "description": "Sauce traditionnelle aux feuilles d'eru et légumes verts",
+      "category": "plat_principal",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 30,
+      "cookTime": 25,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Feuilles d'eru",
+          "quantity": "400g",
+          "type": "légume"
+        },
+        {
+          "name": "Épinards",
+          "quantity": "200g",
+          "type": "légume"
+        },
+        {
+          "name": "Poisson fumé",
+          "quantity": "200g",
+          "type": "protéine"
+        },
+        {
+          "name": "Crevettes séchées",
+          "quantity": "50g",
+          "type": "protéine"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "1 pièce",
+          "type": "aromatique"
+        },
+        {
+          "name": "Tomates",
+          "quantity": "2 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Huile de palme",
+          "quantity": "2 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 280,
+        "proteins": 22,
+        "carbs": 20,
+        "fats": 12,
+        "fiber": 6,
+        "sugar": 4,
+        "sodium": 350,
+        "glycemicIndex": 30
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["riche_en_fibres", "faible_ig", "protéines", "légumes_verts"],
+      "instructions": [
+        "Laver et hacher les feuilles d'eru et épinards",
+        "Faire revenir les oignons et tomates",
+        "Ajouter le poisson fumé et les crevettes",
+        "Incorporer les légumes verts",
+        "Laisser mijoter 20 minutes"
+      ],
+      "tips": "Riche en fer et vitamines, excellent pour la santé cardiovasculaire",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Poisson braisé aux légumes",
+      "description": "Poisson grillé accompagné de légumes de saison",
+      "category": "plat_principal",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 20,
+      "cookTime": 20,
+      "servings": 2,
+      "ingredients": [
+        {
+          "name": "Poisson frais (tilapia)",
+          "quantity": "400g",
+          "type": "protéine"
+        },
+        {
+          "name": "Tomates",
+          "quantity": "3 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "2 pièces",
+          "type": "aromatique"
+        },
+        {
+          "name": "Poivrons",
+          "quantity": "2 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Ail",
+          "quantity": "2 gousses",
+          "type": "aromatique"
+        },
+        {
+          "name": "Gingembre",
+          "quantity": "1 morceau",
+          "type": "aromatique"
+        },
+        {
+          "name": "Huile d'olive",
+          "quantity": "2 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 250,
+        "proteins": 28,
+        "carbs": 15,
+        "fats": 8,
+        "fiber": 4,
+        "sugar": 8,
+        "sodium": 200,
+        "glycemicIndex": 25
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["riche_en_protéines", "faible_ig", "oméga3", "légumes"],
+      "instructions": [
+        "Nettoyer et assaisonner le poisson",
+        "Couper les légumes en morceaux",
+        "Faire revenir les légumes dans l'huile",
+        "Ajouter le poisson et laisser cuire",
+        "Servir chaud"
+      ],
+      "tips": "Excellent apport en protéines et oméga-3, idéal pour le contrôle du diabète",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "Salade de haricots verts",
+      "description": "Salade fraîche de haricots verts aux légumes",
+      "category": "accompagnement",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 15,
+      "cookTime": 10,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Haricots verts",
+          "quantity": "500g",
+          "type": "légume"
+        },
+        {
+          "name": "Tomates cerises",
+          "quantity": "200g",
+          "type": "légume"
+        },
+        {
+          "name": "Oignons rouges",
+          "quantity": "1 pièce",
+          "type": "aromatique"
+        },
+        {
+          "name": "Persil frais",
+          "quantity": "1 bouquet",
+          "type": "aromatique"
+        },
+        {
+          "name": "Vinaigre",
+          "quantity": "2 cuillères à soupe",
+          "type": "condiment"
+        },
+        {
+          "name": "Huile d'olive",
+          "quantity": "3 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 120,
+        "proteins": 6,
+        "carbs": 12,
+        "fats": 5,
+        "fiber": 8,
+        "sugar": 6,
+        "sodium": 50,
+        "glycemicIndex": 20
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["riche_en_fibres", "très_faible_ig", "légumes", "antioxydants"],
+      "instructions": [
+        "Faire blanchir les haricots verts",
+        "Couper les tomates et oignons",
+        "Mélanger tous les ingrédients",
+        "Assaisonner avec vinaigre et huile",
+        "Réserver au frais 30 minutes"
+      ],
+      "tips": "Très riche en fibres, excellent pour stabiliser la glycémie",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    }
+  ],
   "appointments": [
     {
       "id": 1,

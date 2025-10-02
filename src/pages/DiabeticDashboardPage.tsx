@@ -326,9 +326,17 @@ const DiabeticDashboardPage: React.FC = memo(() => {
 
         {/* Plats recommandés */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold text-gray-800 mb-4" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
-            Plats Recommandés (Cuisine Camerounaise)
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-bold text-gray-800" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
+              Plats Recommandés (Cuisine Camerounaise)
+            </h3>
+            <button 
+              onClick={() => {/* TODO: Ouvrir modal de sélection de repas */}}
+              className="text-blue-600 text-sm font-medium"
+            >
+              Voir tous
+            </button>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             {recommendedMeals.map((meal, index) => (
               <div key={index} className="p-3 bg-gray-50 rounded-xl">
@@ -346,6 +354,66 @@ const DiabeticDashboardPage: React.FC = memo(() => {
                 <p className="text-xs font-medium text-gray-800">{meal.calories} kcal</p>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Actions rapides */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-bold text-gray-800 mb-4" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
+            Actions Rapides
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <button 
+              onClick={() => {/* TODO: Ouvrir modal ajout glycémie */}}
+              className="p-4 bg-green-50 rounded-xl border border-green-200 hover:bg-green-100 transition-colors"
+            >
+              <div className="flex items-center justify-center mb-2">
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-bold">📊</span>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-gray-800">Ajouter Glycémie</p>
+              <p className="text-xs text-gray-600">Enregistrer une mesure</p>
+            </button>
+            
+            <button 
+              onClick={() => {/* TODO: Ouvrir modal ajout repas */}}
+              className="p-4 bg-blue-50 rounded-xl border border-blue-200 hover:bg-blue-100 transition-colors"
+            >
+              <div className="flex items-center justify-center mb-2">
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-bold">🍽️</span>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-gray-800">Ajouter Repas</p>
+              <p className="text-xs text-gray-600">Enregistrer un repas</p>
+            </button>
+            
+            <button 
+              onClick={() => {/* TODO: Ouvrir modal ajout médicament */}}
+              className="p-4 bg-purple-50 rounded-xl border border-purple-200 hover:bg-purple-100 transition-colors"
+            >
+              <div className="flex items-center justify-center mb-2">
+                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-bold">💊</span>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-gray-800">Médicament</p>
+              <p className="text-xs text-gray-600">Marquer comme pris</p>
+            </button>
+            
+            <button 
+              onClick={() => {/* TODO: Ouvrir modal paramètres */}}
+              className="p-4 bg-orange-50 rounded-xl border border-orange-200 hover:bg-orange-100 transition-colors"
+            >
+              <div className="flex items-center justify-center mb-2">
+                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-bold">⚙️</span>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-gray-800">Paramètres</p>
+              <p className="text-xs text-gray-600">Modifier profil</p>
+            </button>
           </div>
         </div>
       </div>

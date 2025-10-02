@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useToast } from '../components/ToastProvider';
 import { Add, Edit, Delete, Save, Close, People, Person, PersonAdd, Block, CheckCircle, Search, FilterList, Download, Clear, LocalHospital, LocationOn, Phone, Email } from '@mui/icons-material';
-import { campaignApi, userApi, healthCenterApi, type Campaign, type User, type HealthCenter } from '../services/api';
+import { campaignApi, userApi, healthCenterApi, mealTemplateApi, type Campaign, type User, type HealthCenter, type MealTemplate } from '../services/api';
 
 const emptyCampaign: Campaign = {
   title: '',
@@ -34,21 +34,53 @@ const emptyHealthCenter: Omit<HealthCenter, 'id' | 'createdAt' | 'updatedAt'> = 
   images: []
 };
 
+const emptyMeal: Omit<MealTemplate, 'id' | 'createdAt' | 'updatedAt'> = {
+  name: '',
+  description: '',
+  category: 'plat_principal',
+  cuisine: 'camerounaise',
+  difficulty: 'facile',
+  prepTime: 0,
+  cookTime: 0,
+  servings: 1,
+  ingredients: [],
+  nutritionalValues: {
+    calories: 0,
+    proteins: 0,
+    carbs: 0,
+    fats: 0,
+    fiber: 0,
+    sugar: 0,
+    sodium: 0,
+    glycemicIndex: 0
+  },
+  diabeticFriendly: true,
+  suitableFor: ['type1', 'type2'],
+  tags: [],
+  instructions: [],
+  tips: '',
+  isActive: true
+};
+
 const AdminDashboardPage: React.FC = () => {
   const [items, setItems] = useState<Campaign[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [healthCenters, setHealthCenters] = useState<HealthCenter[]>([]);
+  const [meals, setMeals] = useState<MealTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [isLoadingHealthCenters, setIsLoadingHealthCenters] = useState(true);
+  const [isLoadingMeals, setIsLoadingMeals] = useState(true);
   const [editing, setEditing] = useState<Campaign | null>(null);
   const [editingHealthCenter, setEditingHealthCenter] = useState<HealthCenter | null>(null);
+  const [editingMeal, setEditingMeal] = useState<MealTemplate | null>(null);
   // const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [showUserForm, setShowUserForm] = useState(false);
   const [showHealthCenterForm, setShowHealthCenterForm] = useState(false);
+  const [showMealForm, setShowMealForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'campaigns' | 'users' | 'healthCenters'>('campaigns');
+  const [activeTab, setActiveTab] = useState<'campaigns' | 'users' | 'healthCenters' | 'meals'>('campaigns');
   const [userSearch, setUserSearch] = useState('');
   const [userFilter, setUserFilter] = useState<'all' | 'active' | 'inactive' | 'diabetic_person' | 'doctor' | 'administrator'>('all');
   const [healthCenterSearch, setHealthCenterSearch] = useState('');
@@ -97,10 +129,25 @@ const AdminDashboardPage: React.FC = () => {
     }
   };
 
+  const fetchMeals = async () => {
+    try {
+      setIsLoadingMeals(true);
+      const data = await mealTemplateApi.getAll();
+      setMeals(Array.isArray(data) ? data : []);
+      toast.show('Repas chargés', 'success');
+    } catch (e: any) {
+      setError(e?.message || 'Erreur de chargement des repas');
+      toast.show('Erreur lors du chargement des repas', 'error');
+    } finally {
+      setIsLoadingMeals(false);
+    }
+  };
+
   useEffect(() => {
     fetchItems();
     fetchUsers();
     fetchHealthCenters();
+    fetchMeals();
   }, []);
 
   const startCreate = () => {
@@ -479,6 +526,14 @@ const AdminDashboardPage: React.FC = () => {
           onClick={() => setActiveTab('healthCenters')}
         >
           Centres de Santé
+        </button>
+        <button
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            activeTab === 'meals' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+          }`}
+          onClick={() => setActiveTab('meals')}
+        >
+          Repas
         </button>
       </div>
 
@@ -1149,6 +1204,255 @@ const AdminDashboardPage: React.FC = () => {
                 <Save className="w-4 h-4" />
                 {editingHealthCenter.id ? 'Modifier' : 'Créer'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Onglet Repas */}
+      {activeTab === 'meals' && (
+        <div className="space-y-6">
+          {/* Cartes de statistiques */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="bg-white rounded-xl shadow p-4 text-center">
+              <div className="text-2xl font-bold text-gray-800">{meals.length}</div>
+              <div className="text-sm text-gray-600">Total Repas</div>
+            </div>
+            <div className="bg-white rounded-xl shadow p-4 text-center">
+              <div className="text-2xl font-bold text-green-600">{meals.filter(m => m.diabeticFriendly).length}</div>
+              <div className="text-sm text-gray-600">Diabète-friendly</div>
+            </div>
+            <div className="bg-white rounded-xl shadow p-4 text-center">
+              <div className="text-2xl font-bold text-blue-600">{meals.filter(m => m.category === 'plat_principal').length}</div>
+              <div className="text-sm text-gray-600">Plats principaux</div>
+            </div>
+            <div className="bg-white rounded-xl shadow p-4 text-center">
+              <div className="text-2xl font-bold text-purple-600">{meals.filter(m => m.isActive).length}</div>
+              <div className="text-sm text-gray-600">Actifs</div>
+            </div>
+          </div>
+
+          {/* Barre d'actions */}
+          <div className="flex justify-between items-center">
+            <div className="flex space-x-2">
+              <button 
+                onClick={() => {
+                  setEditingMeal({ ...emptyMeal });
+                  setShowMealForm(true);
+                }}
+                className="inline-flex items-center px-3 py-2 rounded bg-green-600 text-white hover:bg-green-700"
+              >
+                <Add className="mr-1" /> Nouveau repas
+              </button>
+            </div>
+          </div>
+
+          {/* Liste des repas */}
+          <div className="bg-white rounded-xl shadow overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Calories</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IG</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diabète</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {meals.map((meal) => (
+                    <tr key={meal.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{meal.name}</div>
+                        <div className="text-sm text-gray-500">{meal.description}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                          {meal.category}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {meal.nutritionalValues.calories} kcal
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {meal.nutritionalValues.glycemicIndex}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                          meal.diabeticFriendly 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          {meal.diabeticFriendly ? 'Oui' : 'Non'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button
+                          onClick={() => {
+                            setEditingMeal(meal);
+                            setShowMealForm(true);
+                          }}
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (confirm('Êtes-vous sûr de vouloir supprimer ce repas ?')) {
+                              mealTemplateApi.delete(meal.id).then(() => {
+                                fetchMeals();
+                                toast.show('Repas supprimé', 'success');
+                              });
+                            }
+                          }}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <Delete className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Formulaire de repas */}
+      {showMealForm && editingMeal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setShowMealForm(false)}>
+          <div className="bg-white rounded-xl shadow-xl w-[95%] max-w-4xl max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold">Gestion des repas</h3>
+              <button className="p-2 rounded hover:bg-gray-100" onClick={() => setShowMealForm(false)}>
+                <Close />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Informations de base */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Nom du repas</label>
+                  <input
+                    type="text"
+                    value={editingMeal.name}
+                    onChange={(e) => setEditingMeal({...editingMeal, name: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ex: Ndolé aux légumes"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
+                  <select
+                    value={editingMeal.category}
+                    onChange={(e) => setEditingMeal({...editingMeal, category: e.target.value as any})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="plat_principal">Plat principal</option>
+                    <option value="accompagnement">Accompagnement</option>
+                    <option value="dessert">Dessert</option>
+                    <option value="boisson">Boisson</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <textarea
+                  value={editingMeal.description}
+                  onChange={(e) => setEditingMeal({...editingMeal, description: e.target.value})}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Description du repas..."
+                />
+              </div>
+
+              {/* Valeurs nutritionnelles */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Calories</label>
+                  <input
+                    type="number"
+                    value={editingMeal.nutritionalValues.calories}
+                    onChange={(e) => setEditingMeal({
+                      ...editingMeal, 
+                      nutritionalValues: {...editingMeal.nutritionalValues, calories: parseInt(e.target.value) || 0}
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Protéines (g)</label>
+                  <input
+                    type="number"
+                    value={editingMeal.nutritionalValues.proteins}
+                    onChange={(e) => setEditingMeal({
+                      ...editingMeal, 
+                      nutritionalValues: {...editingMeal.nutritionalValues, proteins: parseInt(e.target.value) || 0}
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Glucides (g)</label>
+                  <input
+                    type="number"
+                    value={editingMeal.nutritionalValues.carbs}
+                    onChange={(e) => setEditingMeal({
+                      ...editingMeal, 
+                      nutritionalValues: {...editingMeal.nutritionalValues, carbs: parseInt(e.target.value) || 0}
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Indice Glycémique</label>
+                  <input
+                    type="number"
+                    value={editingMeal.nutritionalValues.glycemicIndex}
+                    onChange={(e) => setEditingMeal({
+                      ...editingMeal, 
+                      nutritionalValues: {...editingMeal.nutritionalValues, glycemicIndex: parseInt(e.target.value) || 0}
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Boutons d'action */}
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowMealForm(false)}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      if (editingMeal.id) {
+                        await mealTemplateApi.update(editingMeal.id, editingMeal);
+                        toast.show('Repas modifié avec succès', 'success');
+                      } else {
+                        await mealTemplateApi.create(editingMeal);
+                        toast.show('Repas créé avec succès', 'success');
+                      }
+                      setShowMealForm(false);
+                      fetchMeals();
+                    } catch (error) {
+                      toast.show('Erreur lors de la sauvegarde', 'error');
+                    }
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                >
+                  <Save className="w-4 h-4" />
+                  {editingMeal.id ? 'Modifier' : 'Créer'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

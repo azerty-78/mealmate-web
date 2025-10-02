@@ -242,6 +242,41 @@ export interface Meal {
   notes?: string;
 }
 
+export interface MealTemplate {
+  id: number;
+  name: string;
+  description: string;
+  category: 'plat_principal' | 'accompagnement' | 'dessert' | 'boisson';
+  cuisine: string;
+  difficulty: 'facile' | 'moyen' | 'difficile';
+  prepTime: number;
+  cookTime: number;
+  servings: number;
+  ingredients: Array<{
+    name: string;
+    quantity: string;
+    type: string;
+  }>;
+  nutritionalValues: {
+    calories: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+    fiber: number;
+    sugar: number;
+    sodium: number;
+    glycemicIndex: number;
+  };
+  diabeticFriendly: boolean;
+  suitableFor: string[];
+  tags: string[];
+  instructions: string[];
+  tips: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface MedicationLog {
   id: number;
   userId: number;
@@ -745,6 +780,37 @@ export const medicationLogApi = {
     }),
   delete: (id: number): Promise<void> =>
     request<void>(`/medicationLogs/${id}`, { method: 'DELETE' }),
+};
+
+// API pour les modèles de repas
+export const mealTemplateApi = {
+  getAll: (): Promise<MealTemplate[]> =>
+    request<MealTemplate[]>('/meals'),
+  getById: (id: number): Promise<MealTemplate> =>
+    request<MealTemplate>(`/meals/${id}`),
+  getByCategory: (category: string): Promise<MealTemplate[]> =>
+    request<MealTemplate[]>(`/meals?category=${category}`),
+  getDiabeticFriendly: (): Promise<MealTemplate[]> =>
+    request<MealTemplate[]>('/meals?diabeticFriendly=true'),
+  create: (data: Omit<MealTemplate, 'id' | 'createdAt' | 'updatedAt'>): Promise<MealTemplate> =>
+    request<MealTemplate>('/meals', {
+      method: 'POST',
+      body: JSON.stringify({
+        ...data,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }),
+    }),
+  update: (id: number, data: Partial<MealTemplate>): Promise<MealTemplate> =>
+    request<MealTemplate>(`/meals/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        ...data,
+        updatedAt: new Date().toISOString(),
+      }),
+    }),
+  delete: (id: number): Promise<void> =>
+    request<void>(`/meals/${id}`, { method: 'DELETE' }),
 };
 
 // Fonction pour assigner automatiquement un médecin à une femme enceinte
