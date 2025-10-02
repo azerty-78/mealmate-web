@@ -12,37 +12,6 @@ import MedicationModal from '../components/MedicationModal';
 import GlucoseDetailsModal from '../components/GlucoseDetailsModal';
 import MealDetailsModal from '../components/MealDetailsModal';
 
-const Card: React.FC<{ title: string; subtitle?: string; className?: string; children?: React.ReactNode }> = ({ title, subtitle, className, children }) => (
-  <div className={`rounded-2xl p-4 sm:p-5 shadow border border-black/5 ${className || ''}`}>
-    <div className="mb-3">
-      <h3 className="text-xl font-semibold" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>{title}</h3>
-      {subtitle && <p className="text-sm text-gray-600">{subtitle}</p>}
-    </div>
-    {children}
-  </div>
-);
-
-const StatTile: React.FC<{ color: string; icon: React.ReactNode; label: string; value: string }> = ({ color, icon, label, value }) => (
-  <div className={`rounded-2xl p-4 text-white`} style={{ background: color }}>
-    <div className="flex items-center justify-between">
-      <div className="text-2xl">{icon}</div>
-      <div className="text-2xl font-semibold" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>{value}</div>
-    </div>
-    <div className="mt-2 text-white/90" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>{label}</div>
-  </div>
-);
-
-const CircularProgress: React.FC<{ percent: number }> = ({ percent }) => (
-  <div className="relative w-40 h-40 mx-auto">
-    <svg className="w-40 h-40 -rotate-90" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="45" stroke="#f1f5f9" strokeWidth="10" fill="none" />
-      <circle cx="50" cy="50" r="45" stroke="#ec4899" strokeWidth="10" fill="none" strokeLinecap="round" strokeDasharray={`${Math.PI * 2 * 45}`} strokeDashoffset={`${Math.PI * 2 * 45 * (1 - percent/100)}`} />
-    </svg>
-    <div className="absolute inset-0 flex items-center justify-center">
-      <span className="text-2xl font-bold text-gray-800" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>{Math.round(percent)}%</span>
-    </div>
-  </div>
-);
 
 const DiabeticDashboardPage: React.FC = memo(() => {
   const { user } = useAuth();
@@ -256,7 +225,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
           
           {/* Graphique en barres */}
           <div className="flex items-end justify-between space-x-2 h-32">
-            {glucoseReadings.slice(-5).map((reading, index) => {
+            {glucoseReadings.slice(-5).map((reading) => {
               const isHigh = reading.value > 140;
               const time = new Date(reading.timestamp).toLocaleTimeString('fr-FR', { 
                 hour: '2-digit', 
@@ -407,7 +376,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             </button>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {recommendedMeals.map((meal, index) => (
+            {recommendedMeals.map((meal) => (
               <div 
                 key={meal.id} 
                 className="p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors"
