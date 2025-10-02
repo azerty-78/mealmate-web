@@ -17,7 +17,7 @@ const AICoachChatPage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
-      text: 'Bonjour ! Je suis votre coach IA spécialisé dans la grossesse. Je peux vous conseiller sur la nutrition, les symptômes, les examens, le bien-être et tous vos questionnements. Posez-moi vos questions !',
+      text: 'Bonjour ! Je suis votre coach IA spécialisé dans la gestion du diabète. Je peux vous conseiller sur la nutrition, la glycémie, les médicaments, l\'exercice physique et tous vos questionnements sur le diabète. Posez-moi vos questions !',
       isUser: false,
       timestamp: new Date()
     }
@@ -32,14 +32,14 @@ const AICoachChatPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const suggestedQuestions = [
-    "Symptômes normaux?",
-    "Aliments à éviter?",
-    "Gérer les nausées?",
-    "Examens importants?",
-    "Exercices recommandés?",
-    "Préparer l'accouchement?",
-    "Troubles du sommeil?",
-    "Anxiété et stress?"
+    "Comment contrôler ma glycémie?",
+    "Aliments recommandés pour diabétiques?",
+    "Gérer l'hypoglycémie?",
+    "Exercices adaptés au diabète?",
+    "Complications du diabète?",
+    "Régime alimentaire optimal?",
+    "Médicaments et insuline?",
+    "Prévenir les complications?"
   ];
 
   const scrollToBottom = () => {

@@ -68,22 +68,22 @@
     },
     {
       "id": 3,
-      "username": "Dr Djeff Djadi Leteta",
-      "email": "dr.djeff.leteta@gmail.com",
+      "username": "Dr Bernard Arnaud",
+      "email": "dr.bernard.arnaud@gmail.com",
       "password": "user1234",
       "profileType": "doctor",
       "profileImage": null,
-      "firstName": "Djeff",
-      "lastName": "Djadi Leteta",
+      "firstName": "Bernard",
+      "lastName": "Arnaud",
       "phone": "+237 6XX XX XX XX",
       "region": "Littoral",
       "isActive": true,
       "createdAt": "2024-01-15T11:00:00.000Z",
       "updatedAt": "2025-10-01T09:53:14.682Z",
-      "specialty": "Pédiatrie",
+      "specialty": "Endocrinologie",
       "licenseNumber": "ORDRE-2024-001",
       "hospital": "Hôpital Central de Douala",
-      "yearsOfExperience": 3,
+      "yearsOfExperience": 8,
       "certifications": [],
       "languages": [],
       "consultationFee": 0,
@@ -194,7 +194,7 @@
           "available": false
         }
       },
-      "bio": "Médecin généraliste dédiée à la santé des personnes diabétiques. Avec 5 ans d'expérience, je me spécialise dans les soins préventifs et la gestion du diabète.",
+      "bio": "Endocrinologue spécialisé dans la gestion du diabète. Avec 8 ans d'expérience, je me consacre au suivi et au traitement des personnes diabétiques pour une meilleure qualité de vie.",
       "education": [
         {
           "degree": "Doctorat en Médecine",
@@ -543,7 +543,7 @@
       "lastHbA1cDate": "2024-09-15T00:00:00.000Z",
       "emergencyContacts": [
         {
-          "name": "Dr Djeff Djadi Leteta",
+          "name": "Dr Bernard Arnaud",
           "phone": "+237 6XX XX XX XX",
           "relationship": "Médecin traitant"
         }
