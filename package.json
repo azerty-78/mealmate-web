@@ -1,19 +1,41 @@
 {
   "name": "mealmate-web",
+  "description": "Application web complète de gestion du diabète avec IA, interfaces spécialisées pour patients, médecins et administrateurs",
+  "keywords": [
+    "diabetes",
+    "healthcare",
+    "medical",
+    "nutrition",
+    "ai",
+    "react",
+    "typescript",
+    "tailwindcss",
+    "gemini-ai",
+    "cameroon",
+    "diabète",
+    "santé",
+    "nutrition",
+    "médical"
+  ],
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "type-check": "tsc --noEmit",
     "preview": "vite preview",
     "db": "node simple-server.cjs",
     "dev:full": "concurrently \"npm run dev\" \"npm run db\"",
+    "clean": "rm -rf dist node_modules/.vite",
+    "reset": "npm run clean && npm install",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
