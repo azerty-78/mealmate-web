@@ -63,6 +63,7 @@ const emptyMeal: Omit<MealTemplate, 'id' | 'createdAt' | 'updatedAt'> = {
 };
 
 const AdminDashboardPage: React.FC = () => {
+  const toast = useToast();
   const [items, setItems] = useState<Campaign[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [healthCenters, setHealthCenters] = useState<HealthCenter[]>([]);
@@ -134,7 +135,6 @@ const AdminDashboardPage: React.FC = () => {
       setIsLoadingMeals(true);
       const data = await mealTemplateApi.getAll();
       setMeals(Array.isArray(data) ? data : []);
-      toast.show('Repas chargés', 'success');
     } catch (e: any) {
       setError(e?.message || 'Erreur de chargement des repas');
       toast.show('Erreur lors du chargement des repas', 'error');
@@ -291,8 +291,6 @@ const AdminDashboardPage: React.FC = () => {
       toast.show('Erreur lors de la suppression', 'error');
     }
   };
-
-  const toast = useToast();
 
   const userStats = useMemo(() => {
     const total = users.length;
@@ -1299,12 +1297,16 @@ const AdminDashboardPage: React.FC = () => {
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => {
+                          onClick={async () => {
                             if (confirm('Êtes-vous sûr de vouloir supprimer ce repas ?')) {
-                              mealTemplateApi.delete(meal.id).then(() => {
-                                fetchMeals();
-                                toast.show('Repas supprimé', 'success');
-                              });
+                              try {
+                                await mealTemplateApi.delete(meal.id);
+                                await fetchMeals();
+                                toast.show('Repas supprimé avec succès', 'success');
+                              } catch (error) {
+                                console.error('Erreur lors de la suppression:', error);
+                                toast.show('Erreur lors de la suppression du repas', 'error');
+                              }
                             }
                           }}
                           className="text-red-600 hover:text-red-900"
@@ -1434,6 +1436,16 @@ const AdminDashboardPage: React.FC = () => {
                 <button
                   onClick={async () => {
                     try {
+                      // Validation des champs requis
+                      if (!editingMeal.name.trim()) {
+                        toast.show('Le nom du repas est requis', 'error');
+                        return;
+                      }
+                      if (!editingMeal.description.trim()) {
+                        toast.show('La description est requise', 'error');
+                        return;
+                      }
+
                       if (editingMeal.id) {
                         await mealTemplateApi.update(editingMeal.id, editingMeal);
                         toast.show('Repas modifié avec succès', 'success');
@@ -1442,9 +1454,11 @@ const AdminDashboardPage: React.FC = () => {
                         toast.show('Repas créé avec succès', 'success');
                       }
                       setShowMealForm(false);
-                      fetchMeals();
+                      setEditingMeal(null);
+                      await fetchMeals();
                     } catch (error) {
-                      toast.show('Erreur lors de la sauvegarde', 'error');
+                      console.error('Erreur lors de la sauvegarde:', error);
+                      toast.show('Erreur lors de la sauvegarde du repas', 'error');
                     }
                   }}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"

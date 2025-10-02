@@ -241,6 +241,57 @@ const ProfilePage: React.FC = memo(() => {
     w.print();
   };
 
+  // Fonctions pour gérer les modaux
+  const handleMedicalParamsSave = async (updatedData: Partial<DiabeticRecord>) => {
+    if (!diabeticRecord) return;
+    try {
+      const updated = await diabeticApi.update(diabeticRecord.id, updatedData);
+      setDiabeticRecord(updated);
+      show('Paramètres médicaux mis à jour', 'success');
+    } catch (error) {
+      show('Erreur lors de la mise à jour', 'error');
+    }
+  };
+
+  const handleEmergencyContactsSave = async (contacts: any[]) => {
+    if (!diabeticRecord) return;
+    try {
+      const updated = await diabeticApi.update(diabeticRecord.id, {
+        emergencyContacts: contacts
+      });
+      setDiabeticRecord(updated);
+      show('Contacts d\'urgence mis à jour', 'success');
+    } catch (error) {
+      show('Erreur lors de la mise à jour des contacts', 'error');
+    }
+  };
+
+  const handleMedicationSave = async (medications: any[]) => {
+    if (!diabeticRecord) return;
+    try {
+      const updated = await diabeticApi.update(diabeticRecord.id, {
+        currentMedications: medications
+      });
+      setDiabeticRecord(updated);
+      show('Médicaments mis à jour', 'success');
+    } catch (error) {
+      show('Erreur lors de la mise à jour des médicaments', 'error');
+    }
+  };
+
+  const handleAddGlucoseReading = async (reading: Omit<GlucoseReading, 'id'>) => {
+    try {
+      const newReading = await glucoseApi.create({
+        ...reading,
+        userId: user!.id
+      });
+      setGlucoseReadings(prev => [...prev, newReading]);
+      show('Lecture de glycémie ajoutée', 'success');
+    } catch (error) {
+      show('Erreur lors de l\'ajout de la lecture', 'error');
+    }
+  };
+
   const getProfileTypeLabel = (profileType: string) => {
     switch (profileType) {
       case 'diabetic_person':
@@ -597,7 +648,7 @@ const ProfilePage: React.FC = memo(() => {
               <div className="p-3 bg-purple-50 rounded-lg">
                 <p className="text-sm text-gray-600">HbA1c actuel</p>
                 <p className="font-medium text-gray-800">{diabeticRecord.lastHbA1c}%</p>
-                <p className="text-xs text-gray-500">{new Date(diabeticRecord.lastHbA1cDate).toLocaleDateString()}</p>
+                <p className="text-xs text-gray-500">{diabeticRecord.lastHbA1cDate ? new Date(diabeticRecord.lastHbA1cDate).toLocaleDateString() : 'Non renseignée'}</p>
               </div>
               <div className="p-3 bg-orange-50 rounded-lg">
                 <p className="text-sm text-gray-600">HbA1c cible</p>
