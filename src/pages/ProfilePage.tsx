@@ -3,6 +3,10 @@ import { Edit, Person, Email, Phone, LocationOn, CameraAlt, Save, Close, Verifie
 import { useAuth } from '../hooks/useAuth';
 import { pregnancyApi, diabeticApi, glucoseApi, mealApi, medicationLogApi, type PregnancyRecord, type DiabeticRecord, type GlucoseReading, type Meal, type MedicationLog } from '../services/api';
 import { useToast } from '../components/ToastProvider';
+import MedicalParamsModal from '../components/MedicalParamsModal';
+import EmergencyContactsModal from '../components/EmergencyContactsModal';
+import MedicationModal from '../components/MedicationModal';
+import GlucoseDetailsModal from '../components/GlucoseDetailsModal';
 
 const ProfilePage: React.FC = memo(() => {
   const { user, updateProfile } = useAuth();
@@ -57,6 +61,12 @@ const ProfilePage: React.FC = memo(() => {
   });
   const [savingMedical, setSavingMedical] = useState(false);
   const [savingDiabetic, setSavingDiabetic] = useState(false);
+  
+  // États pour les modaux
+  const [isMedicalParamsModalOpen, setIsMedicalParamsModalOpen] = useState(false);
+  const [isEmergencyContactsModalOpen, setIsEmergencyContactsModalOpen] = useState(false);
+  const [isMedicationModalOpen, setIsMedicationModalOpen] = useState(false);
+  const [isGlucoseModalOpen, setIsGlucoseModalOpen] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);

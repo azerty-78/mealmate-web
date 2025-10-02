@@ -6,4 +6,6 @@ export { default as MealmateLogo } from './MealmateLogo';
 export { default as MedicationModal } from './MedicationModal';
 export { default as GlucoseDetailsModal } from './GlucoseDetailsModal';
 export { default as MealDetailsModal } from './MealDetailsModal';
+export { default as MedicalParamsModal } from './MedicalParamsModal';
+export { default as EmergencyContactsModal } from './EmergencyContactsModal';
 
