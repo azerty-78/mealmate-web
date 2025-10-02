@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { diabeticApi, glucoseApi, mealApi, medicationLogApi, type DiabeticRecord, type GlucoseReading, type Meal, type MedicationLog } from '../services/api';
+import { diabeticApi, glucoseApi, mealApi, mealTemplateApi, medicationLogApi, type DiabeticRecord, type GlucoseReading, type Meal, type MealTemplate, type MedicationLog } from '../services/api';
 import { 
   Favorite, 
   Info, 
@@ -8,6 +8,9 @@ import {
   CheckCircle, 
   Schedule
 } from '@mui/icons-material';
+import MedicationModal from '../components/MedicationModal';
+import GlucoseDetailsModal from '../components/GlucoseDetailsModal';
+import MealDetailsModal from '../components/MealDetailsModal';
 
 const Card: React.FC<{ title: string; subtitle?: string; className?: string; children?: React.ReactNode }> = ({ title, subtitle, className, children }) => (
   <div className={`rounded-2xl p-4 sm:p-5 shadow border border-black/5 ${className || ''}`}>
@@ -51,6 +54,13 @@ const DiabeticDashboardPage: React.FC = memo(() => {
   const [glucoseReadings, setGlucoseReadings] = useState<GlucoseReading[]>([]);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [medicationLogs, setMedicationLogs] = useState<MedicationLog[]>([]);
+  const [recommendedMeals, setRecommendedMeals] = useState<MealTemplate[]>([]);
+
+  // États pour les modaux
+  const [isMedicationModalOpen, setIsMedicationModalOpen] = useState(false);
+  const [isGlucoseModalOpen, setIsGlucoseModalOpen] = useState(false);
+  const [isMealModalOpen, setIsMealModalOpen] = useState(false);
+  const [selectedMeal, setSelectedMeal] = useState<MealTemplate | null>(null);
 
   // Données calculées
   const currentGlucose = glucoseReadings.length > 0 ? glucoseReadings[glucoseReadings.length - 1].value : 0;
@@ -67,10 +77,15 @@ const DiabeticDashboardPage: React.FC = memo(() => {
       [{ type: 'success', message: 'Glycémie dans la normale', time: new Date().toLocaleTimeString() }] : [])
   ];
 
-  const recommendedMeals = [
-    { name: 'Ndolé aux légumes', type: 'Plat principal', carbs: '25g', portion: '150g', calories: 320, ig: 'IG' },
-    { name: 'Salade de haricots verts', type: 'Accompagnement', carbs: '12g', portion: '200g', calories: 120 }
-  ];
+  // Fonction pour charger les repas recommandés
+  const loadRecommendedMeals = async () => {
+    try {
+      const allMeals = await mealTemplateApi.getDiabeticFriendly();
+      setRecommendedMeals(allMeals.slice(0, 4));
+    } catch (error) {
+      console.error('Erreur lors du chargement des repas recommandés:', error);
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -92,6 +107,9 @@ const DiabeticDashboardPage: React.FC = memo(() => {
         setMeals(mealsData);
         setMedicationLogs(medicationData);
         
+        // Charger les repas recommandés
+        await loadRecommendedMeals();
+        
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
       } finally {
@@ -101,6 +119,40 @@ const DiabeticDashboardPage: React.FC = memo(() => {
 
     loadData();
   }, [user]);
+
+  // Fonctions pour gérer les médicaments
+  const handleMedicationSave = async (medications: any[]) => {
+    if (!diabeticRecord) return;
+    
+    try {
+      const updated = await diabeticApi.update(diabeticRecord.id, {
+        ...diabeticRecord,
+        currentMedications: medications
+      });
+      setDiabeticRecord(updated);
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde des médicaments:', error);
+    }
+  };
+
+  // Fonction pour ajouter une lecture de glycémie
+  const handleAddGlucoseReading = async (reading: Omit<GlucoseReading, 'id'>) => {
+    try {
+      const newReading = await glucoseApi.create({
+        ...reading,
+        userId: user!.id
+      });
+      setGlucoseReadings(prev => [...prev, newReading]);
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de la lecture:', error);
+    }
+  };
+
+  // Fonction pour sélectionner un repas
+  const handleSelectMeal = (meal: MealTemplate) => {
+    // Ici vous pouvez ajouter la logique pour enregistrer le repas sélectionné
+    console.log('Repas sélectionné:', meal);
+  };
 
   if (loading) {
     return (
@@ -193,7 +245,11 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             <h3 className="text-lg font-bold text-gray-800" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
               Évolution Glycémie
             </h3>
-            <button className="text-blue-600 text-sm font-medium" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
+            <button 
+              onClick={() => setIsGlucoseModalOpen(true)}
+              className="text-blue-600 text-sm font-medium" 
+              style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}
+            >
               Détails
             </button>
           </div>
@@ -261,35 +317,40 @@ const DiabeticDashboardPage: React.FC = memo(() => {
 
         {/* Médicaments */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold text-gray-800 mb-4" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
-            Médicaments
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-bold text-gray-800" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
+              Médicaments
+            </h3>
+            <button 
+              onClick={() => setIsMedicationModalOpen(true)}
+              className="text-blue-600 text-sm font-medium"
+            >
+              Gérer
+            </button>
+          </div>
           <div className="space-y-3">
-            {medicationLogs.slice(-3).map((med) => {
-              const time = new Date(med.scheduledTime).toLocaleTimeString('fr-FR', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-              });
-              return (
-                <div key={med.id} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                      med.taken ? 'bg-green-500' : 'bg-orange-100'
-                    }`}>
-                      {med.taken ? (
-                        <CheckCircle className="w-4 h-4 text-white" />
-                      ) : (
-                        <Schedule className="w-4 h-4 text-orange-600" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800">{med.medicationName}</p>
-                      <p className="text-sm text-gray-600">{med.dosage} • {time}</p>
-                    </div>
+            {diabeticRecord?.currentMedications?.slice(0, 3).map((med, index) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                    med.isActive ? 'bg-green-500' : 'bg-gray-400'
+                  }`}>
+                    {med.isActive ? (
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    ) : (
+                      <Schedule className="w-4 h-4 text-white" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-800">{med.name}</p>
+                    <p className="text-sm text-gray-600">{med.dosage} • {med.frequency}</p>
+                    <p className="text-xs text-gray-500">Heures: {med.times.join(', ')}</p>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            )) || (
+              <p className="text-gray-500 text-center py-4">Aucun médicament enregistré</p>
+            )}
           </div>
         </div>
 
@@ -300,7 +361,14 @@ const DiabeticDashboardPage: React.FC = memo(() => {
           </h3>
           <div className="space-y-3">
             {alerts.length > 0 ? alerts.map((alert, index) => (
-              <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl">
+              <div 
+                key={index} 
+                className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors"
+                onClick={() => {
+                  // Ici vous pouvez ajouter une logique pour afficher plus de détails sur l'alerte
+                  console.log('Alerte cliquée:', alert);
+                }}
+              >
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                   alert.type === 'warning' ? 'bg-orange-100' :
                   alert.type === 'info' ? 'bg-blue-100' : 'bg-green-100'
@@ -317,6 +385,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
                   <p className="text-sm font-medium text-gray-800">{alert.message}</p>
                   <p className="text-xs text-gray-500">{alert.time}</p>
                 </div>
+                <div className="text-xs text-gray-400">Cliquer pour plus de détails</div>
               </div>
             )) : (
               <p className="text-gray-500 text-center py-4">Aucune alerte pour le moment</p>
@@ -339,19 +408,27 @@ const DiabeticDashboardPage: React.FC = memo(() => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             {recommendedMeals.map((meal, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-xl">
+              <div 
+                key={meal.id} 
+                className="p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors"
+                onClick={() => {
+                  setSelectedMeal(meal);
+                  setIsMealModalOpen(true);
+                }}
+              >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-gray-600">{meal.type}</span>
+                  <span className="text-xs text-gray-600 capitalize">{meal.category.replace('_', ' ')}</span>
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">{meal.ig}</span>
+                    <span className="text-white text-xs font-bold">IG</span>
                   </div>
                 </div>
                 <p className="font-medium text-gray-800 text-sm mb-1" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
                   {meal.name}
                 </p>
-                <p className="text-xs text-gray-600 mb-1">{meal.carbs} glucides</p>
-                <p className="text-xs text-gray-600 mb-1">Portion: {meal.portion}</p>
-                <p className="text-xs font-medium text-gray-800">{meal.calories} kcal</p>
+                <p className="text-xs text-gray-600 mb-1">{meal.nutritionalValues.carbs}g glucides</p>
+                <p className="text-xs text-gray-600 mb-1">Portion: {meal.servings} personnes</p>
+                <p className="text-xs font-medium text-gray-800">{meal.nutritionalValues.calories} kcal</p>
+                <p className="text-xs text-blue-600 mt-2">Cliquer pour plus de détails</p>
               </div>
             ))}
           </div>
@@ -417,6 +494,28 @@ const DiabeticDashboardPage: React.FC = memo(() => {
           </div>
         </div>
       </div>
+
+      {/* Modaux */}
+      <MedicationModal
+        isOpen={isMedicationModalOpen}
+        onClose={() => setIsMedicationModalOpen(false)}
+        medications={diabeticRecord?.currentMedications || []}
+        onSave={handleMedicationSave}
+      />
+
+      <GlucoseDetailsModal
+        isOpen={isGlucoseModalOpen}
+        onClose={() => setIsGlucoseModalOpen(false)}
+        readings={glucoseReadings}
+        onAddReading={handleAddGlucoseReading}
+      />
+
+      <MealDetailsModal
+        isOpen={isMealModalOpen}
+        onClose={() => setIsMealModalOpen(false)}
+        meal={selectedMeal}
+        onSelectMeal={handleSelectMeal}
+      />
     </div>
   );
 });

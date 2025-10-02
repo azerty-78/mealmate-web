@@ -959,6 +959,581 @@
       "isActive": true,
       "createdAt": "2024-12-19T10:00:00.000Z",
       "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "Poulet DG aux légumes",
+      "description": "Poulet sauté aux légumes verts, spécialité camerounaise",
+      "category": "plat_principal",
+      "cuisine": "camerounaise",
+      "difficulty": "moyen",
+      "prepTime": 25,
+      "cookTime": 20,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Poulet coupé en morceaux",
+          "quantity": "800g",
+          "type": "protéine"
+        },
+        {
+          "name": "Épinards",
+          "quantity": "300g",
+          "type": "légume"
+        },
+        {
+          "name": "Choux",
+          "quantity": "200g",
+          "type": "légume"
+        },
+        {
+          "name": "Carottes",
+          "quantity": "2 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "2 pièces",
+          "type": "aromatique"
+        },
+        {
+          "name": "Ail",
+          "quantity": "3 gousses",
+          "type": "aromatique"
+        },
+        {
+          "name": "Gingembre",
+          "quantity": "1 morceau",
+          "type": "aromatique"
+        },
+        {
+          "name": "Huile de palme",
+          "quantity": "3 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 280,
+        "proteins": 32,
+        "carbs": 18,
+        "fats": 12,
+        "fiber": 6,
+        "sugar": 8,
+        "sodium": 300,
+        "glycemicIndex": 30
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["riche_en_protéines", "faible_ig", "légumes_verts", "équilibré"],
+      "instructions": [
+        "Assaisonner le poulet avec ail, gingembre et épices",
+        "Faire revenir le poulet dans l'huile",
+        "Ajouter les oignons et laisser dorer",
+        "Incorporer les légumes par couches",
+        "Laisser mijoter 15 minutes"
+      ],
+      "tips": "Excellent apport en protéines et légumes verts, idéal pour le contrôle glycémique",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "name": "Sauce gombo aux légumes",
+      "description": "Sauce traditionnelle au gombo avec légumes et poisson",
+      "category": "plat_principal",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 20,
+      "cookTime": 25,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Gombo frais",
+          "quantity": "400g",
+          "type": "légume"
+        },
+        {
+          "name": "Poisson frais",
+          "quantity": "500g",
+          "type": "protéine"
+        },
+        {
+          "name": "Tomates",
+          "quantity": "3 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "2 pièces",
+          "type": "aromatique"
+        },
+        {
+          "name": "Ail",
+          "quantity": "2 gousses",
+          "type": "aromatique"
+        },
+        {
+          "name": "Piment vert",
+          "quantity": "2 pièces",
+          "type": "aromatique"
+        },
+        {
+          "name": "Huile de palme",
+          "quantity": "2 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 220,
+        "proteins": 28,
+        "carbs": 15,
+        "fats": 8,
+        "fiber": 7,
+        "sugar": 6,
+        "sodium": 250,
+        "glycemicIndex": 25
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["riche_en_fibres", "faible_ig", "protéines", "légumes_verts"],
+      "instructions": [
+        "Nettoyer et couper le gombo en rondelles",
+        "Faire revenir les oignons et l'ail",
+        "Ajouter les tomates et laisser mijoter",
+        "Incorporer le poisson et le gombo",
+        "Laisser cuire 20 minutes"
+      ],
+      "tips": "Le gombo est riche en fibres solubles, excellent pour la glycémie",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "name": "Riz complet aux légumes",
+      "description": "Riz complet accompagné de légumes de saison",
+      "category": "accompagnement",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 15,
+      "cookTime": 30,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Riz complet",
+          "quantity": "300g",
+          "type": "céréale"
+        },
+        {
+          "name": "Carottes",
+          "quantity": "2 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Haricots verts",
+          "quantity": "200g",
+          "type": "légume"
+        },
+        {
+          "name": "Choux",
+          "quantity": "150g",
+          "type": "légume"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "1 pièce",
+          "type": "aromatique"
+        },
+        {
+          "name": "Ail",
+          "quantity": "2 gousses",
+          "type": "aromatique"
+        },
+        {
+          "name": "Huile d'olive",
+          "quantity": "2 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 180,
+        "proteins": 8,
+        "carbs": 35,
+        "fats": 4,
+        "fiber": 6,
+        "sugar": 4,
+        "sodium": 100,
+        "glycemicIndex": 50
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["céréale_complète", "riche_en_fibres", "légumes", "équilibré"],
+      "instructions": [
+        "Faire cuire le riz complet",
+        "Faire revenir les légumes dans l'huile",
+        "Mélanger le riz avec les légumes",
+        "Assaisonner selon goût"
+      ],
+      "tips": "Le riz complet a un index glycémique plus bas que le riz blanc",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "name": "Sauce arachide aux légumes",
+      "description": "Sauce crémeuse à l'arachide avec légumes verts",
+      "category": "plat_principal",
+      "cuisine": "camerounaise",
+      "difficulty": "moyen",
+      "prepTime": 30,
+      "cookTime": 35,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Arachides décortiquées",
+          "quantity": "250g",
+          "type": "protéine"
+        },
+        {
+          "name": "Épinards",
+          "quantity": "400g",
+          "type": "légume"
+        },
+        {
+          "name": "Tomates",
+          "quantity": "3 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "2 pièces",
+          "type": "aromatique"
+        },
+        {
+          "name": "Ail",
+          "quantity": "3 gousses",
+          "type": "aromatique"
+        },
+        {
+          "name": "Gingembre",
+          "quantity": "1 morceau",
+          "type": "aromatique"
+        },
+        {
+          "name": "Huile de palme",
+          "quantity": "2 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 320,
+        "proteins": 18,
+        "carbs": 22,
+        "fats": 20,
+        "fiber": 8,
+        "sugar": 6,
+        "sodium": 200,
+        "glycemicIndex": 35
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["riche_en_protéines", "faible_ig", "légumes_verts", "acides_gras_sains"],
+      "instructions": [
+        "Faire griller et piler les arachides",
+        "Faire revenir les oignons, ail et gingembre",
+        "Ajouter les tomates et laisser mijoter",
+        "Incorporer les arachides et les épinards",
+        "Laisser mijoter 30 minutes"
+      ],
+      "tips": "Les arachides apportent des protéines et des acides gras sains",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "name": "Soupe de légumes traditionnelle",
+      "description": "Soupe nutritive aux légumes de saison",
+      "category": "soupe",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 20,
+      "cookTime": 25,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Courgettes",
+          "quantity": "2 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Carottes",
+          "quantity": "3 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Tomates",
+          "quantity": "2 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "1 pièce",
+          "type": "aromatique"
+        },
+        {
+          "name": "Ail",
+          "quantity": "2 gousses",
+          "type": "aromatique"
+        },
+        {
+          "name": "Persil frais",
+          "quantity": "1 bouquet",
+          "type": "aromatique"
+        },
+        {
+          "name": "Huile d'olive",
+          "quantity": "1 cuillère à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 80,
+        "proteins": 4,
+        "carbs": 12,
+        "fats": 3,
+        "fiber": 5,
+        "sugar": 8,
+        "sodium": 150,
+        "glycemicIndex": 25
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["très_faible_ig", "riche_en_fibres", "légumes", "hydratant"],
+      "instructions": [
+        "Couper tous les légumes en morceaux",
+        "Faire revenir les oignons et l'ail",
+        "Ajouter les légumes et couvrir d'eau",
+        "Laisser mijoter 20 minutes",
+        "Assaisonner et servir chaud"
+      ],
+      "tips": "Soupe légère et hydratante, parfaite pour le contrôle glycémique",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "name": "Poulet grillé aux herbes",
+      "description": "Poulet mariné aux herbes et épices camerounaises",
+      "category": "plat_principal",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 30,
+      "cookTime": 40,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Poulet entier",
+          "quantity": "1.2kg",
+          "type": "protéine"
+        },
+        {
+          "name": "Ail",
+          "quantity": "4 gousses",
+          "type": "aromatique"
+        },
+        {
+          "name": "Gingembre",
+          "quantity": "2 morceaux",
+          "type": "aromatique"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "2 pièces",
+          "type": "aromatique"
+        },
+        {
+          "name": "Piment rouge",
+          "quantity": "1 pièce",
+          "type": "aromatique"
+        },
+        {
+          "name": "Citron",
+          "quantity": "2 pièces",
+          "type": "aromatique"
+        },
+        {
+          "name": "Huile d'olive",
+          "quantity": "3 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 250,
+        "proteins": 35,
+        "carbs": 8,
+        "fats": 12,
+        "fiber": 2,
+        "sugar": 4,
+        "sodium": 180,
+        "glycemicIndex": 0
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["riche_en_protéines", "faible_ig", "sans_glucides", "grillé"],
+      "instructions": [
+        "Préparer la marinade avec ail, gingembre, oignons et piment",
+        "Badigeonner le poulet avec la marinade",
+        "Laisser mariner 2 heures au frais",
+        "Griller au four ou au barbecue 40 minutes",
+        "Servir avec des légumes"
+      ],
+      "tips": "Excellente source de protéines maigres, sans glucides",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "name": "Smoothie vert aux légumes",
+      "description": "Boisson nutritive aux légumes verts et fruits",
+      "category": "boisson",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 10,
+      "cookTime": 0,
+      "servings": 2,
+      "ingredients": [
+        {
+          "name": "Épinards frais",
+          "quantity": "100g",
+          "type": "légume"
+        },
+        {
+          "name": "Concombre",
+          "quantity": "1 pièce",
+          "type": "légume"
+        },
+        {
+          "name": "Avocat",
+          "quantity": "1/2 pièce",
+          "type": "fruit"
+        },
+        {
+          "name": "Citron",
+          "quantity": "1/2 pièce",
+          "type": "fruit"
+        },
+        {
+          "name": "Gingembre",
+          "quantity": "1 morceau",
+          "type": "aromatique"
+        },
+        {
+          "name": "Eau",
+          "quantity": "200ml",
+          "type": "liquide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 120,
+        "proteins": 4,
+        "carbs": 15,
+        "fats": 6,
+        "fiber": 8,
+        "sugar": 8,
+        "sodium": 20,
+        "glycemicIndex": 30
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["riche_en_fibres", "faible_ig", "antioxydants", "hydratant"],
+      "instructions": [
+        "Laver tous les légumes",
+        "Couper en morceaux",
+        "Mixer avec l'eau",
+        "Filtrer si nécessaire",
+        "Servir frais"
+      ],
+      "tips": "Boisson riche en nutriments et fibres, excellente pour la glycémie",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "name": "Légumes sautés aux épices",
+      "description": "Mélange de légumes sautés aux épices camerounaises",
+      "category": "accompagnement",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 15,
+      "cookTime": 15,
+      "servings": 4,
+      "ingredients": [
+        {
+          "name": "Brocolis",
+          "quantity": "200g",
+          "type": "légume"
+        },
+        {
+          "name": "Carottes",
+          "quantity": "2 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Poivrons",
+          "quantity": "2 pièces",
+          "type": "légume"
+        },
+        {
+          "name": "Choux",
+          "quantity": "150g",
+          "type": "légume"
+        },
+        {
+          "name": "Oignons",
+          "quantity": "1 pièce",
+          "type": "aromatique"
+        },
+        {
+          "name": "Ail",
+          "quantity": "2 gousses",
+          "type": "aromatique"
+        },
+        {
+          "name": "Huile d'olive",
+          "quantity": "2 cuillères à soupe",
+          "type": "lipide"
+        }
+      ],
+      "nutritionalValues": {
+        "calories": 90,
+        "proteins": 5,
+        "carbs": 12,
+        "fats": 4,
+        "fiber": 6,
+        "sugar": 8,
+        "sodium": 80,
+        "glycemicIndex": 20
+      },
+      "diabeticFriendly": true,
+      "suitableFor": ["type1", "type2"],
+      "tags": ["très_faible_ig", "riche_en_fibres", "légumes", "vitamines"],
+      "instructions": [
+        "Couper tous les légumes en morceaux",
+        "Faire chauffer l'huile dans une poêle",
+        "Faire revenir les oignons et l'ail",
+        "Ajouter les légumes par ordre de cuisson",
+        "Sauter 10-15 minutes"
+      ],
+      "tips": "Légumes croquants riches en vitamines et minéraux",
+      "isActive": true,
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
     }
   ],
   "appointments": [
@@ -966,46 +1541,46 @@
       "id": 1,
       "userId": 2,
       "doctorId": 3,
-      "type": "Consultation prénatale",
+      "type": "Consultation diabétologie",
       "date": "2025-10-09",
       "status": "scheduled",
-      "notes": "Contrôle de routine"
+      "notes": "Contrôle de routine du diabète"
     },
     {
       "id": 2,
       "userId": 2,
       "doctorId": 3,
-      "type": "Consultation prénatale",
+      "type": "Consultation diabétologie",
       "date": "2025-10-07T08:07:00.000Z",
       "status": "scheduled",
-      "notes": ""
+      "notes": "Suivi HbA1c"
     },
     {
       "id": 3,
       "userId": 2,
       "doctorId": 3,
-      "type": "Consultation prénatale",
+      "type": "Consultation diabétologie",
       "date": "2025-10-07T08:07:00.000Z",
       "status": "scheduled",
-      "notes": ""
+      "notes": "Ajustement des médicaments"
     },
     {
       "id": 4,
       "userId": 2,
       "doctorId": 3,
-      "type": "Échographie",
+      "type": "Analyse de sang",
       "date": "2025-10-07T08:07:00.000Z",
       "status": "scheduled",
-      "notes": ""
+      "notes": "HbA1c et glycémie"
     },
     {
       "id": 5,
       "userId": 2,
       "doctorId": 3,
-      "type": "Consultation prénatale",
+      "type": "Consultation diabétologie",
       "date": "2025-10-07T08:38:00.000Z",
       "status": "scheduled",
-      "notes": ""
+      "notes": "Éducation thérapeutique"
     },
     {
       "id": 6,
@@ -1014,7 +1589,7 @@
       "type": "Analyse de sang",
       "date": "2025-10-11T08:38:00.000Z",
       "status": "scheduled",
-      "notes": ""
+      "notes": "Contrôle glycémique et lipidique"
     }
   ],
   "medicalRecords": [
@@ -1023,32 +1598,35 @@
       "patientId": 2,
       "doctorId": 3,
       "recordType": "consultation",
-      "title": "Consultation prénatale - 24 semaines",
+      "title": "Consultation diabétologie - Suivi trimestriel",
       "date": "2025-09-30T10:00:00.000Z",
       "content": {
-        "chiefComplaint": "Contrôle de routine du diabète",
-        "history": "Patient de 28 ans, diabétique de type 2, suivi régulier depuis 2 ans",
+        "chiefComplaint": "Contrôle de routine du diabète de type 2",
+        "history": "Patient de 28 ans, diabétique de type 2 diagnostiqué en juin 2023, suivi régulier depuis 2 ans. Bonne observance thérapeutique.",
         "examination": {
           "vitalSigns": {
             "bloodPressure": "112/72 mmHg",
             "heartRate": "78 bpm",
             "temperature": "36.8°C",
             "weight": "62 kg",
-            "height": "165 cm"
+            "height": "165 cm",
+            "bmi": "22.8"
           },
-          "abdominalExamination": "Utérus palpable à 24 cm de hauteur utérine, présentation céphalique",
-          "fetalHeartRate": "140 bpm",
-          "cervicalExamination": "Col long, fermé"
+          "diabeticExamination": {
+            "feet": "Pas de lésions, sensibilité conservée",
+            "eyes": "Fond d'œil normal",
+            "kidneys": "Pas de protéinurie"
+          }
         },
-        "diagnosis": "Grossesse normale à 24 semaines",
-        "treatment": "Continuation de l'acide folique et du fer",
-        "followUp": "Prochaine consultation dans 4 semaines"
+        "diagnosis": "Diabète de type 2 bien contrôlé",
+        "treatment": "Continuation Metformine 500mg x2/jour, Insuline rapide 8 UI avant repas",
+        "followUp": "Prochaine consultation dans 3 mois, HbA1c dans 6 mois"
       },
       "attachments": [
         {
-          "type": "image",
-          "name": "echographie_24semaines.jpg",
-          "url": "/uploads/echographie_24semaines.jpg"
+          "type": "pdf",
+          "name": "consultation_diabetologie_sept2025.pdf",
+          "url": "/uploads/consultation_diabetologie_sept2025.pdf"
         }
       ],
       "createdAt": "2025-09-30T10:00:00.000Z",
@@ -1059,14 +1637,14 @@
       "patientId": 2,
       "doctorId": 3,
       "recordType": "laboratory",
-      "title": "Analyses de sang - 24 semaines",
+      "title": "Analyses de sang - Contrôle diabétique",
       "date": "2025-09-28T08:00:00.000Z",
       "content": {
         "tests": [
           {
-            "name": "Hémoglobine",
-            "value": "11.8 g/dL",
-            "normalRange": "11.0-13.0 g/dL",
+            "name": "HbA1c",
+            "value": "6.8%",
+            "normalRange": "< 7.0%",
             "status": "normal"
           },
           {
@@ -1076,19 +1654,43 @@
             "status": "normal"
           },
           {
-            "name": "Protéinurie",
-            "value": "Négative",
-            "normalRange": "Négative",
+            "name": "Cholestérol total",
+            "value": "180 mg/dL",
+            "normalRange": "< 200 mg/dL",
+            "status": "normal"
+          },
+          {
+            "name": "HDL cholestérol",
+            "value": "45 mg/dL",
+            "normalRange": "> 40 mg/dL",
+            "status": "normal"
+          },
+          {
+            "name": "LDL cholestérol",
+            "value": "110 mg/dL",
+            "normalRange": "< 100 mg/dL",
+            "status": "borderline"
+          },
+          {
+            "name": "Triglycérides",
+            "value": "125 mg/dL",
+            "normalRange": "< 150 mg/dL",
+            "status": "normal"
+          },
+          {
+            "name": "Créatinine",
+            "value": "0.9 mg/dL",
+            "normalRange": "0.6-1.2 mg/dL",
             "status": "normal"
           }
         ],
-        "interpretation": "Analyses normales pour le suivi du diabète"
+        "interpretation": "Bien contrôlé. LDL légèrement élevé, surveiller l'alimentation"
       },
       "attachments": [
         {
           "type": "pdf",
-          "name": "resultats_analyses_24semaines.pdf",
-          "url": "/uploads/resultats_analyses_24semaines.pdf"
+          "name": "resultats_analyses_diabete_sept2025.pdf",
+          "url": "/uploads/resultats_analyses_diabete_sept2025.pdf"
         }
       ],
       "createdAt": "2025-09-28T08:00:00.000Z",
@@ -1098,26 +1700,30 @@
       "id": 3,
       "patientId": 2,
       "doctorId": 3,
-      "recordType": "ultrasound",
-      "title": "Échographie morphologique - 22 semaines",
+      "recordType": "consultation",
+      "title": "Éducation thérapeutique - Gestion du diabète",
       "date": "2025-09-15T14:30:00.000Z",
       "content": {
-        "gestationalAge": "22 semaines + 3 jours",
-        "fetalMeasurements": {
-          "biparietalDiameter": "5.2 cm",
-          "headCircumference": "19.8 cm",
-          "abdominalCircumference": "17.2 cm",
-          "femurLength": "3.8 cm"
-        },
-        "estimatedWeight": "600 g",
-        "findings": "Anatomie fœtale normale, développement conforme au terme",
-        "recommendations": "Continuation du suivi normal"
+        "sessionType": "Éducation thérapeutique individuelle",
+        "topics": [
+          "Auto-surveillance glycémique",
+          "Alimentation adaptée au diabète",
+          "Gestion des hypoglycémies",
+          "Activité physique recommandée"
+        ],
+        "findings": "Patient motivée et réceptive aux conseils",
+        "recommendations": [
+          "Mesurer la glycémie 2 fois par jour",
+          "Privilégier les aliments à index glycémique bas",
+          "30 minutes d'activité physique par jour",
+          "Contacter le médecin si glycémie > 250 mg/dL"
+        ]
       },
       "attachments": [
         {
-          "type": "image",
-          "name": "echographie_morphologique_22sem.jpg",
-          "url": "/uploads/echographie_morphologique_22sem.jpg"
+          "type": "pdf",
+          "name": "education_therapeutique_sept2025.pdf",
+          "url": "/uploads/education_therapeutique_sept2025.pdf"
         }
       ],
       "createdAt": "2025-09-15T14:30:00.000Z",
@@ -1132,21 +1738,21 @@
       "date": "2025-09-30T10:00:00.000Z",
       "medications": [
         {
-          "name": "Acide Folique",
-          "dosage": "400 µg",
-          "frequency": "1 comprimé par jour",
-          "duration": "Traitement continu du diabète",
-          "instructions": "À prendre le matin avec un verre d'eau"
+          "name": "Metformine",
+          "dosage": "500 mg",
+          "frequency": "2 comprimés par jour",
+          "duration": "Traitement continu",
+          "instructions": "À prendre matin et soir avec les repas"
         },
         {
-          "name": "Sulfate de Fer",
-          "dosage": "65 mg",
-          "frequency": "1 comprimé par jour",
-          "duration": "3 mois",
-          "instructions": "À prendre le soir, de préférence à jeun"
+          "name": "Insuline rapide",
+          "dosage": "8 UI",
+          "frequency": "Avant chaque repas principal",
+          "duration": "Traitement continu",
+          "instructions": "Injection sous-cutanée 15 minutes avant les repas"
         }
       ],
-      "notes": "Prescription de routine pour diabète de type 2",
+      "notes": "Prescription de routine pour diabète de type 2 - Bon contrôle glycémique",
       "createdAt": "2025-09-30T10:00:00.000Z"
     }
   ],

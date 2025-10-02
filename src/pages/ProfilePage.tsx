@@ -65,15 +65,15 @@ const ProfilePage: React.FC = memo(() => {
   useEffect(() => {
     const load = async () => {
       if (!user || user.profileType !== 'diabetic_person') return;
-      const pr = await pregnancyApi.getByUserId(user.id);
-      setRecord(pr);
+      const dr = await diabeticApi.getByUserId(user.id);
+      setDiabeticRecord(dr);
       setMedParamsForm({
-        systolicMmHg: pr?.medicalParams?.systolicMmHg?.toString() || '',
-        diastolicMmHg: pr?.medicalParams?.diastolicMmHg?.toString() || '',
-        fastingGlucoseMgDl: pr?.medicalParams?.fastingGlucoseMgDl?.toString() || '',
-        hemoglobinGdl: pr?.medicalParams?.hemoglobinGdl?.toString() || '',
-        babyName: pr?.babyName || '',
-        weightKg: pr?.weightKg?.toString() || '',
+        systolicMmHg: '',
+        diastolicMmHg: '',
+        fastingGlucoseMgDl: '',
+        hemoglobinGdl: '',
+        babyName: '',
+        weightKg: '',
       });
     };
     load();
@@ -187,26 +187,24 @@ const ProfilePage: React.FC = memo(() => {
   };
 
   const saveMedicalParams = async () => {
-    if (!user || !record) return;
+    if (!user || !diabeticRecord) return;
     setSavingMedical(true);
     try {
-      const updated = await pregnancyApi.update(record.id, {
-        babyName: medParamsForm.babyName || undefined,
-        weightKg: medParamsForm.weightKg ? Number(medParamsForm.weightKg) : record.weightKg,
-        medicalParams: {
-          systolicMmHg: medParamsForm.systolicMmHg ? Number(medParamsForm.systolicMmHg) : (record.medicalParams?.systolicMmHg || 0),
-          diastolicMmHg: medParamsForm.diastolicMmHg ? Number(medParamsForm.diastolicMmHg) : (record.medicalParams?.diastolicMmHg || 0),
-          fastingGlucoseMgDl: medParamsForm.fastingGlucoseMgDl ? Number(medParamsForm.fastingGlucoseMgDl) : (record.medicalParams?.fastingGlucoseMgDl || 0),
-          hemoglobinGdl: medParamsForm.hemoglobinGdl ? Number(medParamsForm.hemoglobinGdl) : (record.medicalParams?.hemoglobinGdl || 0),
-          bmi: record.bmi,
-          preExistingConditions: record.medicalParams?.preExistingConditions || [],
-          allergies: record.medicalParams?.allergies || [],
-          riskFlags: record.medicalParams?.riskFlags || [],
-        }
+      const updated = await diabeticApi.update(diabeticRecord.id, {
+        bloodGlucoseTargets: {
+          fasting: { min: 80, max: 130 },
+          beforeMeals: { min: 80, max: 130 },
+          afterMeals: { min: 80, max: 180 }
+        },
+        hba1cTarget: 7.0,
+        lastHbA1c: diabeticRecord.lastHbA1c,
+        lastHbA1cDate: diabeticRecord.lastHbA1cDate,
+        emergencyContacts: diabeticRecord.emergencyContacts,
+        notes: diabeticRecord.notes
       });
-      setRecord(updated);
+      setDiabeticRecord(updated);
       // Notifier le dashboard qu'il doit se rafraîchir
-      window.dispatchEvent(new Event('pregnancyDataUpdated'));
+      window.dispatchEvent(new Event('diabeticDataUpdated'));
       show('Paramètres médicaux sauvegardés', 'success');
     } finally {
       setSavingMedical(false);
@@ -216,16 +214,18 @@ const ProfilePage: React.FC = memo(() => {
   const exportPdf = () => {
     // Simple export: ouvrir une nouvelle fenêtre avec contenu imprimable
     const w = window.open('', '_blank');
-    if (!w || !record) return;
-    w.document.write(`<html><head><title>Dossier grossesse</title></head><body>`);
+    if (!w || !diabeticRecord) return;
+    w.document.write(`<html><head><title>Dossier diabétique</title></head><body>`);
     w.document.write(`<h1>Dossier de ${user?.firstName || ''} ${user?.lastName || ''}</h1>`);
-    w.document.write(`<p>DPA: ${record.dueDate} — Semaine: ${record.currentWeek}</p>`);
-    w.document.write(`<p>Bébé: ${record.babyName || '-'}</p>`);
+    w.document.write(`<p>Type de diabète: ${diabeticRecord.diabetesType}</p>`);
+    w.document.write(`<p>Date de diagnostic: ${new Date(diabeticRecord.diagnosisDate).toLocaleDateString()}</p>`);
     w.document.write(`<h3>Paramètres médicaux</h3>`);
-    w.document.write(`<pre>${JSON.stringify(record.medicalParams, null, 2)}</pre>`);
-    if (record.ultrasounds?.length) {
-      w.document.write(`<h3>Échographies</h3><pre>${JSON.stringify(record.ultrasounds, null, 2)}</pre>`);
-    }
+    w.document.write(`<p>HbA1c actuel: ${diabeticRecord.lastHbA1c}%</p>`);
+    w.document.write(`<p>HbA1c cible: ${diabeticRecord.hba1cTarget}%</p>`);
+    w.document.write(`<h3>Médicaments actuels</h3>`);
+    w.document.write(`<pre>${JSON.stringify(diabeticRecord.currentMedications, null, 2)}</pre>`);
+    w.document.write(`<h3>Contacts d'urgence</h3>`);
+    w.document.write(`<pre>${JSON.stringify(diabeticRecord.emergencyContacts, null, 2)}</pre>`);
     w.document.write(`</body></html>`);
     w.document.close();
     w.print();
@@ -566,44 +566,95 @@ const ProfilePage: React.FC = memo(() => {
         )}
 
         {/* Section Paramètres médicaux (visible pour personne diabétique) */}
-        {user.profileType === 'diabetic_person' && (
+        {user.profileType === 'diabetic_person' && diabeticRecord && (
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5">
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center">Paramètres médicaux</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-sm text-gray-600">Nom du bébé</label>
-                <input value={medParamsForm.babyName} onChange={e=> setMedParamsForm({ ...medParamsForm, babyName: e.target.value })} className="w-full rounded-lg border border-gray-300 p-2" />
+            
+            {/* Informations générales du diabète */}
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <p className="text-sm text-gray-600">Type de diabète</p>
+                <p className="font-medium text-gray-800 capitalize">{diabeticRecord.diabetesType}</p>
               </div>
-              <div>
-                <label className="text-sm text-gray-600">Poids (kg)</label>
-                <input type="number" value={medParamsForm.weightKg} onChange={e=> setMedParamsForm({ ...medParamsForm, weightKg: e.target.value })} className="w-full rounded-lg border border-gray-300 p-2" />
-              </div>
-              <div>
-                <label className="text-sm text-gray-600">Tension systolique</label>
-                <input type="number" value={medParamsForm.systolicMmHg} onChange={e=> setMedParamsForm({ ...medParamsForm, systolicMmHg: e.target.value })} className="w-full rounded-lg border border-gray-300 p-2" />
-              </div>
-              <div>
-                <label className="text-sm text-gray-600">Tension diastolique</label>
-                <input type="number" value={medParamsForm.diastolicMmHg} onChange={e=> setMedParamsForm({ ...medParamsForm, diastolicMmHg: e.target.value })} className="w-full rounded-lg border border-gray-300 p-2" />
-              </div>
-              <div>
-                <label className="text-sm text-gray-600">Glycémie à jeun (mg/dL)</label>
-                <input type="number" value={medParamsForm.fastingGlucoseMgDl} onChange={e=> setMedParamsForm({ ...medParamsForm, fastingGlucoseMgDl: e.target.value })} className="w-full rounded-lg border border-gray-300 p-2" />
-              </div>
-              <div>
-                <label className="text-sm text-gray-600">Hémoglobine (g/dL)</label>
-                <input type="number" value={medParamsForm.hemoglobinGdl} onChange={e=> setMedParamsForm({ ...medParamsForm, hemoglobinGdl: e.target.value })} className="w-full rounded-lg border border-gray-300 p-2" />
+              <div className="p-3 bg-green-50 rounded-lg">
+                <p className="text-sm text-gray-600">Date de diagnostic</p>
+                <p className="font-medium text-gray-800">{new Date(diabeticRecord.diagnosisDate).toLocaleDateString()}</p>
               </div>
             </div>
+
+            {/* HbA1c */}
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="p-3 bg-purple-50 rounded-lg">
+                <p className="text-sm text-gray-600">HbA1c actuel</p>
+                <p className="font-medium text-gray-800">{diabeticRecord.lastHbA1c}%</p>
+                <p className="text-xs text-gray-500">{new Date(diabeticRecord.lastHbA1cDate).toLocaleDateString()}</p>
+              </div>
+              <div className="p-3 bg-orange-50 rounded-lg">
+                <p className="text-sm text-gray-600">HbA1c cible</p>
+                <p className="font-medium text-gray-800">{diabeticRecord.hba1cTarget}%</p>
+              </div>
+            </div>
+
+            {/* Objectifs glycémiques */}
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-gray-600 mb-2">Objectifs glycémiques</h4>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="p-2 bg-gray-50 rounded-lg text-center">
+                  <p className="text-xs text-gray-600">À jeun</p>
+                  <p className="text-sm font-medium">{diabeticRecord.bloodGlucoseTargets.fasting.min}-{diabeticRecord.bloodGlucoseTargets.fasting.max} mg/dL</p>
+                </div>
+                <div className="p-2 bg-gray-50 rounded-lg text-center">
+                  <p className="text-xs text-gray-600">Avant repas</p>
+                  <p className="text-sm font-medium">{diabeticRecord.bloodGlucoseTargets.beforeMeals.min}-{diabeticRecord.bloodGlucoseTargets.beforeMeals.max} mg/dL</p>
+                </div>
+                <div className="p-2 bg-gray-50 rounded-lg text-center">
+                  <p className="text-xs text-gray-600">Après repas</p>
+                  <p className="text-sm font-medium">{diabeticRecord.bloodGlucoseTargets.afterMeals.min}-{diabeticRecord.bloodGlucoseTargets.afterMeals.max} mg/dL</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Médicaments actuels */}
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-gray-600 mb-2">Médicaments actuels</h4>
+              <div className="space-y-2">
+                {diabeticRecord.currentMedications.map((med, index) => (
+                  <div key={index} className="p-3 bg-gray-50 rounded-lg">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-800">{med.name}</p>
+                        <p className="text-sm text-gray-600">{med.dosage} • {med.frequency}</p>
+                        <p className="text-xs text-gray-500">Heures: {med.times.join(', ')}</p>
+                      </div>
+                      <div className={`px-2 py-1 rounded-full text-xs ${
+                        med.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {med.isActive ? 'Actif' : 'Inactif'}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Contacts d'urgence */}
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-gray-600 mb-2">Contacts d'urgence</h4>
+              <div className="space-y-2">
+                {diabeticRecord.emergencyContacts.map((contact, index) => (
+                  <div key={index} className="p-3 bg-red-50 rounded-lg">
+                    <p className="font-medium text-gray-800">{contact.name}</p>
+                    <p className="text-sm text-gray-600">{contact.phone}</p>
+                    <p className="text-xs text-gray-500">{contact.relationship}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <div className="mt-4 flex items-center gap-3">
-              <button onClick={saveMedicalParams} disabled={savingMedical || !record} className="px-4 py-2 rounded-xl bg-green-600 text-white disabled:opacity-50">{savingMedical ? 'Sauvegarde…' : 'Enregistrer'}</button>
+              <button onClick={saveMedicalParams} disabled={savingMedical || !diabeticRecord} className="px-4 py-2 rounded-xl bg-green-600 text-white disabled:opacity-50">{savingMedical ? 'Sauvegarde…' : 'Enregistrer'}</button>
               <button onClick={exportPdf} className="px-4 py-2 rounded-xl bg-red-600 text-white flex items-center gap-2"><PictureAsPdf className="w-4 h-4" /> Exporter PDF</button>
             </div>
-            {record && (
-              <div className="mt-4 text-sm text-gray-700">
-                <div>Dernière écho: {record.ultrasound?.date ? new Date(record.ultrasound.date).toLocaleDateString() : '—'}; Taille: {record.ultrasound?.lengthCm || '—'} cm; Poids estimé: {record.ultrasound?.estimatedWeightGrams || '—'} g</div>
-              </div>
-            )}
           </div>
         )}
       </div>
