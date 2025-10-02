@@ -369,7 +369,10 @@ const DiabeticDashboardPage: React.FC = memo(() => {
               Plats Recommandés (Cuisine Camerounaise)
             </h3>
             <button 
-              onClick={() => {/* TODO: Ouvrir modal de sélection de repas */}}
+              onClick={() => {
+                // Charger tous les repas recommandés et ouvrir une vue étendue
+                loadRecommendedMeals();
+              }}
               className="text-blue-600 text-sm font-medium"
             >
               Voir tous
@@ -410,7 +413,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
           </h3>
           <div className="grid grid-cols-2 gap-4">
             <button 
-              onClick={() => {/* TODO: Ouvrir modal ajout glycémie */}}
+              onClick={() => setIsGlucoseModalOpen(true)}
               className="p-4 bg-green-50 rounded-xl border border-green-200 hover:bg-green-100 transition-colors"
             >
               <div className="flex items-center justify-center mb-2">
@@ -436,7 +439,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             </button>
             
             <button 
-              onClick={() => {/* TODO: Ouvrir modal ajout médicament */}}
+              onClick={() => setIsMedicationModalOpen(true)}
               className="p-4 bg-purple-50 rounded-xl border border-purple-200 hover:bg-purple-100 transition-colors"
             >
               <div className="flex items-center justify-center mb-2">

@@ -37,23 +37,38 @@
             "name": "Metformine",
             "dosage": "500mg",
             "frequency": "2 fois par jour",
-            "times": ["08:00", "20:00"],
+            "times": [
+              "08:00",
+              "20:00"
+            ],
             "isActive": true
           },
           {
             "name": "Insuline rapide",
             "dosage": "8 UI",
             "frequency": "Avant repas",
-            "times": ["12:00", "19:00"],
+            "times": [
+              "12:00",
+              "19:00"
+            ],
             "isActive": true
           }
         ],
         "bloodGlucoseTargets": {
-          "fasting": { "min": 80, "max": 130 },
-          "beforeMeals": { "min": 80, "max": 130 },
-          "afterMeals": { "min": 80, "max": 180 }
+          "fasting": {
+            "min": 80,
+            "max": 130
+          },
+          "beforeMeals": {
+            "min": 80,
+            "max": 130
+          },
+          "afterMeals": {
+            "min": 80,
+            "max": 180
+          }
         },
-        "hba1cTarget": 7.0,
+        "hba1cTarget": 7,
         "lastHbA1c": 6.8,
         "lastHbA1cDate": "2024-09-15T00:00:00.000Z",
         "emergencyContacts": [
@@ -522,23 +537,38 @@
           "name": "Metformine",
           "dosage": "500mg",
           "frequency": "2 fois par jour",
-          "times": ["08:00", "20:00"],
+          "times": [
+            "08:00",
+            "20:00"
+          ],
           "isActive": true
         },
         {
           "name": "Insuline rapide",
           "dosage": "8 UI",
           "frequency": "Avant repas",
-          "times": ["12:00", "19:00"],
+          "times": [
+            "12:00",
+            "19:00"
+          ],
           "isActive": true
         }
       ],
       "bloodGlucoseTargets": {
-        "fasting": { "min": 80, "max": 130 },
-        "beforeMeals": { "min": 80, "max": 130 },
-        "afterMeals": { "min": 80, "max": 180 }
+        "fasting": {
+          "min": 80,
+          "max": 130
+        },
+        "beforeMeals": {
+          "min": 80,
+          "max": 130
+        },
+        "afterMeals": {
+          "min": 80,
+          "max": 180
+        }
       },
-      "hba1cTarget": 7.0,
+      "hba1cTarget": 7,
       "lastHbA1c": 6.8,
       "lastHbA1cDate": "2024-09-15T00:00:00.000Z",
       "emergencyContacts": [
@@ -593,86 +623,6 @@
       "type": "before_meal",
       "timestamp": "2024-12-19T18:00:00.000Z",
       "notes": "Avant dîner"
-    }
-  ],
-  "meals": [
-    {
-      "id": 1,
-      "userId": 2,
-      "name": "Eru aux légumes",
-      "type": "breakfast",
-      "timestamp": "2024-12-19T07:30:00.000Z",
-      "calories": 280,
-      "carbs": 30,
-      "glucoseBefore": 135,
-      "glucoseAfter": 135,
-      "notes": "Petit-déjeuner traditionnel"
-    },
-    {
-      "id": 2,
-      "userId": 2,
-      "name": "Ndolé aux légumes",
-      "type": "lunch",
-      "timestamp": "2024-12-19T12:30:00.000Z",
-      "calories": 320,
-      "carbs": 35,
-      "glucoseBefore": 110,
-      "glucoseAfter": 155,
-      "notes": "Déjeuner avec légumes verts"
-    },
-    {
-      "id": 3,
-      "userId": 2,
-      "name": "Poisson à la sauce tomate",
-      "type": "dinner",
-      "timestamp": "2024-12-19T19:00:00.000Z",
-      "calories": 250,
-      "carbs": 20,
-      "glucoseBefore": 105,
-      "glucoseAfter": 145,
-      "notes": "Dîner léger"
-    }
-  ],
-  "medicationLogs": [
-    {
-      "id": 1,
-      "userId": 2,
-      "medicationName": "Metformine",
-      "dosage": "500mg",
-      "scheduledTime": "2024-12-19T08:00:00.000Z",
-      "takenTime": "2024-12-19T08:05:00.000Z",
-      "taken": true,
-      "notes": "Prise normale"
-    },
-    {
-      "id": 2,
-      "userId": 2,
-      "medicationName": "Insuline rapide",
-      "dosage": "8 UI",
-      "scheduledTime": "2024-12-19T12:00:00.000Z",
-      "takenTime": "2024-12-19T12:02:00.000Z",
-      "taken": true,
-      "notes": "Avant déjeuner"
-    },
-    {
-      "id": 3,
-      "userId": 2,
-      "medicationName": "Insuline rapide",
-      "dosage": "8 UI",
-      "scheduledTime": "2024-12-19T19:00:00.000Z",
-      "takenTime": null,
-      "taken": false,
-      "notes": "À prendre avant dîner"
-    },
-    {
-      "id": 4,
-      "userId": 2,
-      "medicationName": "Metformine",
-      "dosage": "500mg",
-      "scheduledTime": "2024-12-19T20:00:00.000Z",
-      "takenTime": null,
-      "taken": false,
-      "notes": "À prendre ce soir"
     }
   ],
   "meals": [
@@ -734,8 +684,16 @@
         "glycemicIndex": 35
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["riche_en_fibres", "faible_ig", "protéines", "légumes"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "riche_en_fibres",
+        "faible_ig",
+        "protéines",
+        "légumes"
+      ],
       "instructions": [
         "Nettoyer et laver les feuilles de ndolé",
         "Faire griller les arachides et les piler",
@@ -807,8 +765,16 @@
         "glycemicIndex": 30
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["riche_en_fibres", "faible_ig", "protéines", "légumes_verts"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "riche_en_fibres",
+        "faible_ig",
+        "protéines",
+        "légumes_verts"
+      ],
       "instructions": [
         "Laver et hacher les feuilles d'eru et épinards",
         "Faire revenir les oignons et tomates",
@@ -879,8 +845,16 @@
         "glycemicIndex": 25
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["riche_en_protéines", "faible_ig", "oméga3", "légumes"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "riche_en_protéines",
+        "faible_ig",
+        "oméga3",
+        "légumes"
+      ],
       "instructions": [
         "Nettoyer et assaisonner le poisson",
         "Couper les légumes en morceaux",
@@ -946,8 +920,16 @@
         "glycemicIndex": 20
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["riche_en_fibres", "très_faible_ig", "légumes", "antioxydants"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "riche_en_fibres",
+        "très_faible_ig",
+        "légumes",
+        "antioxydants"
+      ],
       "instructions": [
         "Faire blanchir les haricots verts",
         "Couper les tomates et oignons",
@@ -1023,8 +1005,16 @@
         "glycemicIndex": 30
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["riche_en_protéines", "faible_ig", "légumes_verts", "équilibré"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "riche_en_protéines",
+        "faible_ig",
+        "légumes_verts",
+        "équilibré"
+      ],
       "instructions": [
         "Assaisonner le poulet avec ail, gingembre et épices",
         "Faire revenir le poulet dans l'huile",
@@ -1095,8 +1085,16 @@
         "glycemicIndex": 25
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["riche_en_fibres", "faible_ig", "protéines", "légumes_verts"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "riche_en_fibres",
+        "faible_ig",
+        "protéines",
+        "légumes_verts"
+      ],
       "instructions": [
         "Nettoyer et couper le gombo en rondelles",
         "Faire revenir les oignons et l'ail",
@@ -1167,8 +1165,16 @@
         "glycemicIndex": 50
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["céréale_complète", "riche_en_fibres", "légumes", "équilibré"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "céréale_complète",
+        "riche_en_fibres",
+        "légumes",
+        "équilibré"
+      ],
       "instructions": [
         "Faire cuire le riz complet",
         "Faire revenir les légumes dans l'huile",
@@ -1238,8 +1244,16 @@
         "glycemicIndex": 35
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["riche_en_protéines", "faible_ig", "légumes_verts", "acides_gras_sains"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "riche_en_protéines",
+        "faible_ig",
+        "légumes_verts",
+        "acides_gras_sains"
+      ],
       "instructions": [
         "Faire griller et piler les arachides",
         "Faire revenir les oignons, ail et gingembre",
@@ -1310,8 +1324,16 @@
         "glycemicIndex": 25
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["très_faible_ig", "riche_en_fibres", "légumes", "hydratant"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "très_faible_ig",
+        "riche_en_fibres",
+        "légumes",
+        "hydratant"
+      ],
       "instructions": [
         "Couper tous les légumes en morceaux",
         "Faire revenir les oignons et l'ail",
@@ -1382,8 +1404,16 @@
         "glycemicIndex": 0
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["riche_en_protéines", "faible_ig", "sans_glucides", "grillé"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "riche_en_protéines",
+        "faible_ig",
+        "sans_glucides",
+        "grillé"
+      ],
       "instructions": [
         "Préparer la marinade avec ail, gingembre, oignons et piment",
         "Badigeonner le poulet avec la marinade",
@@ -1449,8 +1479,16 @@
         "glycemicIndex": 30
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["riche_en_fibres", "faible_ig", "antioxydants", "hydratant"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "riche_en_fibres",
+        "faible_ig",
+        "antioxydants",
+        "hydratant"
+      ],
       "instructions": [
         "Laver tous les légumes",
         "Couper en morceaux",
@@ -1521,8 +1559,16 @@
         "glycemicIndex": 20
       },
       "diabeticFriendly": true,
-      "suitableFor": ["type1", "type2"],
-      "tags": ["très_faible_ig", "riche_en_fibres", "légumes", "vitamines"],
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [
+        "très_faible_ig",
+        "riche_en_fibres",
+        "légumes",
+        "vitamines"
+      ],
       "instructions": [
         "Couper tous les légumes en morceaux",
         "Faire chauffer l'huile dans une poêle",
@@ -1534,6 +1580,81 @@
       "isActive": true,
       "createdAt": "2024-12-19T10:00:00.000Z",
       "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "id": 0,
+      "name": "koki",
+      "description": "hgjkhgfbvnjjk",
+      "category": "plat_principal",
+      "cuisine": "camerounaise",
+      "difficulty": "facile",
+      "prepTime": 0,
+      "cookTime": 0,
+      "servings": 1,
+      "ingredients": [],
+      "nutritionalValues": {
+        "calories": 498,
+        "proteins": 1,
+        "carbs": 200,
+        "fats": 0,
+        "fiber": 0,
+        "sugar": 0,
+        "sodium": 0,
+        "glycemicIndex": 1
+      },
+      "diabeticFriendly": true,
+      "suitableFor": [
+        "type1",
+        "type2"
+      ],
+      "tags": [],
+      "instructions": [],
+      "tips": "",
+      "isActive": true,
+      "createdAt": "2025-10-02T10:08:16.216Z",
+      "updatedAt": "2025-10-02T10:08:16.216Z"
+    }
+  ],
+  "medicationLogs": [
+    {
+      "id": 1,
+      "userId": 2,
+      "medicationName": "Metformine",
+      "dosage": "500mg",
+      "scheduledTime": "2024-12-19T08:00:00.000Z",
+      "takenTime": "2024-12-19T08:05:00.000Z",
+      "taken": true,
+      "notes": "Prise normale"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "medicationName": "Insuline rapide",
+      "dosage": "8 UI",
+      "scheduledTime": "2024-12-19T12:00:00.000Z",
+      "takenTime": "2024-12-19T12:02:00.000Z",
+      "taken": true,
+      "notes": "Avant déjeuner"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "medicationName": "Insuline rapide",
+      "dosage": "8 UI",
+      "scheduledTime": "2024-12-19T19:00:00.000Z",
+      "takenTime": null,
+      "taken": false,
+      "notes": "À prendre avant dîner"
+    },
+    {
+      "id": 4,
+      "userId": 2,
+      "medicationName": "Metformine",
+      "dosage": "500mg",
+      "scheduledTime": "2024-12-19T20:00:00.000Z",
+      "takenTime": null,
+      "taken": false,
+      "notes": "À prendre ce soir"
     }
   ],
   "appointments": [

@@ -1,12 +1,8 @@
 import React, { useState, memo, useEffect } from 'react';
-import { Edit, Person, Email, Phone, LocationOn, CameraAlt, Save, Close, Verified, TrendingUp, Message, Campaign, PictureAsPdf, Work, School, Star, Language, AccessTime, AttachMoney, MedicalServices, EmojiEvents } from '@mui/icons-material';
+import { Edit, Person, Email, Phone, LocationOn, CameraAlt, Save, Close, Verified, TrendingUp, Message, Campaign, PictureAsPdf, Work, School, Language, AccessTime, AttachMoney, MedicalServices, EmojiEvents } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth';
-import { pregnancyApi, diabeticApi, glucoseApi, mealApi, medicationLogApi, type PregnancyRecord, type DiabeticRecord, type GlucoseReading, type Meal, type MedicationLog } from '../services/api';
+import { diabeticApi, type DiabeticRecord } from '../services/api';
 import { useToast } from '../components/ToastProvider';
-import MedicalParamsModal from '../components/MedicalParamsModal';
-import EmergencyContactsModal from '../components/EmergencyContactsModal';
-import MedicationModal from '../components/MedicationModal';
-import GlucoseDetailsModal from '../components/GlucoseDetailsModal';
 
 const ProfilePage: React.FC = memo(() => {
   const { user, updateProfile } = useAuth();
@@ -35,38 +31,8 @@ const ProfilePage: React.FC = memo(() => {
     education: user?.education || [],
     awards: user?.awards || []
   });
-  const [record, setRecord] = useState<PregnancyRecord | null>(null);
   const [diabeticRecord, setDiabeticRecord] = useState<DiabeticRecord | null>(null);
-  const [glucoseReadings, setGlucoseReadings] = useState<GlucoseReading[]>([]);
-  const [meals, setMeals] = useState<Meal[]>([]);
-  const [medicationLogs, setMedicationLogs] = useState<MedicationLog[]>([]);
-  const [medParamsForm, setMedParamsForm] = useState({
-    systolicMmHg: '',
-    diastolicMmHg: '',
-    fastingGlucoseMgDl: '',
-    hemoglobinGdl: '',
-    babyName: '',
-    weightKg: '',
-  });
-  const [diabeticForm, setDiabeticForm] = useState({
-    glucoseValue: '',
-    glucoseType: 'fasting' as 'fasting' | 'before_meal' | 'after_meal' | 'random',
-    mealName: '',
-    mealType: 'breakfast' as 'breakfast' | 'lunch' | 'dinner' | 'snack',
-    mealCalories: '',
-    mealCarbs: '',
-    medicationName: '',
-    medicationDosage: '',
-    medicationTime: '',
-  });
   const [savingMedical, setSavingMedical] = useState(false);
-  const [savingDiabetic, setSavingDiabetic] = useState(false);
-  
-  // États pour les modaux
-  const [isMedicalParamsModalOpen, setIsMedicalParamsModalOpen] = useState(false);
-  const [isEmergencyContactsModalOpen, setIsEmergencyContactsModalOpen] = useState(false);
-  const [isMedicationModalOpen, setIsMedicationModalOpen] = useState(false);
-  const [isGlucoseModalOpen, setIsGlucoseModalOpen] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -77,14 +43,6 @@ const ProfilePage: React.FC = memo(() => {
       if (!user || user.profileType !== 'diabetic_person') return;
       const dr = await diabeticApi.getByUserId(user.id);
       setDiabeticRecord(dr);
-      setMedParamsForm({
-        systolicMmHg: '',
-        diastolicMmHg: '',
-        fastingGlucoseMgDl: '',
-        hemoglobinGdl: '',
-        babyName: '',
-        weightKg: '',
-      });
     };
     load();
   }, [user]);
@@ -241,56 +199,6 @@ const ProfilePage: React.FC = memo(() => {
     w.print();
   };
 
-  // Fonctions pour gérer les modaux
-  const handleMedicalParamsSave = async (updatedData: Partial<DiabeticRecord>) => {
-    if (!diabeticRecord) return;
-    try {
-      const updated = await diabeticApi.update(diabeticRecord.id, updatedData);
-      setDiabeticRecord(updated);
-      show('Paramètres médicaux mis à jour', 'success');
-    } catch (error) {
-      show('Erreur lors de la mise à jour', 'error');
-    }
-  };
-
-  const handleEmergencyContactsSave = async (contacts: any[]) => {
-    if (!diabeticRecord) return;
-    try {
-      const updated = await diabeticApi.update(diabeticRecord.id, {
-        emergencyContacts: contacts
-      });
-      setDiabeticRecord(updated);
-      show('Contacts d\'urgence mis à jour', 'success');
-    } catch (error) {
-      show('Erreur lors de la mise à jour des contacts', 'error');
-    }
-  };
-
-  const handleMedicationSave = async (medications: any[]) => {
-    if (!diabeticRecord) return;
-    try {
-      const updated = await diabeticApi.update(diabeticRecord.id, {
-        currentMedications: medications
-      });
-      setDiabeticRecord(updated);
-      show('Médicaments mis à jour', 'success');
-    } catch (error) {
-      show('Erreur lors de la mise à jour des médicaments', 'error');
-    }
-  };
-
-  const handleAddGlucoseReading = async (reading: Omit<GlucoseReading, 'id'>) => {
-    try {
-      const newReading = await glucoseApi.create({
-        ...reading,
-        userId: user!.id
-      });
-      setGlucoseReadings(prev => [...prev, newReading]);
-      show('Lecture de glycémie ajoutée', 'success');
-    } catch (error) {
-      show('Erreur lors de l\'ajout de la lecture', 'error');
-    }
-  };
 
   const getProfileTypeLabel = (profileType: string) => {
     switch (profileType) {
