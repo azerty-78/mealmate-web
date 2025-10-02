@@ -1235,7 +1235,7 @@ const AdminDashboardPage: React.FC = () => {
             <div className="flex space-x-2">
               <button 
                 onClick={() => {
-                  setEditingMeal({ ...emptyMeal });
+                  setEditingMeal({ ...emptyMeal, id: 0, createdAt: '', updatedAt: '' } as MealTemplate);
                   setShowMealForm(true);
                 }}
                 className="inline-flex items-center px-3 py-2 rounded bg-green-600 text-white hover:bg-green-700"
