@@ -18,12 +18,12 @@ import type {
   MedicalRecord, 
   MedicalPrescription, 
   EmergencyContact, 
-  PregnancyRecord 
+  DiabeticRecord 
 } from '../services/api';
 
 interface MedicalRecordExporterProps {
   patient: User;
-  pregnancyRecord: PregnancyRecord | null;
+  diabeticRecord: DiabeticRecord | null;
   medicalRecords: MedicalRecord[];
   prescriptions: MedicalPrescription[];
   emergencyContacts: EmergencyContact[];
@@ -32,7 +32,7 @@ interface MedicalRecordExporterProps {
 
 const MedicalRecordExporter: React.FC<MedicalRecordExporterProps> = ({
   patient,
-  pregnancyRecord,
+  diabeticRecord,
   medicalRecords,
   prescriptions,
   emergencyContacts,
@@ -71,8 +71,8 @@ const MedicalRecordExporter: React.FC<MedicalRecordExporterProps> = ({
         isActive: patient.isActive,
         createdAt: patient.createdAt
       },
-      pregnancyRecord: pregnancyRecord ? {
-        ...pregnancyRecord,
+      diabeticRecord: diabeticRecord ? {
+        ...diabeticRecord,
         // Ne pas inclure les données sensibles si nécessaire
       } : null,
       medicalRecords: medicalRecords
@@ -159,14 +159,14 @@ const MedicalRecordExporter: React.FC<MedicalRecordExporterProps> = ({
             <p>Exporté le: ${new Date().toLocaleDateString()}</p>
           </div>
 
-          ${pregnancyRecord ? `
+          ${diabeticRecord ? `
             <div class="section">
-              <h3>Dossier de grossesse</h3>
-              <p><strong>Semaine actuelle:</strong> ${pregnancyRecord.currentWeek} semaines</p>
-              <p><strong>Date d'accouchement prévue:</strong> ${new Date(pregnancyRecord.dueDate).toLocaleDateString()}</p>
-              <p><strong>IMC:</strong> ${pregnancyRecord.bmi}</p>
-              <p><strong>Poids:</strong> ${pregnancyRecord.weightKg} kg</p>
-              <p><strong>Taille:</strong> ${pregnancyRecord.heightCm} cm</p>
+              <h3>Dossier diabétique</h3>
+              <p><strong>Type de diabète:</strong> ${diabeticRecord.diabetesType}</p>
+              <p><strong>Date de diagnostic:</strong> ${new Date(diabeticRecord.diagnosisDate).toLocaleDateString()}</p>
+              <p><strong>HbA1c actuel:</strong> ${diabeticRecord.lastHbA1c}%</p>
+              <p><strong>Date HbA1c:</strong> ${diabeticRecord.lastHbA1cDate ? new Date(diabeticRecord.lastHbA1cDate).toLocaleDateString() : 'Non renseignée'}</p>
+              <p><strong>Objectif HbA1c:</strong> ${diabeticRecord.hba1cTarget}%</p>
             </div>
           ` : ''}
 
@@ -425,8 +425,8 @@ const MedicalRecordExporter: React.FC<MedicalRecordExporterProps> = ({
                 <span className="ml-2 font-medium">{emergencyContacts.length}</span>
               </div>
               <div>
-                <span className="text-gray-600">Dossier de grossesse:</span>
-                <span className="ml-2 font-medium">{pregnancyRecord ? 'Oui' : 'Non'}</span>
+                <span className="text-gray-600">Dossier diabétique:</span>
+                <span className="ml-2 font-medium">{diabeticRecord ? 'Oui' : 'Non'}</span>
               </div>
             </div>
           </div>

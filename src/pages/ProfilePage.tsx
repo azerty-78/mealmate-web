@@ -808,10 +808,15 @@ const ProfilePage: React.FC = memo(() => {
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                       <option value="">Sélectionnez votre spécialité</option>
-                      <option value="Gynécologie-Obstétrique">Gynécologie-Obstétrique</option>
+                      <option value="Endocrinologie">Endocrinologie</option>
+                      <option value="Diabétologie">Diabétologie</option>
+                      <option value="Médecine interne">Médecine interne</option>
                       <option value="Médecine Générale">Médecine Générale</option>
-                      <option value="Pédiatrie">Pédiatrie</option>
                       <option value="Cardiologie">Cardiologie</option>
+                      <option value="Néphrologie">Néphrologie</option>
+                      <option value="Ophtalmologie">Ophtalmologie</option>
+                      <option value="Pédiatrie">Pédiatrie</option>
+                      <option value="Gynécologie-Obstétrique">Gynécologie-Obstétrique</option>
                       <option value="Dermatologie">Dermatologie</option>
                       <option value="Neurologie">Neurologie</option>
                       <option value="Psychiatrie">Psychiatrie</option>

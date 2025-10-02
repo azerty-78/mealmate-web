@@ -2,26 +2,17 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useToast } from '../components/ToastProvider';
 import { 
   People, 
-  MedicalServices, 
   Assignment, 
   Download, 
   Search, 
   FilterList, 
   Visibility,
-  Add,
-  Edit,
-  Delete,
-  Close,
-  Save,
   Person,
-  LocalHospital,
   Schedule,
-  Description,
   Medication,
-  Emergency,
   TrendingUp,
   CheckCircle,
-  Warning
+  Close
 } from '@mui/icons-material';
 import { MedicalRecordViewer, MedicalRecordExporter } from '../components';
 import { 
@@ -30,7 +21,7 @@ import {
   medicalRecordApi, 
   prescriptionApi, 
   emergencyContactApi,
-  pregnancyApi,
+  diabeticApi,
   appointmentApi
 } from '../services/api';
 import type { 
@@ -39,7 +30,7 @@ import type {
   MedicalRecord,
   MedicalPrescription,
   EmergencyContact,
-  PregnancyRecord
+  DiabeticRecord
 } from '../services/api';
 
 const DoctorDashboardPage: React.FC = () => {
@@ -48,7 +39,7 @@ const DoctorDashboardPage: React.FC = () => {
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
   const [prescriptions, setPrescriptions] = useState<MedicalPrescription[]>([]);
   const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
-  const [pregnancyRecords, setPregnancyRecords] = useState<PregnancyRecord[]>([]);
+  const [diabeticRecords, setDiabeticRecords] = useState<DiabeticRecord[]>([]);
   const [appointments, setAppointments] = useState<any[]>([]);
   
   const [isLoading, setIsLoading] = useState(true);
@@ -58,7 +49,7 @@ const DoctorDashboardPage: React.FC = () => {
   const [showExporter, setShowExporter] = useState(false);
   
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'pregnant' | 'active' | 'inactive'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'diabetic' | 'active' | 'inactive'>('all');
   const [activeTab, setActiveTab] = useState<'patients' | 'records' | 'prescriptions' | 'appointments'>('patients');
   
   const toast = useToast();
@@ -106,11 +97,11 @@ const DoctorDashboardPage: React.FC = () => {
       );
       setEmergencyContacts(allEmergencyContacts.flat());
       
-      // Récupérer les dossiers de grossesse
-      const allPregnancyRecords = await Promise.all(
-        patientIds.map(id => pregnancyApi.getByUserId(id))
+      // Récupérer les dossiers diabétiques
+      const allDiabeticRecords = await Promise.all(
+        patientIds.map(id => diabeticApi.getByUserId(id))
       );
-      setPregnancyRecords(allPregnancyRecords.filter(record => record !== null) as PregnancyRecord[]);
+      setDiabeticRecords(allDiabeticRecords.filter(record => record !== null) as DiabeticRecord[]);
       
       // Récupérer les rendez-vous
       const allAppointments = await Promise.all(
@@ -155,9 +146,9 @@ const DoctorDashboardPage: React.FC = () => {
     let filtered = patients;
     
     // Filtre par type
-    if (filterType === 'pregnant') {
+    if (filterType === 'diabetic') {
       filtered = filtered.filter(patient => 
-        pregnancyRecords.some(record => record.userId === patient.id)
+        diabeticRecords.some(record => record.userId === patient.id)
       );
     } else if (filterType === 'active') {
       const activePatientIds = doctorPatients
@@ -182,7 +173,7 @@ const DoctorDashboardPage: React.FC = () => {
     }
     
     return filtered;
-  }, [patients, filterType, searchTerm, doctorPatients, pregnancyRecords]);
+  }, [patients, filterType, searchTerm, doctorPatients, diabeticRecords]);
 
   // Dossiers médicaux du patient sélectionné
   const patientMedicalRecords = useMemo(() => {
@@ -196,11 +187,11 @@ const DoctorDashboardPage: React.FC = () => {
     return prescriptions.filter(prescription => prescription.patientId === selectedPatient.id);
   }, [selectedPatient, prescriptions]);
 
-  // Dossier de grossesse du patient sélectionné
-  const patientPregnancyRecord = useMemo(() => {
+  // Dossier diabétique du patient sélectionné
+  const patientDiabeticRecord = useMemo(() => {
     if (!selectedPatient) return null;
-    return pregnancyRecords.find(record => record.userId === selectedPatient.id) || null;
-  }, [selectedPatient, pregnancyRecords]);
+    return diabeticRecords.find(record => record.userId === selectedPatient.id) || null;
+  }, [selectedPatient, diabeticRecords]);
 
   // Contacts d'urgence du patient sélectionné
   const patientEmergencyContacts = useMemo(() => {
@@ -228,31 +219,6 @@ const DoctorDashboardPage: React.FC = () => {
     setShowExporter(true);
   };
 
-  const exportPatientData = (patient: User) => {
-    const patientData = {
-      patient: {
-        name: `${patient.firstName} ${patient.lastName}`,
-        email: patient.email,
-        phone: patient.phone,
-        region: patient.region
-      },
-      pregnancyRecord: patientPregnancyRecord,
-      medicalRecords: patientMedicalRecords,
-      prescriptions: patientPrescriptions,
-      emergencyContacts: patientEmergencyContacts
-    };
-
-    const dataStr = JSON.stringify(patientData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `dossier_${patient.firstName}_${patient.lastName}_${new Date().toISOString().slice(0, 10)}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-    
-    toast.show('Dossier exporté avec succès', 'success');
-  };
 
   if (isLoading) {
     return (
@@ -398,7 +364,7 @@ const DoctorDashboardPage: React.FC = () => {
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">Tous les patients</option>
-                  <option value="pregnant">Femmes enceintes</option>
+                  <option value="diabetic">Patients diabétiques</option>
                   <option value="active">Patients actifs</option>
                   <option value="inactive">Patients inactifs</option>
                 </select>
@@ -409,7 +375,7 @@ const DoctorDashboardPage: React.FC = () => {
           {/* Liste des patients */}
           <div className="space-y-4">
             {filteredPatients.map((patient) => {
-              const pregnancyRecord = pregnancyRecords.find(record => record.userId === patient.id);
+              const diabeticRecord = diabeticRecords.find(record => record.userId === patient.id);
               const patientRelation = doctorPatients.find(rel => rel.patientId === patient.id);
               
               return (
@@ -433,9 +399,9 @@ const DoctorDashboardPage: React.FC = () => {
                           }`}>
                             {patientRelation?.status === 'active' ? 'Actif' : 'Inactif'}
                           </span>
-                          {pregnancyRecord && (
-                            <span className="px-2 py-1 rounded-full text-xs bg-pink-100 text-pink-800">
-                              {pregnancyRecord.currentWeek} semaines
+                          {diabeticRecord && (
+                            <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                              Diabète {diabeticRecord.diabetesType}
                             </span>
                           )}
                         </div>
@@ -517,22 +483,22 @@ const DoctorDashboardPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Dossier de grossesse */}
-              {patientPregnancyRecord && (
-                <div className="bg-pink-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-800 mb-3">Dossier de grossesse</h4>
+              {/* Dossier diabétique */}
+              {patientDiabeticRecord && (
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-800 mb-3">Dossier diabétique</h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <span className="text-sm text-gray-600">Semaine actuelle:</span>
-                      <p className="font-medium text-lg">{patientPregnancyRecord.currentWeek} semaines</p>
+                      <span className="text-sm text-gray-600">Type de diabète:</span>
+                      <p className="font-medium text-lg">{patientDiabeticRecord.diabetesType}</p>
                     </div>
                     <div>
-                      <span className="text-sm text-gray-600">Date d'accouchement prévue:</span>
-                      <p className="font-medium">{new Date(patientPregnancyRecord.dueDate).toLocaleDateString()}</p>
+                      <span className="text-sm text-gray-600">Date de diagnostic:</span>
+                      <p className="font-medium">{new Date(patientDiabeticRecord.diagnosisDate).toLocaleDateString()}</p>
                     </div>
                     <div>
-                      <span className="text-sm text-gray-600">IMC:</span>
-                      <p className="font-medium">{patientPregnancyRecord.bmi}</p>
+                      <span className="text-sm text-gray-600">HbA1c actuel:</span>
+                      <p className="font-medium">{patientDiabeticRecord.lastHbA1c}%</p>
                     </div>
                   </div>
                 </div>
@@ -632,7 +598,7 @@ const DoctorDashboardPage: React.FC = () => {
       {showExporter && selectedPatient && (
         <MedicalRecordExporter
           patient={selectedPatient}
-          pregnancyRecord={patientPregnancyRecord}
+          diabeticRecord={patientDiabeticRecord}
           medicalRecords={patientMedicalRecords}
           prescriptions={patientPrescriptions}
           emergencyContacts={patientEmergencyContacts}

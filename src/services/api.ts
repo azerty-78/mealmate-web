@@ -785,15 +785,15 @@ export const medicationLogApi = {
 // API pour les modèles de repas
 export const mealTemplateApi = {
   getAll: (): Promise<MealTemplate[]> =>
-    request<MealTemplate[]>('/meals'),
+    request<MealTemplate[]>('/meal-templates'),
   getById: (id: number): Promise<MealTemplate> =>
-    request<MealTemplate>(`/meals/${id}`),
+    request<MealTemplate>(`/meal-templates/${id}`),
   getByCategory: (category: string): Promise<MealTemplate[]> =>
-    request<MealTemplate[]>(`/meals?category=${category}`),
+    request<MealTemplate[]>(`/meal-templates?category=${category}`),
   getDiabeticFriendly: (): Promise<MealTemplate[]> =>
-    request<MealTemplate[]>('/meals?diabeticFriendly=true'),
+    request<MealTemplate[]>('/meal-templates?diabeticFriendly=true'),
   create: (data: Omit<MealTemplate, 'id' | 'createdAt' | 'updatedAt'>): Promise<MealTemplate> =>
-    request<MealTemplate>('/meals', {
+    request<MealTemplate>('/meal-templates', {
       method: 'POST',
       body: JSON.stringify({
         ...data,
@@ -802,7 +802,7 @@ export const mealTemplateApi = {
       }),
     }),
   update: (id: number, data: Partial<MealTemplate>): Promise<MealTemplate> =>
-    request<MealTemplate>(`/meals/${id}`, {
+    request<MealTemplate>(`/meal-templates/${id}`, {
       method: 'PUT',
       body: JSON.stringify({
         ...data,
@@ -810,7 +810,7 @@ export const mealTemplateApi = {
       }),
     }),
   delete: (id: number): Promise<void> =>
-    request<void>(`/meals/${id}`, { method: 'DELETE' }),
+    request<void>(`/meal-templates/${id}`, { method: 'DELETE' }),
 };
 
 // Fonction pour assigner automatiquement un médecin à une femme enceinte
