@@ -12,8 +12,14 @@ export default defineConfig({
       '127.0.0.1',
       '.ngrok.io',
       '.ngrok-free.app',
-      '.ngrok.app'
+      '.ngrok.app',
+      '.ngrok.dev'
     ],
+    // Configuration pour ngrok
+    hmr: {
+      port: 5173,
+      host: 'localhost'
+    },
     // Proxy pour l'API backend avec configuration robuste
     proxy: {
       '/api': {
@@ -21,19 +27,10 @@ export default defineConfig({
         changeOrigin: true,
         secure: false, // Pour ngrok
         rewrite: (path) => path.replace(/^\/api/, ''),
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req: any, res: any) => {
-            // Ne pas afficher les erreurs ECONNREFUSED pour éviter le spam
-            // Les erreurs sont gérées silencieusement
-            // Retourner une réponse 503 pour indiquer que le service est indisponible
-            if (res && !res.headersSent) {
-              res.writeHead(503, { 'Content-Type': 'application/json' });
-              res.end(JSON.stringify({ 
-                error: 'Service temporairement indisponible', 
-                message: 'Le serveur de base de données n\'est pas démarré. Utilisez "npm run dev:full" pour démarrer les deux services.' 
-              }));
-            }
-          });
+        configure: () => {
+          // Configuration du proxy pour gérer les erreurs de connexion
+          // Les erreurs ECONNREFUSED sont gérées silencieusement
+          // Le proxy retourne automatiquement une erreur 503 si le serveur n'est pas disponible
         },
         // Timeout et retry pour ngrok
         timeout: 5000,

@@ -71,7 +71,7 @@ const AdminDashboardPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [isLoadingHealthCenters, setIsLoadingHealthCenters] = useState(true);
-  const [isLoadingMeals, setIsLoadingMeals] = useState(true);
+  const [, setIsLoadingMeals] = useState(true);
   const [editing, setEditing] = useState<Campaign | null>(null);
   const [editingHealthCenter, setEditingHealthCenter] = useState<HealthCenter | null>(null);
   const [editingMeal, setEditingMeal] = useState<MealTemplate | null>(null);

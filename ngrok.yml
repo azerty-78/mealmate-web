@@ -1,0 +1,42 @@
+version: "2"
+# Remplacez YOUR_AUTHTOKEN par votre token ngrok
+# Obtenez-le sur: https://dashboard.ngrok.com/get-started/your-authtoken
+authtoken: ""
+
+tunnels:
+  # Tunnel pour l'application frontend (Vite)
+  mealmate-frontend:
+    proto: http
+    addr: 5173
+    # Sous-domaine personnalisé (optionnel)
+    # subdomain: mealmate-frontend
+    inspect: true
+    bind_tls: true
+    host_header: "localhost:5173"
+    # Headers pour CORS
+    request_header:
+      add:
+        - "Access-Control-Allow-Origin: *"
+        - "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"
+        - "Access-Control-Allow-Headers: Content-Type, Authorization"
+
+  # Tunnel pour l'API backend (JSON Server)
+  mealmate-api:
+    proto: http
+    addr: 3001
+    # Sous-domaine personnalisé (optionnel)
+    # subdomain: mealmate-api
+    inspect: true
+    bind_tls: true
+    host_header: "localhost:3001"
+    # Headers pour CORS
+    request_header:
+      add:
+        - "Access-Control-Allow-Origin: *"
+        - "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"
+        - "Access-Control-Allow-Headers: Content-Type, Authorization"
+
+# Configuration globale
+log_level: info
+log_format: logfmt
+log: "ngrok.log"

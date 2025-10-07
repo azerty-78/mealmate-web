@@ -28,7 +28,7 @@ export const ServerStatusBanner: React.FC<ServerStatusBannerProps> = ({ onRetry 
       } else {
         setIsVisible(false);
       }
-    } catch (error) {
+    } catch {
       // En cas d'erreur de connexion, afficher la bannière
       setIsVisible(true);
     } finally {

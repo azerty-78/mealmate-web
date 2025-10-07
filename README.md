@@ -145,12 +145,16 @@ npm run dev
 
 # Option 2: Démarrage complet avec base de données
 npm run dev:full
+
+# Option 3: Démarrage avec ngrok (partage instantané)
+npm run ngrok
 ```
 
 ### Accès à l'application
-- **Application** : http://localhost:5173
+- **Application locale** : http://localhost:5173
 - **API Base de données** : http://localhost:3001 (si démarré)
 - **Documentation API** : http://localhost:3001 (si démarré)
+- **Avec ngrok** : URLs générées automatiquement (voir ci-dessous)
 
 ### 📋 Modes de démarrage
 
@@ -166,6 +170,12 @@ npm run dev:full
 - **`npm run dev:vite`** : Frontend uniquement
   - ✅ Interface utilisateur seulement
   - ⚠️ Fonctionnalités de base de données limitées
+
+- **`npm run ngrok`** : Démarrage avec partage instantané
+  - ✅ Frontend + Base de données + ngrok
+  - ✅ URLs publiques générées automatiquement
+  - ✅ Partage instantané de l'application
+  - ✅ HTTPS automatique
 
 ### 🧪 Comptes de Test Préconfigurés
 
@@ -195,6 +205,8 @@ npm run dev:full
 > 🗄️ **Guide d'accès à la base de données** : Voir [DATABASE-ACCESS-GUIDE.md](./DATABASE-ACCESS-GUIDE.md) pour consulter, modifier et gérer votre base de données MealMate.
 
 > 🧪 **Tests de synchronisation** : Utilisez `test-campaigns.bat` (Windows) ou `node test-campaign-sync.js` pour tester la synchronisation des campagnes entre l'admin et la page d'accueil.
+
+> 🌍 **Partage instantané avec ngrok** : Voir [NGROK-QUICK-START.md](./NGROK-QUICK-START.md) pour partager votre application en 30 secondes avec ngrok.
 
 ## 🔧 Configuration
 
