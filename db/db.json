@@ -530,7 +530,7 @@
     {
       "id": 1,
       "userId": 2,
-      "diabetesType": "type2",
+      "diabetesType": "type1",
       "diagnosisDate": "2023-06-15T00:00:00.000Z",
       "currentMedications": [
         {
@@ -590,7 +590,7 @@
       ],
       "notes": "Patient suivie pour diabète de type 2, bon contrôle glycémique",
       "createdAt": "2024-01-15T10:30:00.000Z",
-      "updatedAt": "2025-10-07T12:48:52.984Z"
+      "updatedAt": "2025-10-07T12:55:03.560Z"
     }
   ],
   "glucoseReadings": [

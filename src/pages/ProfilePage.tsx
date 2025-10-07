@@ -169,6 +169,7 @@ const ProfilePage: React.FC = memo(() => {
     setSavingMedical(true);
     try {
       const payload: Partial<DiabeticRecord> = {
+        diabetesType: editableRecord.diabetesType,
         bloodGlucoseTargets: {
           fasting: { min: editableRecord.bloodGlucoseTargets.fasting.min, max: editableRecord.bloodGlucoseTargets.fasting.max },
           beforeMeals: { min: editableRecord.bloodGlucoseTargets.beforeMeals.min, max: editableRecord.bloodGlucoseTargets.beforeMeals.max },
@@ -681,7 +682,18 @@ const ProfilePage: React.FC = memo(() => {
             </div>
 
             {/* HbA1c et Notes (éditables) */}
-            <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="mb-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <p className="text-xs text-gray-600 mb-2">Type de diabète</p>
+                <select
+                  value={editableRecord?.diabetesType || 'type2'}
+                  onChange={(e) => editableRecord && setEditableRecord({ ...editableRecord, diabetesType: e.target.value as any })}
+                  className="w-full px-2 py-1 border border-gray-300 rounded"
+                >
+                  <option value="type1">Type 1</option>
+                  <option value="type2">Type 2</option>
+                </select>
+              </div>
               <div className="p-3 bg-purple-50 rounded-lg">
                 <p className="text-xs text-gray-600 mb-2">HbA1c cible (%)</p>
                 <input
