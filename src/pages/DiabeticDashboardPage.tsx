@@ -26,6 +26,10 @@ const DiabeticDashboardPage: React.FC = memo(() => {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [medicationLogs, setMedicationLogs] = useState<MedicationLog[]>([]);
   const [recommendedMeals, setRecommendedMeals] = useState<MealTemplate[]>([]);
+  // Formulaire d'injection d'insuline
+  const [insulinType, setInsulinType] = useState<'rapide' | 'intermédiaire' | 'lente'>('rapide');
+  const [insulinUnits, setInsulinUnits] = useState<number>(0);
+  const [insulinTime, setInsulinTime] = useState<string>(() => new Date().toISOString().slice(0, 16));
 
   // États pour les modaux
   const [isMedicationModalOpen, setIsMedicationModalOpen] = useState(false);
@@ -164,6 +168,47 @@ const DiabeticDashboardPage: React.FC = memo(() => {
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement de la prise de médicament:', error);
       toast.show('Erreur lors de l\'enregistrement de la prise', 'error');
+    }
+  };
+  
+  // Enregistrer une injection d'insuline
+  const handleSaveInsulinInjection = async () => {
+    try {
+      if (!user) return;
+      if (!insulinUnits || insulinUnits <= 0) {
+        toast.show('Veuillez saisir le nombre d’unités', 'error');
+        return;
+      }
+      const when = insulinTime ? new Date(insulinTime).toISOString() : new Date().toISOString();
+      const typeLabel = insulinType === 'rapide' ? 'Rapide' : insulinType === 'intermédiaire' ? 'Intermédiaire' : 'Lente';
+      await medicationLogApi.create({
+        userId: user.id,
+        medicationName: `Insuline (${typeLabel})`,
+        dosage: `${insulinUnits} UI`,
+        scheduledTime: when,
+        takenTime: when,
+        taken: true,
+        notes: 'insulin'
+      } as any);
+      toast.show('Injection d’insuline enregistrée', 'success');
+      setInsulinUnits(0);
+      setInsulinTime(new Date().toISOString().slice(0, 16));
+      await reloadMedicationLogs();
+    } catch (error) {
+      console.error('Erreur lors de l\'enregistrement de l\'insuline:', error);
+      toast.show('Erreur lors de l’enregistrement de l’insuline', 'error');
+    }
+  };
+
+  // Supprimer une injection d'insuline (log)
+  const handleDeleteInsulinLog = async (logId: number) => {
+    try {
+      await medicationLogApi.delete(logId);
+      toast.show('Injection supprimée', 'success');
+      await reloadMedicationLogs();
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'injection:', error);
+      toast.show('Erreur lors de la suppression', 'error');
     }
   };
 
@@ -485,6 +530,81 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             })}
             {(!medicationLogs || medicationLogs.length === 0) && (
               <p className="text-gray-500 text-center py-4">Aucune prise enregistrée</p>
+            )}
+          </div>
+        </div>
+
+        {/* Injections d'insuline */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-bold text-gray-800 mb-4" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
+            Injections d’insuline
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end mb-4">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Type</label>
+              <select
+                value={insulinType}
+                onChange={(e) => setInsulinType(e.target.value as any)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="rapide">Rapide</option>
+                <option value="intermédiaire">Intermédiaire</option>
+                <option value="lente">Lente</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Unités (UI)</label>
+              <input
+                type="number"
+                min={0}
+                value={insulinUnits}
+                onChange={(e) => setInsulinUnits(parseInt(e.target.value) || 0)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Heure</label>
+              <input
+                type="datetime-local"
+                value={insulinTime}
+                onChange={(e) => setInsulinTime(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={handleSaveInsulinInjection}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Enregistrer l’injection
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {(medicationLogs || [])
+              .filter(l => (l.notes && l.notes.toLowerCase().includes('insulin')) || (l.medicationName || '').toLowerCase().includes('insulin') || (l.medicationName || '').toLowerCase().includes('insuline'))
+              .slice(-5)
+              .map((log) => {
+                const time = new Date(log.takenTime || log.scheduledTime).toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+                return (
+                  <div key={log.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                    <div>
+                      <p className="font-medium text-gray-800">{log.medicationName} — {log.dosage}</p>
+                      <p className="text-xs text-gray-600">{time}</p>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteInsulinLog(log.id)}
+                      className="px-3 py-1.5 text-sm rounded-lg bg-red-100 text-red-700 hover:bg-red-200"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                );
+              })}
+            {((medicationLogs || []).filter(l => (l.notes && l.notes.toLowerCase().includes('insulin')) || (l.medicationName || '').toLowerCase().includes('insulin') || (l.medicationName || '').toLowerCase().includes('insuline')).length === 0) && (
+              <p className="text-gray-500 text-center py-4">Aucune injection enregistrée</p>
             )}
           </div>
         </div>
