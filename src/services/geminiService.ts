@@ -26,9 +26,24 @@ export class GeminiService {
     });
   }
 
+  private extractTextSafely(result: any): string {
+    try {
+      const text = result?.response?.text?.() ?? '';
+      if (text && typeof text === 'string' && text.trim().length > 0) return text;
+    } catch {}
+
+    try {
+      const candidates = result?.response?.candidates || result?.candidates;
+      const firstText = candidates?.[0]?.content?.parts?.[0]?.text;
+      if (firstText && typeof firstText === 'string' && firstText.trim().length > 0) return firstText;
+    } catch {}
+
+    return '';
+  }
+
   async generateContent(prompt: string): Promise<string> {
     try {
-      console.log('🤖 Génération de contenu avec Gemini 1.5 Flash...');
+      console.log(`🤖 Génération de contenu avec ${GEMINI_CONFIG.modelName}...`);
       
       // Ajouter un timeout pour éviter les attentes trop longues
       const timeoutPromise = new Promise<never>((_, reject) => {
@@ -37,12 +52,12 @@ export class GeminiService {
       
       const generatePromise = this.model.generateContent(prompt);
       const result = await Promise.race([generatePromise, timeoutPromise]);
-      
-      const response = await result.response;
-      const text = response.text();
+      const text = this.extractTextSafely(result);
       
       console.log('✅ Réponse générée avec succès');
-      return text;
+      return text && text.trim().length > 0
+        ? text
+        : 'Je suis désolé, je ne peux pas répondre à votre question pour le moment.';
     } catch (error) {
       console.error('❌ Erreur lors de la génération de contenu:', error);
       
@@ -57,7 +72,7 @@ export class GeminiService {
 
   async chatWithAI(messages: GeminiMessage[]): Promise<string> {
     try {
-      console.log('💬 Chat avec Gemini 1.5 Flash...');
+      console.log(`💬 Chat avec ${GEMINI_CONFIG.modelName}...`);
       
       // Ajouter un timeout pour éviter les attentes trop longues
       const timeoutPromise = new Promise<never>((_, reject) => {
@@ -75,12 +90,12 @@ export class GeminiService {
       const lastMessage = messages[messages.length - 1];
       const chatPromise = chat.sendMessage(lastMessage.parts[0].text);
       const result = await Promise.race([chatPromise, timeoutPromise]);
-      
-      const response = await result.response;
-      const text = response.text();
+      const text = this.extractTextSafely(result);
       
       console.log('✅ Réponse de chat générée avec succès');
-      return text;
+      return text && text.trim().length > 0
+        ? text
+        : 'Je suis désolé, je ne peux pas répondre à votre question pour le moment.';
     } catch (error) {
       console.error('❌ Erreur lors du chat avec l\'IA:', error);
       
@@ -113,11 +128,12 @@ export class GeminiService {
       ]);
       
       const result = await Promise.race([imagePromise, timeoutPromise]);
-      const response = await result.response;
-      const text = response.text();
+      const text = this.extractTextSafely(result);
       
       console.log('✅ Réponse avec image générée avec succès');
-      return text;
+      return text && text.trim().length > 0
+        ? text
+        : 'Je suis désolé, je ne peux pas analyser cette image pour le moment.';
     } catch (error) {
       console.error('❌ Erreur lors de la génération avec image:', error);
       
