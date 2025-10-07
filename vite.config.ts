@@ -21,11 +21,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false, // Pour ngrok
         rewrite: (path) => path.replace(/^\/api/, ''),
-        configure: (proxy, options) => {
-          proxy.on('error', (err, req, res) => {
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, res) => {
             // Ne pas afficher les erreurs ECONNREFUSED pour éviter le spam
             if (err.code !== 'ECONNREFUSED') {
-              console.log('Proxy error:', err);
+              process.stdout.write(`Proxy error: ${err}\n`);
             }
             // Retourner une réponse 503 pour indiquer que le service est indisponible
             if (res && !res.headersSent) {
@@ -35,13 +35,6 @@ export default defineConfig({
                 message: 'Le serveur de base de données n\'est pas démarré. Utilisez "npm run dev:full" pour démarrer les deux services.' 
               }));
             }
-          });
-          proxy.on('proxyReq', (proxyReq, req, res) => {
-            // Log seulement si le serveur est disponible
-            console.log('Sending Request to the Target:', req.method, req.url);
-          });
-          proxy.on('proxyRes', (proxyRes, req, res) => {
-            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
           });
         },
         // Timeout et retry pour ngrok

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, AlertTitle, Button, Collapse, IconButton } from '@mui/material';
-import { Close, Refresh, Database, Warning } from '@mui/icons-material';
+import { Close, Refresh, Storage, Warning } from '@mui/icons-material';
 
 interface ServerStatusBannerProps {
   onRetry?: () => void;
@@ -55,7 +55,7 @@ export const ServerStatusBanner: React.FC<ServerStatusBannerProps> = ({ onRetry 
     <Collapse in={isVisible}>
       <Alert
         severity="warning"
-        icon={<Database />}
+        icon={<Storage />}
         action={
           <div className="flex items-center gap-2">
             <Button
