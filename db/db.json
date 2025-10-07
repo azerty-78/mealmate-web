@@ -566,7 +566,7 @@
       ],
       "bloodGlucoseTargets": {
         "fasting": {
-          "min": 77,
+          "min": 78,
           "max": 130
         },
         "beforeMeals": {
@@ -590,7 +590,7 @@
       ],
       "notes": "Patient suivie pour diabète de type 2, bon contrôle glycémique",
       "createdAt": "2024-01-15T10:30:00.000Z",
-      "updatedAt": "2025-10-07T12:27:13.378Z"
+      "updatedAt": "2025-10-07T12:48:52.984Z"
     }
   ],
   "glucoseReadings": [

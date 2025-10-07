@@ -800,8 +800,8 @@ export const mealTemplateApi = {
         const { id: _omitId, createdAt: _omitCreatedAt, updatedAt: _omitUpdatedAt, ...rest } = (data as any) || {};
         return {
           ...rest,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         };
       })()),
     }),

@@ -611,7 +611,7 @@ const ProfilePage: React.FC = memo(() => {
                       className="w-full px-2 py-1 border border-gray-300 rounded"
                       placeholder="Max"
                     />
-                  </div>
+                </div>
                 </div>
 
                 <div className="p-3 bg-gray-50 rounded-lg">
@@ -643,8 +643,8 @@ const ProfilePage: React.FC = memo(() => {
                       className="w-full px-2 py-1 border border-gray-300 rounded"
                       placeholder="Max"
                     />
-                  </div>
                 </div>
+              </div>
 
                 <div className="p-3 bg-gray-50 rounded-lg">
                   <p className="text-xs text-gray-600 mb-2">Après repas (mg/dL)</p>

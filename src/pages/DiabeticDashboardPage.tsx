@@ -424,7 +424,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
           <div className="space-y-3">
             {diabeticRecord?.currentMedications?.slice(0, 3).map((med, index) => (
               <div key={index} className={`flex items-center justify-between p-3 rounded-xl ${takenTodayNames.has(med.name) ? 'bg-green-50 border border-green-200' : 'bg-gray-50'}`}>
-                  <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                     med.isActive ? 'bg-green-500' : 'bg-gray-400'
                   }`}>
