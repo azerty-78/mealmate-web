@@ -22,11 +22,9 @@ export default defineConfig({
         secure: false, // Pour ngrok
         rewrite: (path) => path.replace(/^\/api/, ''),
         configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, res) => {
+          proxy.on('error', (err, _req: any, res: any) => {
             // Ne pas afficher les erreurs ECONNREFUSED pour éviter le spam
-            if (err.code !== 'ECONNREFUSED') {
-              process.stdout.write(`Proxy error: ${err}\n`);
-            }
+            // Les erreurs sont gérées silencieusement
             // Retourner une réponse 503 pour indiquer que le service est indisponible
             if (res && !res.headersSent) {
               res.writeHead(503, { 'Content-Type': 'application/json' });
