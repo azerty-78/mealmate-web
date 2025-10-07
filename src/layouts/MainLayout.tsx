@@ -2,6 +2,7 @@ import React, { useEffect, Suspense, lazy, memo } from 'react';
 import TopBar from '../components/TopBar';
 import BottomBar from '../components/BottomBar';
 import NetworkStatusBanner from '../components/NetworkStatusBanner';
+import { ServerStatusBanner } from '../components/ServerStatusBanner';
 import { useNavigation } from '../contexts/NavigationContext';
 import { useAuth } from '../hooks/useAuth';
 import { useServerRestart } from '../hooks/useServerRestart';
@@ -200,6 +201,11 @@ const MainLayout: React.FC = memo(() => {
         <TopBar onLogout={handleLogout} />
       </div>
       
+      {/* Bannière de statut du serveur */}
+      <div className="fixed top-16 left-0 right-0 z-30 px-4">
+        <ServerStatusBanner />
+      </div>
+
       {/* Contenu principal - Scroll uniquement ici */}
       <main className="flex-1 overflow-y-auto overflow-x-hidden pt-16 pb-16 m-0 p-0">
         <div className="page-enter-active">

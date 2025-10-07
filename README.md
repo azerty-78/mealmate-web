@@ -140,13 +140,32 @@ npm install
 npm install @google/generative-ai
 
 # 3. Démarrer l'application
+# Option 1: Démarrage intelligent (recommandé)
+npm run dev
+
+# Option 2: Démarrage complet avec base de données
 npm run dev:full
 ```
 
 ### Accès à l'application
 - **Application** : http://localhost:5173
-- **API Base de données** : http://localhost:3001
-- **Documentation API** : http://localhost:3001
+- **API Base de données** : http://localhost:3001 (si démarré)
+- **Documentation API** : http://localhost:3001 (si démarré)
+
+### 📋 Modes de démarrage
+
+- **`npm run dev`** : Démarrage intelligent qui s'adapte automatiquement
+  - ✅ Détecte si le serveur JSON est disponible
+  - ✅ Affiche des instructions claires si nécessaire
+  - ✅ Fonctionne même sans base de données (mode UI uniquement)
+
+- **`npm run dev:full`** : Démarrage complet avec base de données
+  - ✅ Frontend + Base de données JSON
+  - ✅ Toutes les fonctionnalités disponibles
+
+- **`npm run dev:vite`** : Frontend uniquement
+  - ✅ Interface utilisateur seulement
+  - ⚠️ Fonctionnalités de base de données limitées
 
 ### 🧪 Comptes de Test Préconfigurés
 

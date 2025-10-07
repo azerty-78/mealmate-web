@@ -23,9 +23,21 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''),
         configure: (proxy, options) => {
           proxy.on('error', (err, req, res) => {
-            console.log('Proxy error:', err);
+            // Ne pas afficher les erreurs ECONNREFUSED pour éviter le spam
+            if (err.code !== 'ECONNREFUSED') {
+              console.log('Proxy error:', err);
+            }
+            // Retourner une réponse 503 pour indiquer que le service est indisponible
+            if (res && !res.headersSent) {
+              res.writeHead(503, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ 
+                error: 'Service temporairement indisponible', 
+                message: 'Le serveur de base de données n\'est pas démarré. Utilisez "npm run dev:full" pour démarrer les deux services.' 
+              }));
+            }
           });
           proxy.on('proxyReq', (proxyReq, req, res) => {
+            // Log seulement si le serveur est disponible
             console.log('Sending Request to the Target:', req.method, req.url);
           });
           proxy.on('proxyRes', (proxyRes, req, res) => {
@@ -33,8 +45,11 @@ export default defineConfig({
           });
         },
         // Timeout et retry pour ngrok
-        timeout: 10000,
-        proxyTimeout: 10000,
+        timeout: 5000,
+        proxyTimeout: 5000,
+        // Configuration pour gérer l'absence du serveur
+        ws: false,
+        followRedirects: false,
       }
     }
   },
