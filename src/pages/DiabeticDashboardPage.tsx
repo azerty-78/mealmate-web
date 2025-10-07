@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { diabeticApi, glucoseApi, mealApi, mealTemplateApi, medicationLogApi, type DiabeticRecord, type GlucoseReading, type Meal, type MealTemplate, type MedicationLog } from '../services/api';
 import { 
@@ -72,6 +72,26 @@ const DiabeticDashboardPage: React.FC = memo(() => {
       console.error('Erreur lors du rechargement des prises:', error);
     }
   };
+
+  // Identifier les médicaments pris aujourd'hui pour feedback visuel
+  const takenTodayNames = useMemo(() => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = today.getMonth();
+    const dd = today.getDate();
+    const isSameDay = (iso?: string | null) => {
+      if (!iso) return false;
+      const d = new Date(iso);
+      return d.getFullYear() === yyyy && d.getMonth() === mm && d.getDate() === dd;
+    };
+    const names = new Set<string>();
+    (medicationLogs || []).forEach(log => {
+      if (log.taken && (isSameDay(log.takenTime) || isSameDay(log.scheduledTime))) {
+        if (log.medicationName) names.add(log.medicationName);
+      }
+    });
+    return names;
+  }, [medicationLogs]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -342,7 +362,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
           </div>
           <div className="space-y-3">
             {diabeticRecord?.currentMedications?.slice(0, 3).map((med, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div key={index} className={`flex items-center justify-between p-3 rounded-xl ${takenTodayNames.has(med.name) ? 'bg-green-50 border border-green-200' : 'bg-gray-50'}`}>
                   <div className="flex items-center space-x-3">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                     med.isActive ? 'bg-green-500' : 'bg-gray-400'
@@ -357,14 +377,18 @@ const DiabeticDashboardPage: React.FC = memo(() => {
                     <p className="font-medium text-gray-800">{med.name}</p>
                     <p className="text-sm text-gray-600">{med.dosage} • {med.frequency}</p>
                     <p className="text-xs text-gray-500">Heures: {med.times.join(', ')}</p>
+                    {takenTodayNames.has(med.name) && (
+                      <span className="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700">Pris aujourd'hui</span>
+                    )}
                   </div>
                 </div>
                 <div>
                   <button
                     onClick={() => handleMarkMedicationTaken({ name: med.name, dosage: med.dosage })}
-                    className="px-3 py-1.5 text-sm rounded-lg bg-green-100 text-green-700 hover:bg-green-200"
+                    disabled={takenTodayNames.has(med.name)}
+                    className={`px-3 py-1.5 text-sm rounded-lg ${takenTodayNames.has(med.name) ? 'bg-gray-100 text-gray-500' : 'bg-green-100 text-green-700 hover:bg-green-200'}`}
                   >
-                    Marquer pris
+                    {takenTodayNames.has(med.name) ? 'Déjà pris' : 'Marquer pris'}
                   </button>
                 </div>
               </div>
