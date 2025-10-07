@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de synchronisation des campagnes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #6c757d; cursor: not-allowed; }
+        .log {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .campaign-item {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de synchronisation des campagnes</h1>
+        <p>Ce test vérifie que les campagnes sont bien synchronisées entre l'admin et la page d'accueil.</p>
+
+        <div class="test-section info">
+            <h3>📋 Instructions</h3>
+            <ol>
+                <li>Démarrez le serveur JSON : <code>npm run db</code></li>
+                <li>Démarrez l'application : <code>npm run dev</code></li>
+                <li>Ouvrez l'admin dashboard et créez/modifiez une campagne</li>
+                <li>Vérifiez que la campagne apparaît dans la page d'accueil</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Test de l'API</h3>
+            <button onclick="testAPI()">Tester l'API des campagnes</button>
+            <button onclick="clearLog()">Effacer les logs</button>
+            <div id="log" class="log"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Campagnes actuelles</h3>
+            <button onclick="loadCampaigns()">Charger les campagnes</button>
+            <div id="campaigns"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔄 Test de synchronisation</h3>
+            <button onclick="testSync()">Tester la synchronisation</button>
+            <div id="syncResult"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001';
+        let logElement = document.getElementById('log');
+        let campaignsElement = document.getElementById('campaigns');
+        let syncResultElement = document.getElementById('syncResult');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}\n`;
+            logElement.textContent += logMessage;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function clearLog() {
+            logElement.textContent = '';
+        }
+
+        async function makeRequest(path, method = 'GET', data = null) {
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+
+                if (data) {
+                    options.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(`${API_BASE}${path}`, options);
+                const result = await response.json();
+                
+                return {
+                    status: response.status,
+                    data: result
+                };
+            } catch (error) {
+                throw new Error(`Erreur de requête: ${error.message}`);
+            }
+        }
+
+        async function testAPI() {
+            log('🧪 Début du test de l\'API...');
+            
+            try {
+                // Test 1: Vérifier l'accès au serveur
+                log('1️⃣ Vérification de l\'accès au serveur...');
+                const healthCheck = await makeRequest('/health');
+                if (healthCheck.status !== 200) {
+                    throw new Error(`Serveur non accessible: ${healthCheck.status}`);
+                }
+                log('✅ Serveur accessible');
+
+                // Test 2: Récupérer les campagnes
+                log('2️⃣ Récupération des campagnes...');
+                const campaigns = await makeRequest('/campaigns');
+                if (campaigns.status !== 200) {
+                    throw new Error(`Erreur lors de la récupération: ${campaigns.status}`);
+                }
+                
+                const campaignCount = Array.isArray(campaigns.data) ? campaigns.data.length : 0;
+                log(`✅ ${campaignCount} campagnes récupérées`);
+
+                // Test 3: Créer une campagne de test
+                log('3️⃣ Création d\'une campagne de test...');
+                const testCampaign = {
+                    title: `Test UI - ${new Date().toLocaleTimeString()}`,
+                    organizer: 'Test Interface',
+                    description: 'Campagne créée via l\'interface de test',
+                    link: 'https://example.com',
+                    status: 'planned'
+                };
+
+                const createResult = await makeRequest('/campaigns', 'POST', testCampaign);
+                if (createResult.status !== 201) {
+                    throw new Error(`Erreur lors de la création: ${createResult.status}`);
+                }
+                
+                log(`✅ Campagne créée avec l'ID: ${createResult.data.id}`);
+
+                // Test 4: Vérifier la création
+                log('4️⃣ Vérification de la création...');
+                const getResult = await makeRequest(`/campaigns/${createResult.data.id}`);
+                if (getResult.status !== 200) {
+                    throw new Error(`Erreur lors de la récupération: ${getResult.status}`);
+                }
+                
+                log(`✅ Campagne récupérée: ${getResult.data.title}`);
+
+                // Test 5: Supprimer la campagne de test
+                log('5️⃣ Suppression de la campagne de test...');
+                const deleteResult = await makeRequest(`/campaigns/${createResult.data.id}`, 'DELETE');
+                if (deleteResult.status !== 200) {
+                    log(`⚠️ Erreur lors de la suppression: ${deleteResult.status}`);
+                } else {
+                    log('✅ Campagne supprimée');
+                }
+
+                log('🎉 Test de l\'API terminé avec succès !');
+
+            } catch (error) {
+                log(`❌ Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadCampaigns() {
+            log('📊 Chargement des campagnes...');
+            
+            try {
+                const result = await makeRequest('/campaigns');
+                if (result.status !== 200) {
+                    throw new Error(`Erreur: ${result.status}`);
+                }
+
+                const campaigns = Array.isArray(result.data) ? result.data : [];
+                campaignsElement.innerHTML = '';
+
+                if (campaigns.length === 0) {
+                    campaignsElement.innerHTML = '<p>Aucune campagne trouvée</p>';
+                    return;
+                }
+
+                campaigns.forEach(campaign => {
+                    const campaignDiv = document.createElement('div');
+                    campaignDiv.className = 'campaign-item';
+                    campaignDiv.innerHTML = `
+                        <strong>${campaign.title}</strong><br>
+                        <small>Organisateur: ${campaign.organizer || 'N/A'}</small><br>
+                        <small>Statut: ${campaign.status}</small><br>
+                        <small>ID: ${campaign.id}</small>
+                    `;
+                    campaignsElement.appendChild(campaignDiv);
+                });
+
+                log(`✅ ${campaigns.length} campagnes chargées`);
+
+            } catch (error) {
+                log(`❌ Erreur lors du chargement: ${error.message}`, 'error');
+                campaignsElement.innerHTML = '<p>Erreur lors du chargement des campagnes</p>';
+            }
+        }
+
+        async function testSync() {
+            log('🔄 Test de synchronisation...');
+            
+            try {
+                // Simuler un événement de changement
+                const event = new CustomEvent('campaigns:changed', {
+                    detail: { action: 'test', timestamp: new Date().toISOString() }
+                });
+                
+                window.dispatchEvent(event);
+                log('✅ Événement campaigns:changed déclenché');
+                
+                // Attendre un peu puis recharger
+                setTimeout(async () => {
+                    await loadCampaigns();
+                    log('✅ Campagnes rechargées après événement');
+                }, 1000);
+
+            } catch (error) {
+                log(`❌ Erreur lors du test de synchronisation: ${error.message}`, 'error');
+            }
+        }
+
+        // Charger les campagnes au chargement de la page
+        window.addEventListener('load', () => {
+            log('🚀 Interface de test chargée');
+            loadCampaigns();
+        });
+    </script>
+</body>
+</html>

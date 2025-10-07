@@ -59,11 +59,9 @@ const HomePage: React.FC = memo(() => {
         if (Array.isArray(parsed)) {
           setCampaigns(parsed);
           setIsLoading(false);
-          return () => controller.abort();
         }
       } catch {}
     }
-
 
     const triggerReload = () => {
       // Invalider le cache pour forcer rechargement
@@ -71,10 +69,19 @@ const HomePage: React.FC = memo(() => {
       fetchCampaigns();
     };
 
+    // Charger les campagnes au montage
     fetchCampaigns();
+    
+    // Écouter les événements de changement
     window.addEventListener('campaigns:changed', triggerReload);
     window.addEventListener('focus', triggerReload);
-    return () => controller.abort();
+    
+    // Cleanup des event listeners
+    return () => {
+      controller.abort();
+      window.removeEventListener('campaigns:changed', triggerReload);
+      window.removeEventListener('focus', triggerReload);
+    };
   }, []);
 
   const openImage = (imageSrc?: string | null) => {
@@ -136,12 +143,34 @@ const HomePage: React.FC = memo(() => {
     try {
       setIsLoading(true);
       setHasError(false);
-      console.log('🔍 Récupération des campagnes...');
+      console.log('🔍 Récupération des campagnes depuis l\'API...');
+      
       const data = await campaignApi.getAll();
-      console.log('📋 Campagnes récupérées:', data);
-      setCampaigns(Array.isArray(data) ? data : []);
+      console.log('📋 Campagnes récupérées depuis l\'API:', data);
+      console.log('📊 Nombre de campagnes:', Array.isArray(data) ? data.length : 0);
+      
+      const campaignsArray = Array.isArray(data) ? data : [];
+      setCampaigns(campaignsArray);
       setRetryCount(0); // Reset retry count on success
-      try { sessionStorage.setItem('campaigns', JSON.stringify(Array.isArray(data) ? data : [])); } catch {}
+      
+      // Sauvegarder en sessionStorage pour le cache
+      try { 
+        sessionStorage.setItem('campaigns', JSON.stringify(campaignsArray)); 
+        console.log('💾 Campagnes sauvegardées en cache');
+      } catch (e) {
+        console.warn('⚠️ Impossible de sauvegarder en cache:', e);
+      }
+      
+      // Déclencher un événement personnalisé pour notifier les autres composants
+      try {
+        window.dispatchEvent(new CustomEvent('campaigns:loaded', { 
+          detail: { count: campaignsArray.length, campaigns: campaignsArray } 
+        }));
+        console.log('📡 Événement campaigns:loaded déclenché');
+      } catch (e) {
+        console.warn('⚠️ Impossible de déclencher l\'événement:', e);
+      }
+      
     } catch (error) {
       console.error('❌ Erreur lors de la récupération des campagnes:', error);
       if ((error as any)?.name !== 'AbortError') {

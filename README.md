@@ -192,6 +192,10 @@ npm run dev:full
 
 > 🌐 **Guide Ngrok (un tunnel)** : Voir [NGROK-GUIDE.md](./NGROK-GUIDE.md) pour exposer l'application via ngrok et utiliser le proxy Vite (`/api`) avec un seul tunnel.
 
+> 🗄️ **Guide d'accès à la base de données** : Voir [DATABASE-ACCESS-GUIDE.md](./DATABASE-ACCESS-GUIDE.md) pour consulter, modifier et gérer votre base de données MealMate.
+
+> 🧪 **Tests de synchronisation** : Utilisez `test-campaigns.bat` (Windows) ou `node test-campaign-sync.js` pour tester la synchronisation des campagnes entre l'admin et la page d'accueil.
+
 ## 🔧 Configuration
 
 ### Variables d'environnement

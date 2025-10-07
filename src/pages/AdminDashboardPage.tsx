@@ -177,15 +177,36 @@ const AdminDashboardPage: React.FC = () => {
     }
     try {
       setError(null);
-      if (editing.id) await campaignApi.update(editing.id as number, editing);
-      else await campaignApi.create(editing as any);
+      console.log('💾 Sauvegarde de la campagne:', editing);
+      
+      let savedCampaign;
+      if (editing.id) {
+        savedCampaign = await campaignApi.update(editing.id as number, editing);
+        console.log('✅ Campagne mise à jour:', savedCampaign);
+      } else {
+        savedCampaign = await campaignApi.create(editing as any);
+        console.log('✅ Campagne créée:', savedCampaign);
+      }
+      
+      // Recharger la liste des campagnes
       await fetchItems();
-      try { window.dispatchEvent(new CustomEvent('campaigns:changed')); } catch {}
+      
+      // Déclencher l'événement de changement
+      try { 
+        window.dispatchEvent(new CustomEvent('campaigns:changed', { 
+          detail: { action: toastAction, campaign: savedCampaign } 
+        }));
+        console.log('📡 Événement campaigns:changed déclenché');
+      } catch (e) {
+        console.warn('⚠️ Impossible de déclencher l\'événement:', e);
+      }
+      
       cancelForm();
       toast.show(`${toastAction} réussie`, 'success');
     } catch (e: any) {
-      setError(e?.message || 'Erreur lors de l’enregistrement');
-      toast.show('Erreur lors de l’enregistrement', 'error');
+      console.error('❌ Erreur lors de l\'enregistrement:', e);
+      setError(e?.message || 'Erreur lors de l\'enregistrement');
+      toast.show('Erreur lors de l\'enregistrement', 'error');
     }
   };
 
@@ -193,11 +214,26 @@ const AdminDashboardPage: React.FC = () => {
     if (!id) return;
     if (!confirm('Supprimer cette campagne ?')) return;
     try {
+      console.log('🗑️ Suppression de la campagne ID:', id);
       await campaignApi.delete(id);
+      console.log('✅ Campagne supprimée');
+      
+      // Recharger la liste des campagnes
       await fetchItems();
-      try { window.dispatchEvent(new CustomEvent('campaigns:changed')); } catch {}
+      
+      // Déclencher l'événement de changement
+      try { 
+        window.dispatchEvent(new CustomEvent('campaigns:changed', { 
+          detail: { action: 'suppression', campaignId: id } 
+        }));
+        console.log('📡 Événement campaigns:changed déclenché');
+      } catch (e) {
+        console.warn('⚠️ Impossible de déclencher l\'événement:', e);
+      }
+      
       toast.show('Campagne supprimée', 'success');
     } catch (e: any) {
+      console.error('❌ Erreur lors de la suppression:', e);
       setError(e?.message || 'Erreur lors de la suppression');
       toast.show('Erreur lors de la suppression', 'error');
     }
