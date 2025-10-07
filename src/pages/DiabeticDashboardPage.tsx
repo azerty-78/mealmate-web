@@ -11,10 +11,12 @@ import {
 import MedicationModal from '../components/MedicationModal';
 import GlucoseDetailsModal from '../components/GlucoseDetailsModal';
 import MealDetailsModal from '../components/MealDetailsModal';
+import { useToast } from '../components/ToastProvider';
 
 
 const DiabeticDashboardPage: React.FC = memo(() => {
   const { user } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState<'today' | '7days' | '30days'>('today');
   
@@ -30,6 +32,8 @@ const DiabeticDashboardPage: React.FC = memo(() => {
   const [isGlucoseModalOpen, setIsGlucoseModalOpen] = useState(false);
   const [isMealModalOpen, setIsMealModalOpen] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState<MealTemplate | null>(null);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [selectedAlert, setSelectedAlert] = useState<{ type: 'warning' | 'info' | 'success'; message: string; time: string } | null>(null);
 
   // Données calculées
   const currentGlucose = glucoseReadings.length > 0 ? glucoseReadings[glucoseReadings.length - 1].value : 0;
@@ -54,6 +58,18 @@ const DiabeticDashboardPage: React.FC = memo(() => {
       setRecommendedMeals((allMeals || []).filter(m => m.isActive !== false));
     } catch (error) {
       console.error('Erreur lors du chargement des repas recommandés:', error);
+    }
+  };
+
+  const reloadMedicationLogs = async () => {
+    if (!user) return;
+    try {
+      const logs = await medicationLogApi.getByUserId(user.id);
+      // Trier par date
+      const sorted = [...logs].sort((a, b) => new Date(a.takenTime || a.scheduledTime).getTime() - new Date(b.takenTime || b.scheduledTime).getTime());
+      setMedicationLogs(sorted);
+    } catch (error) {
+      console.error('Erreur lors du rechargement des prises:', error);
     }
   };
 
@@ -100,8 +116,10 @@ const DiabeticDashboardPage: React.FC = memo(() => {
         currentMedications: medications
       });
       setDiabeticRecord(updated);
+      toast.show('Médicaments mis à jour', 'success');
     } catch (error) {
       console.error('Erreur lors de la sauvegarde des médicaments:', error);
+      toast.show('Erreur lors de la sauvegarde des médicaments', 'error');
     }
   };
 
@@ -121,8 +139,11 @@ const DiabeticDashboardPage: React.FC = memo(() => {
       } as any);
       // Rafraîchir la liste des logs localement
       setMedicationLogs(prev => [...prev, created]);
+      toast.show('Prise de médicament enregistrée', 'success');
+      await reloadMedicationLogs();
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement de la prise de médicament:', error);
+      toast.show('Erreur lors de l\'enregistrement de la prise', 'error');
     }
   };
 
@@ -322,7 +343,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
           <div className="space-y-3">
             {diabeticRecord?.currentMedications?.slice(0, 3).map((med, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-3">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                     med.isActive ? 'bg-green-500' : 'bg-gray-400'
                   }`}>
@@ -364,8 +385,8 @@ const DiabeticDashboardPage: React.FC = memo(() => {
                 key={index} 
                 className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors"
                 onClick={() => {
-                  // Ici vous pouvez ajouter une logique pour afficher plus de détails sur l'alerte
-                  console.log('Alerte cliquée:', alert);
+                  setSelectedAlert(alert as any);
+                  setIsAlertModalOpen(true);
                 }}
               >
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
@@ -391,6 +412,28 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             )}
           </div>
         </div>
+
+        {/* Modal Détails d'Alerte */}
+        {isAlertModalOpen && selectedAlert && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setIsAlertModalOpen(false)}>
+            <div className="bg-white rounded-xl shadow-xl w-[95%] max-w-md p-5" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-lg font-bold">Détails de l'alerte</h3>
+                <button className="p-2 rounded hover:bg-gray-100" onClick={() => setIsAlertModalOpen(false)}>
+                  ×
+                </button>
+              </div>
+              <div className="space-y-2">
+                <div className="text-sm"><span className="font-medium">Type:</span> {selectedAlert.type}</div>
+                <div className="text-sm"><span className="font-medium">Message:</span> {selectedAlert.message}</div>
+                <div className="text-sm"><span className="font-medium">Heure:</span> {selectedAlert.time}</div>
+              </div>
+              <div className="mt-4 flex justify-end">
+                <button className="px-4 py-2 rounded bg-blue-600 text-white" onClick={() => setIsAlertModalOpen(false)}>Fermer</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Dernières prises de médicaments */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">

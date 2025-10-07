@@ -552,6 +552,16 @@
             "19:00"
           ],
           "isActive": true
+        },
+        {
+          "name": "Insuline rapide",
+          "dosage": "8 UI",
+          "frequency": "Avant repas",
+          "times": [
+            "12:00",
+            "19:00"
+          ],
+          "isActive": true
         }
       ],
       "bloodGlucoseTargets": {
@@ -580,7 +590,7 @@
       ],
       "notes": "Patient suivie pour diabète de type 2, bon contrôle glycémique",
       "createdAt": "2024-01-15T10:30:00.000Z",
-      "updatedAt": "2025-10-07T11:55:09.232Z"
+      "updatedAt": "2025-10-07T12:02:09.237Z"
     }
   ],
   "glucoseReadings": [
@@ -1693,6 +1703,26 @@
       "dosage": "500mg",
       "scheduledTime": "2025-10-07T11:49:46.442Z",
       "takenTime": "2025-10-07T11:49:46.442Z",
+      "taken": true,
+      "notes": "Marqué comme pris depuis le tableau de bord"
+    },
+    {
+      "id": 9,
+      "userId": 2,
+      "medicationName": "Metformine",
+      "dosage": "500mg",
+      "scheduledTime": "2025-10-07T12:01:41.393Z",
+      "takenTime": "2025-10-07T12:01:41.393Z",
+      "taken": true,
+      "notes": "Marqué comme pris depuis le tableau de bord"
+    },
+    {
+      "id": 10,
+      "userId": 2,
+      "medicationName": "Insuline rapide",
+      "dosage": "8 UI",
+      "scheduledTime": "2025-10-07T12:02:25.271Z",
+      "takenTime": "2025-10-07T12:02:25.271Z",
       "taken": true,
       "notes": "Marqué comme pris depuis le tableau de bord"
     }
