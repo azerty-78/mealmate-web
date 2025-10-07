@@ -19,10 +19,15 @@ export class GeminiService {
   private model: any;
 
   constructor() {
+    if (!GEMINI_CONFIG.apiKey || typeof GEMINI_CONFIG.apiKey !== 'string' || GEMINI_CONFIG.apiKey.trim().length < 10) {
+      console.error('❌ Clé API Gemini manquante ou invalide. Définissez VITE_GEMINI_API_KEY.');
+      throw new Error('Clé API Gemini manquante ou invalide');
+    }
     this.genAI = new GoogleGenerativeAI(GEMINI_CONFIG.apiKey);
-    this.model = this.genAI.getGenerativeModel({ 
+    this.model = this.genAI.getGenerativeModel({
       model: GEMINI_CONFIG.modelName,
       generationConfig: GEMINI_CONFIG.generationConfig
+      // Note: safetySettings retirés pour compatibilité avec l'API utilisée
     });
   }
 
@@ -53,6 +58,9 @@ export class GeminiService {
       const generatePromise = this.model.generateContent(prompt);
       const result = await Promise.race([generatePromise, timeoutPromise]);
       const text = this.extractTextSafely(result);
+      if (!text) {
+        console.warn('⚠️ Réponse IA vide. Résultat brut:', JSON.stringify(result, null, 2));
+      }
       
       console.log('✅ Réponse générée avec succès');
       return text && text.trim().length > 0
@@ -91,6 +99,9 @@ export class GeminiService {
       const chatPromise = chat.sendMessage(lastMessage.parts[0].text);
       const result = await Promise.race([chatPromise, timeoutPromise]);
       const text = this.extractTextSafely(result);
+      if (!text) {
+        console.warn('⚠️ Réponse chat IA vide. Résultat brut:', JSON.stringify(result, null, 2));
+      }
       
       console.log('✅ Réponse de chat générée avec succès');
       return text && text.trim().length > 0
@@ -129,6 +140,9 @@ export class GeminiService {
       
       const result = await Promise.race([imagePromise, timeoutPromise]);
       const text = this.extractTextSafely(result);
+      if (!text) {
+        console.warn('⚠️ Réponse IA (image) vide. Résultat brut:', JSON.stringify(result, null, 2));
+      }
       
       console.log('✅ Réponse avec image générée avec succès');
       return text && text.trim().length > 0
