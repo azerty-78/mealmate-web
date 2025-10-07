@@ -50,7 +50,8 @@ const DiabeticDashboardPage: React.FC = memo(() => {
   const loadRecommendedMeals = async () => {
     try {
       const allMeals = await mealTemplateApi.getDiabeticFriendly();
-      setRecommendedMeals(allMeals.slice(0, 4));
+      // Afficher tous les repas diabète-friendly actifs
+      setRecommendedMeals((allMeals || []).filter(m => m.isActive !== false));
     } catch (error) {
       console.error('Erreur lors du chargement des repas recommandés:', error);
     }
