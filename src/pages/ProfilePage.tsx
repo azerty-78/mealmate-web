@@ -568,23 +568,150 @@ const ProfilePage: React.FC = memo(() => {
               </div>
             </div>
 
-            {/* Objectifs glycémiques */}
+            {/* Objectifs glycémiques (éditables) */}
             <div className="mb-4">
               <h4 className="text-sm font-medium text-gray-600 mb-2">Objectifs glycémiques</h4>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="p-2 bg-gray-50 rounded-lg text-center">
-                  <p className="text-xs text-gray-600">À jeun</p>
-                  <p className="text-sm font-medium">{diabeticRecord.bloodGlucoseTargets.fasting.min}-{diabeticRecord.bloodGlucoseTargets.fasting.max} mg/dL</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-600 mb-2">À jeun (mg/dL)</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="number"
+                      value={editableRecord?.bloodGlucoseTargets.fasting.min || 0}
+                      onChange={(e) => editableRecord && setEditableRecord({
+                        ...editableRecord,
+                        bloodGlucoseTargets: {
+                          ...editableRecord.bloodGlucoseTargets,
+                          fasting: { ...editableRecord.bloodGlucoseTargets.fasting, min: parseInt(e.target.value) || 0 }
+                        }
+                      })}
+                      className="w-full px-2 py-1 border border-gray-300 rounded"
+                      placeholder="Min"
+                    />
+                    <input
+                      type="number"
+                      value={editableRecord?.bloodGlucoseTargets.fasting.max || 0}
+                      onChange={(e) => editableRecord && setEditableRecord({
+                        ...editableRecord,
+                        bloodGlucoseTargets: {
+                          ...editableRecord.bloodGlucoseTargets,
+                          fasting: { ...editableRecord.bloodGlucoseTargets.fasting, max: parseInt(e.target.value) || 0 }
+                        }
+                      })}
+                      className="w-full px-2 py-1 border border-gray-300 rounded"
+                      placeholder="Max"
+                    />
+                  </div>
                 </div>
-                <div className="p-2 bg-gray-50 rounded-lg text-center">
-                  <p className="text-xs text-gray-600">Avant repas</p>
-                  <p className="text-sm font-medium">{diabeticRecord.bloodGlucoseTargets.beforeMeals.min}-{diabeticRecord.bloodGlucoseTargets.beforeMeals.max} mg/dL</p>
+
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-600 mb-2">Avant repas (mg/dL)</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="number"
+                      value={editableRecord?.bloodGlucoseTargets.beforeMeals.min || 0}
+                      onChange={(e) => editableRecord && setEditableRecord({
+                        ...editableRecord,
+                        bloodGlucoseTargets: {
+                          ...editableRecord.bloodGlucoseTargets,
+                          beforeMeals: { ...editableRecord.bloodGlucoseTargets.beforeMeals, min: parseInt(e.target.value) || 0 }
+                        }
+                      })}
+                      className="w-full px-2 py-1 border border-gray-300 rounded"
+                      placeholder="Min"
+                    />
+                    <input
+                      type="number"
+                      value={editableRecord?.bloodGlucoseTargets.beforeMeals.max || 0}
+                      onChange={(e) => editableRecord && setEditableRecord({
+                        ...editableRecord,
+                        bloodGlucoseTargets: {
+                          ...editableRecord.bloodGlucoseTargets,
+                          beforeMeals: { ...editableRecord.bloodGlucoseTargets.beforeMeals, max: parseInt(e.target.value) || 0 }
+                        }
+                      })}
+                      className="w-full px-2 py-1 border border-gray-300 rounded"
+                      placeholder="Max"
+                    />
+                  </div>
                 </div>
-                <div className="p-2 bg-gray-50 rounded-lg text-center">
-                  <p className="text-xs text-gray-600">Après repas</p>
-                  <p className="text-sm font-medium">{diabeticRecord.bloodGlucoseTargets.afterMeals.min}-{diabeticRecord.bloodGlucoseTargets.afterMeals.max} mg/dL</p>
+
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-600 mb-2">Après repas (mg/dL)</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="number"
+                      value={editableRecord?.bloodGlucoseTargets.afterMeals.min || 0}
+                      onChange={(e) => editableRecord && setEditableRecord({
+                        ...editableRecord,
+                        bloodGlucoseTargets: {
+                          ...editableRecord.bloodGlucoseTargets,
+                          afterMeals: { ...editableRecord.bloodGlucoseTargets.afterMeals, min: parseInt(e.target.value) || 0 }
+                        }
+                      })}
+                      className="w-full px-2 py-1 border border-gray-300 rounded"
+                      placeholder="Min"
+                    />
+                    <input
+                      type="number"
+                      value={editableRecord?.bloodGlucoseTargets.afterMeals.max || 0}
+                      onChange={(e) => editableRecord && setEditableRecord({
+                        ...editableRecord,
+                        bloodGlucoseTargets: {
+                          ...editableRecord.bloodGlucoseTargets,
+                          afterMeals: { ...editableRecord.bloodGlucoseTargets.afterMeals, max: parseInt(e.target.value) || 0 }
+                        }
+                      })}
+                      className="w-full px-2 py-1 border border-gray-300 rounded"
+                      placeholder="Max"
+                    />
+                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* HbA1c et Notes (éditables) */}
+            <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="p-3 bg-purple-50 rounded-lg">
+                <p className="text-xs text-gray-600 mb-2">HbA1c cible (%)</p>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={editableRecord?.hba1cTarget ?? 0}
+                  onChange={(e) => editableRecord && setEditableRecord({ ...editableRecord, hba1cTarget: parseFloat(e.target.value) || 0 })}
+                  className="w-full px-2 py-1 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="p-3 bg-purple-50 rounded-lg">
+                <p className="text-xs text-gray-600 mb-2">HbA1c actuel (%)</p>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={editableRecord?.lastHbA1c ?? 0}
+                  onChange={(e) => editableRecord && setEditableRecord({ ...editableRecord, lastHbA1c: parseFloat(e.target.value) || 0 })}
+                  className="w-full px-2 py-1 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="p-3 bg-purple-50 rounded-lg">
+                <p className="text-xs text-gray-600 mb-2">Date dernière HbA1c</p>
+                <input
+                  type="date"
+                  value={editableRecord?.lastHbA1cDate ? new Date(editableRecord.lastHbA1cDate).toISOString().slice(0,10) : ''}
+                  onChange={(e) => editableRecord && setEditableRecord({ ...editableRecord, lastHbA1cDate: e.target.value ? new Date(e.target.value).toISOString() : null as any })}
+                  className="w-full px-2 py-1 border border-gray-300 rounded"
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-gray-600 mb-2">Notes médicales</h4>
+              <textarea
+                rows={3}
+                value={editableRecord?.notes || ''}
+                onChange={(e) => editableRecord && setEditableRecord({ ...editableRecord, notes: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Notes complémentaires..."
+              />
             </div>
 
             {/* Médicaments actuels */}
