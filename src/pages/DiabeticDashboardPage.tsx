@@ -105,6 +105,27 @@ const DiabeticDashboardPage: React.FC = memo(() => {
     }
   };
 
+  // Marquer une prise de médicament (création d'un log)
+  const handleMarkMedicationTaken = async (medication: { name: string; dosage: string }) => {
+    try {
+      if (!user) return;
+      const nowIso = new Date().toISOString();
+      const created = await medicationLogApi.create({
+        userId: user.id,
+        medicationName: medication.name,
+        dosage: medication.dosage,
+        scheduledTime: nowIso,
+        takenTime: nowIso,
+        taken: true,
+        notes: 'Marqué comme pris depuis le tableau de bord'
+      } as any);
+      // Rafraîchir la liste des logs localement
+      setMedicationLogs(prev => [...prev, created]);
+    } catch (error) {
+      console.error('Erreur lors de l\'enregistrement de la prise de médicament:', error);
+    }
+  };
+
   // Fonction pour ajouter une lecture de glycémie
   const handleAddGlucoseReading = async (reading: Omit<GlucoseReading, 'id'>) => {
     try {
@@ -317,6 +338,14 @@ const DiabeticDashboardPage: React.FC = memo(() => {
                     <p className="text-xs text-gray-500">Heures: {med.times.join(', ')}</p>
                   </div>
                 </div>
+                <div>
+                  <button
+                    onClick={() => handleMarkMedicationTaken({ name: med.name, dosage: med.dosage })}
+                    className="px-3 py-1.5 text-sm rounded-lg bg-green-100 text-green-700 hover:bg-green-200"
+                  >
+                    Marquer pris
+                  </button>
+                </div>
               </div>
             )) || (
               <p className="text-gray-500 text-center py-4">Aucun médicament enregistré</p>
@@ -359,6 +388,36 @@ const DiabeticDashboardPage: React.FC = memo(() => {
               </div>
             )) : (
               <p className="text-gray-500 text-center py-4">Aucune alerte pour le moment</p>
+            )}
+          </div>
+        </div>
+
+        {/* Dernières prises de médicaments */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-bold text-gray-800 mb-4" style={{ fontFamily: 'Comic Sans MS, ui-rounded, system-ui' }}>
+            Dernières prises de médicaments
+          </h3>
+          <div className="space-y-3">
+            {(medicationLogs || []).slice(-5).map((log) => {
+              const time = new Date(log.takenTime || log.scheduledTime).toLocaleString('fr-FR', {
+                hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'
+              });
+              return (
+                <div key={log.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center ${log.taken ? 'bg-green-500' : 'bg-gray-400'}`}>
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800">{log.medicationName} — {log.dosage}</p>
+                      <p className="text-xs text-gray-600">{time}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {(!medicationLogs || medicationLogs.length === 0) && (
+              <p className="text-gray-500 text-center py-4">Aucune prise enregistrée</p>
             )}
           </div>
         </div>

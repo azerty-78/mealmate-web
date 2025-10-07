@@ -118,8 +118,8 @@ const MedicationModal: React.FC<MedicationModalProps> = ({ isOpen, onClose, medi
         <div className="p-6 space-y-6 overflow-y-auto max-h-[60vh]">
           {/* Liste des médicaments */}
           <div className="space-y-3">
-            {medications.map((med) => (
-              <div key={med.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+            {medications.map((med, idx) => (
+              <div key={med.id ?? `${med.name}-${idx}`} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3">
                     <div className={`w-3 h-3 rounded-full ${med.isActive ? 'bg-green-500' : 'bg-gray-400'}`} />

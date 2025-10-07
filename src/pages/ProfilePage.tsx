@@ -32,6 +32,7 @@ const ProfilePage: React.FC = memo(() => {
     awards: user?.awards || []
   });
   const [diabeticRecord, setDiabeticRecord] = useState<DiabeticRecord | null>(null);
+  const [editableRecord, setEditableRecord] = useState<DiabeticRecord | null>(null);
   const [savingMedical, setSavingMedical] = useState(false);
 
   useEffect(() => {
@@ -43,6 +44,7 @@ const ProfilePage: React.FC = memo(() => {
       if (!user || user.profileType !== 'diabetic_person') return;
       const dr = await diabeticApi.getByUserId(user.id);
       setDiabeticRecord(dr);
+      setEditableRecord(dr ? { ...dr } : null);
     };
     load();
   }, [user]);
@@ -155,22 +157,24 @@ const ProfilePage: React.FC = memo(() => {
   };
 
   const saveMedicalParams = async () => {
-    if (!user || !diabeticRecord) return;
+    if (!user || !diabeticRecord || !editableRecord) return;
     setSavingMedical(true);
     try {
-      const updated = await diabeticApi.update(diabeticRecord.id, {
+      const payload: Partial<DiabeticRecord> = {
         bloodGlucoseTargets: {
-          fasting: { min: 80, max: 130 },
-          beforeMeals: { min: 80, max: 130 },
-          afterMeals: { min: 80, max: 180 }
+          fasting: { min: editableRecord.bloodGlucoseTargets.fasting.min, max: editableRecord.bloodGlucoseTargets.fasting.max },
+          beforeMeals: { min: editableRecord.bloodGlucoseTargets.beforeMeals.min, max: editableRecord.bloodGlucoseTargets.beforeMeals.max },
+          afterMeals: { min: editableRecord.bloodGlucoseTargets.afterMeals.min, max: editableRecord.bloodGlucoseTargets.afterMeals.max }
         },
-        hba1cTarget: 7.0,
-        lastHbA1c: diabeticRecord.lastHbA1c,
-        lastHbA1cDate: diabeticRecord.lastHbA1cDate,
-        emergencyContacts: diabeticRecord.emergencyContacts,
-        notes: diabeticRecord.notes
-      });
+        hba1cTarget: editableRecord.hba1cTarget,
+        lastHbA1c: editableRecord.lastHbA1c,
+        lastHbA1cDate: editableRecord.lastHbA1cDate,
+        emergencyContacts: editableRecord.emergencyContacts,
+        notes: editableRecord.notes
+      };
+      const updated = await diabeticApi.update(diabeticRecord.id, payload);
       setDiabeticRecord(updated);
+      setEditableRecord({ ...updated });
       // Notifier le dashboard qu'il doit se rafraîchir
       window.dispatchEvent(new Event('diabeticDataUpdated'));
       show('Paramètres médicaux sauvegardés', 'success');
