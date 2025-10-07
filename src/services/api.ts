@@ -785,24 +785,28 @@ export const medicationLogApi = {
 // API pour les modèles de repas
 export const mealTemplateApi = {
   getAll: (): Promise<MealTemplate[]> =>
-    request<MealTemplate[]>('/meal-templates'),
+    request<MealTemplate[]>('/meals'),
   getById: (id: number): Promise<MealTemplate> =>
-    request<MealTemplate>(`/meal-templates/${id}`),
+    request<MealTemplate>(`/meals/${id}`),
   getByCategory: (category: string): Promise<MealTemplate[]> =>
-    request<MealTemplate[]>(`/meal-templates?category=${category}`),
+    request<MealTemplate[]>(`/meals?category=${category}`),
   getDiabeticFriendly: (): Promise<MealTemplate[]> =>
-    request<MealTemplate[]>('/meal-templates?diabeticFriendly=true'),
+    request<MealTemplate[]>('/meals?diabeticFriendly=true'),
   create: (data: Omit<MealTemplate, 'id' | 'createdAt' | 'updatedAt'>): Promise<MealTemplate> =>
-    request<MealTemplate>('/meal-templates', {
+    request<MealTemplate>('/meals', {
       method: 'POST',
-      body: JSON.stringify({
-        ...data,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }),
+      body: JSON.stringify((() => {
+        // Ne jamais envoyer id/createdAt/updatedAt à JSON Server lors d'une création
+        const { id: _omitId, createdAt: _omitCreatedAt, updatedAt: _omitUpdatedAt, ...rest } = (data as any) || {};
+        return {
+          ...rest,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+      })()),
     }),
   update: (id: number, data: Partial<MealTemplate>): Promise<MealTemplate> =>
-    request<MealTemplate>(`/meal-templates/${id}`, {
+    request<MealTemplate>(`/meals/${id}`, {
       method: 'PUT',
       body: JSON.stringify({
         ...data,
@@ -810,7 +814,7 @@ export const mealTemplateApi = {
       }),
     }),
   delete: (id: number): Promise<void> =>
-    request<void>(`/meal-templates/${id}`, { method: 'DELETE' }),
+    request<void>(`/meals/${id}`, { method: 'DELETE' }),
 };
 
 // Fonction pour assigner automatiquement un médecin à une femme enceinte
