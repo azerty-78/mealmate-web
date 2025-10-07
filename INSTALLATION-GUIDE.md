@@ -51,6 +51,9 @@ cd mealmate-web
 # Installer toutes les dépendances
 npm install
 
+# Installer la dépendance Gemini (IA générative)
+npm install @google/generative-ai
+
 # Vérifier l'installation
 npm list --depth=0
 ```
