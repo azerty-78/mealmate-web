@@ -168,6 +168,8 @@ npm run dev:full
 
 > 📖 **Guide d'installation détaillé** : Voir [INSTALLATION-GUIDE.md](./INSTALLATION-GUIDE.md) pour une installation complète avec résolution des problèmes.
 
+> 🌐 **Guide Ngrok (un tunnel)** : Voir [NGROK-GUIDE.md](./NGROK-GUIDE.md) pour exposer l'application via ngrok et utiliser le proxy Vite (`/api`) avec un seul tunnel.
+
 ## 🔧 Configuration
 
 ### Variables d'environnement
