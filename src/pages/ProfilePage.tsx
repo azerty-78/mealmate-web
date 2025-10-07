@@ -40,13 +40,21 @@ const ProfilePage: React.FC = memo(() => {
   }, []);
 
   useEffect(() => {
-    const load = async () => {
+    const reload = async () => {
       if (!user || user.profileType !== 'diabetic_person') return;
       const dr = await diabeticApi.getByUserId(user.id);
       setDiabeticRecord(dr);
       setEditableRecord(dr ? { ...dr } : null);
     };
-    load();
+    reload();
+
+    const onExternalUpdate = () => {
+      reload().catch(() => void 0);
+    };
+    window.addEventListener('diabeticDataUpdated', onExternalUpdate);
+    return () => {
+      window.removeEventListener('diabeticDataUpdated', onExternalUpdate);
+    };
   }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -172,9 +180,11 @@ const ProfilePage: React.FC = memo(() => {
         emergencyContacts: editableRecord.emergencyContacts,
         notes: editableRecord.notes
       };
-      const updated = await diabeticApi.update(diabeticRecord.id, payload);
-      setDiabeticRecord(updated);
-      setEditableRecord({ ...updated });
+      await diabeticApi.update(diabeticRecord.id, payload);
+      // Recharger depuis la base pour s'assurer de la synchro
+      const refreshed = await diabeticApi.getByUserId(user.id);
+      setDiabeticRecord(refreshed);
+      setEditableRecord(refreshed ? { ...refreshed } : null);
       // Notifier le dashboard qu'il doit se rafraîchir
       window.dispatchEvent(new Event('diabeticDataUpdated'));
       show('Paramètres médicaux sauvegardés', 'success');

@@ -128,6 +128,22 @@ const DiabeticDashboardPage: React.FC = memo(() => {
     };
 
     loadData();
+    
+    // Synchronisation: écouter les mises à jour depuis le profil
+    const handleDiabeticUpdate = async () => {
+      try {
+        if (!user) return;
+        const updated = await diabeticApi.getByUserId(user.id);
+        setDiabeticRecord(updated);
+        await reloadMedicationLogs();
+      } catch (e) {
+        console.warn('Sync diabeticDataUpdated: échec de rechargement', e);
+      }
+    };
+    window.addEventListener('diabeticDataUpdated', handleDiabeticUpdate);
+    return () => {
+      window.removeEventListener('diabeticDataUpdated', handleDiabeticUpdate);
+    };
   }, [user]);
 
   // Fonctions pour gérer les médicaments
