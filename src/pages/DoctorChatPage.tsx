@@ -74,7 +74,7 @@ const DoctorChatPage: React.FC = () => {
   const generateDoctorResponse = (userMessage: string): string => {
     const responses = [
       "Je comprends votre préoccupation. Pouvez-vous me donner plus de détails sur vos symptômes ?",
-      "C'est normal pendant la grossesse. Je vous recommande de...",
+      "C'est normal avec le diabète. Je vous recommande de...",
       "Si les symptômes persistent, n'hésitez pas à venir en consultation.",
       "Je vais noter cela dans votre dossier médical. Avez-vous d'autres questions ?",
       "C'est une excellente question. Voici ce que je peux vous dire..."

@@ -218,8 +218,8 @@ describe('API Responses and Test Requests', () => {
         success: true,
         data: {
           id: 'msg_123',
-          message: 'Bonjour, j\'ai une question sur la nutrition pendant la grossesse',
-          response: 'Bonjour ! Je suis ravie de vous aider avec vos questions sur la nutrition pendant la grossesse. C\'est un sujet très important pour votre santé et celle de votre bébé.\n\nVoici quelques conseils généraux :\n\n1. **Acide folique** : Prenez 400-800 mcg par jour\n2. **Fer** : Important pour prévenir l\'anémie\n3. **Calcium** : 1000-1300 mg par jour\n4. **Protéines** : 75-100g par jour\n\nAvez-vous des questions spécifiques sur votre alimentation ?',
+          message: 'Bonjour, j\'ai une question sur la nutrition pour diabétiques',
+          response: 'Bonjour ! Je suis ravie de vous aider avec vos questions sur la nutrition pour diabétiques. C\'est un sujet très important pour votre santé et votre gestion du diabète.\n\nVoici quelques conseils généraux :\n\n1. **Index glycémique bas** : Privilégiez les aliments à IG bas\n2. **Fibres** : Importantes pour stabiliser la glycémie\n3. **Protéines** : 15-20% de vos calories quotidiennes\n4. **Hydratation** : Buvez suffisamment d\'eau\n\nAvez-vous des questions spécifiques sur votre alimentation ?',
           type: 'ai_coach',
           timestamp: '2024-09-29T07:00:00Z',
           processingTime: 1.2,
@@ -249,8 +249,8 @@ describe('API Responses and Test Requests', () => {
           },
           {
             id: 'msg_002',
-            message: 'Quels aliments éviter pendant la grossesse ?',
-            response: 'Voici les aliments à éviter pendant la grossesse :\n\n❌ **Poissons riches en mercure** (thon, espadon)\n❌ **Viandes crues** (tartare, sushi)\n❌ **Fromages au lait cru**\n❌ **Œufs crus**\n❌ **Alcool**\n\n✅ **Privilégiez** : fruits, légumes, céréales complètes, protéines maigres.',
+            message: 'Quels aliments éviter avec le diabète ?',
+            response: 'Voici les aliments à éviter avec le diabète :\n\n❌ **Sucres rapides** (bonbons, sodas, gâteaux)\n❌ **Aliments à IG élevé** (pain blanc, riz blanc)\n❌ **Graisses trans** (fritures, plats préparés)\n❌ **Alcool en excès**\n❌ **Fruits très sucrés** (dattes, raisins)\n\n✅ **Privilégiez** : légumes verts, céréales complètes, protéines maigres, fruits à IG bas.',
             type: 'ai_coach',
             timestamp: '2024-09-29T06:35:00Z'
           }

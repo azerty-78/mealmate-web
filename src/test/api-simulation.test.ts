@@ -128,7 +128,7 @@ describe('API Simulation Tests', () => {
     it('should simulate AI coach response', async () => {
       const mockChatWithAI = vi.fn().mockResolvedValue({
         success: true,
-        response: 'Bonjour! Je suis votre coach nutritionnel. Comment puis-je vous aider avec votre alimentation pendant la grossesse?',
+        response: 'Bonjour! Je suis votre coach IA spécialisé dans la gestion du diabète. Comment puis-je vous aider avec votre alimentation?',
         timestamp: new Date().toISOString()
       })
 
@@ -138,7 +138,7 @@ describe('API Simulation Tests', () => {
       })
       
       expect(result.success).toBe(true)
-      expect(result.response).toContain('coach nutritionnel')
+      expect(result.response).toContain('coach IA spécialisé')
     })
 
     it('should simulate chat history retrieval', async () => {

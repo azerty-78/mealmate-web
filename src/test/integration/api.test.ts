@@ -161,7 +161,7 @@ describe('API Integration Tests', () => {
   describe('Chat Messages', () => {
     it('should send message to AI coach', async () => {
       const messageData = {
-        message: 'Bonjour, j\'ai une question sur la nutrition pendant la grossesse',
+        message: 'Bonjour, j\'ai une question sur la nutrition pour diabétiques',
         type: 'ai_coach'
       }
 

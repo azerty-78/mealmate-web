@@ -153,7 +153,7 @@ const AICoachChatPage: React.FC = () => {
 
   // Fonction pour générer un prompt adapté au type de question
   const generatePrompt = (question: string, isImage: boolean = false) => {
-    const basePrompt = `Coach IA spécialisé dans la grossesse. Réponse COURTE et PRÉCISE.
+    const basePrompt = `Coach IA spécialisé dans la gestion du diabète. Réponse COURTE et PRÉCISE.
 
 Question: "${question}"
 
@@ -161,63 +161,63 @@ RÈGLES:
 - Maximum 2 phrases
 - Réponse directe et pratique
 - Focus essentiel
-- Tous aspects de la grossesse`;
+- Tous aspects du diabète`;
 
     if (isImage) {
       return `${basePrompt}
 
-Analyse l'image et donne un conseil court sur la grossesse.`;
+Analyse l'image et donne un conseil court sur la gestion du diabète.`;
     }
 
     // Adapter le prompt selon le type de question
-    if (question.toLowerCase().includes('symptôme') || question.toLowerCase().includes('normal')) {
+    if (question.toLowerCase().includes('glycémie') || question.toLowerCase().includes('glucose')) {
       return `${basePrompt}
 
-Symptômes normaux pendant la grossesse.`;
-    } else if (question.toLowerCase().includes('éviter') || question.toLowerCase().includes('interdit')) {
+Contrôle de la glycémie et gestion du glucose.`;
+    } else if (question.toLowerCase().includes('aliment') || question.toLowerCase().includes('nutrition') || question.toLowerCase().includes('régime')) {
       return `${basePrompt}
 
-Aliments à éviter pendant la grossesse.`;
-    } else if (question.toLowerCase().includes('nausée')) {
+Nutrition et alimentation adaptée au diabète.`;
+    } else if (question.toLowerCase().includes('hypoglycémie') || question.toLowerCase().includes('hypo')) {
       return `${basePrompt}
 
-Conseils pour gérer les nausées.`;
-    } else if (question.toLowerCase().includes('examen') || question.toLowerCase().includes('test')) {
+Gestion de l'hypoglycémie.`;
+    } else if (question.toLowerCase().includes('hyperglycémie') || question.toLowerCase().includes('hyper')) {
       return `${basePrompt}
 
-Examens importants pendant la grossesse.`;
-    } else if (question.toLowerCase().includes('exercice') || question.toLowerCase().includes('sport')) {
+Gestion de l'hyperglycémie.`;
+    } else if (question.toLowerCase().includes('exercice') || question.toLowerCase().includes('sport') || question.toLowerCase().includes('activité')) {
       return `${basePrompt}
 
-Exercices recommandés pendant la grossesse.`;
-    } else if (question.toLowerCase().includes('accouchement') || question.toLowerCase().includes('naissance')) {
+Exercices et activités physiques recommandés pour les diabétiques.`;
+    } else if (question.toLowerCase().includes('médicament') || question.toLowerCase().includes('insuline') || question.toLowerCase().includes('traitement')) {
       return `${basePrompt}
 
-Préparation à l'accouchement.`;
-    } else if (question.toLowerCase().includes('sommeil') || question.toLowerCase().includes('dormir')) {
+Médicaments et traitements du diabète.`;
+    } else if (question.toLowerCase().includes('complication') || question.toLowerCase().includes('prévention')) {
       return `${basePrompt}
 
-Conseils pour mieux dormir pendant la grossesse.`;
-    } else if (question.toLowerCase().includes('anxiété') || question.toLowerCase().includes('stress') || question.toLowerCase().includes('angoisse')) {
+Prévention des complications du diabète.`;
+    } else if (question.toLowerCase().includes('stress') || question.toLowerCase().includes('anxiété') || question.toLowerCase().includes('angoisse')) {
       return `${basePrompt}
 
-Gestion du stress et de l'anxiété pendant la grossesse.`;
-    } else if (question.toLowerCase().includes('douleur') || question.toLowerCase().includes('mal')) {
-      return `${basePrompt}
-
-Gestion des douleurs pendant la grossesse.`;
-    } else if (question.toLowerCase().includes('sexe') || question.toLowerCase().includes('intimité')) {
-      return `${basePrompt}
-
-Vie intime pendant la grossesse.`;
+Gestion du stress et de l'anxiété liés au diabète.`;
     } else if (question.toLowerCase().includes('voyage') || question.toLowerCase().includes('déplacement')) {
       return `${basePrompt}
 
-Voyages pendant la grossesse.`;
+Voyages et déplacements avec le diabète.`;
+    } else if (question.toLowerCase().includes('travail') || question.toLowerCase().includes('emploi')) {
+      return `${basePrompt}
+
+Gestion du diabète au travail.`;
+    } else if (question.toLowerCase().includes('famille') || question.toLowerCase().includes('proche')) {
+      return `${basePrompt}
+
+Gestion du diabète en famille et avec les proches.`;
     } else {
       return `${basePrompt}
 
-Conseil court et pratique sur la grossesse.`;
+Conseil court et pratique sur la gestion du diabète.`;
     }
   };
 
@@ -440,8 +440,8 @@ Conseil court et pratique sur la grossesse.`;
               Bienvenue chez votre Coach AI !
             </h2>
             <p className="text-gray-600 mb-8 text-sm" style={{ fontFamily: 'cursive' }}>
-              Je suis votre coach nutritionnel spécialisé pour accompagner les femmes enceintes. 
-              Je peux vous conseiller sur l'alimentation, les suppléments, la gestion des symptômes et le bien-être pendant votre grossesse.
+              Je suis votre coach IA spécialisé dans la gestion du diabète. 
+              Je peux vous conseiller sur la nutrition, la glycémie, les médicaments, l'exercice physique et tous vos questionnements sur le diabète.
             </p>
 
             {/* Questions suggérées */}
