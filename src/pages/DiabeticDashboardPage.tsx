@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useNavigation } from '../contexts/NavigationContext';
 import { diabeticApi, glucoseApi, mealApi, mealTemplateApi, medicationLogApi, type DiabeticRecord, type GlucoseReading, type Meal, type MealTemplate, type MedicationLog } from '../services/api';
 import { 
   Favorite, 
@@ -16,6 +17,7 @@ import { useToast } from '../components/ToastProvider';
 
 const DiabeticDashboardPage: React.FC = memo(() => {
   const { user } = useAuth();
+  const { navigateTo } = useNavigation();
   const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState<'today' | '7days' | '30days'>('today');
@@ -689,19 +691,6 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             </button>
             
             <button 
-              onClick={() => {/* TODO: Ouvrir modal ajout repas */}}
-              className="p-4 bg-blue-50 rounded-xl border border-blue-200 hover:bg-blue-100 transition-colors"
-            >
-              <div className="flex items-center justify-center mb-2">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">🍽️</span>
-                </div>
-              </div>
-              <p className="text-sm font-medium text-gray-800">Ajouter Repas</p>
-              <p className="text-xs text-gray-600">Enregistrer un repas</p>
-            </button>
-            
-            <button 
               onClick={() => setIsMedicationModalOpen(true)}
               className="p-4 bg-purple-50 rounded-xl border border-purple-200 hover:bg-purple-100 transition-colors"
             >
@@ -715,7 +704,7 @@ const DiabeticDashboardPage: React.FC = memo(() => {
             </button>
             
             <button 
-              onClick={() => {/* TODO: Ouvrir modal paramètres */}}
+              onClick={() => navigateTo('profile')}
               className="p-4 bg-orange-50 rounded-xl border border-orange-200 hover:bg-orange-100 transition-colors"
             >
               <div className="flex items-center justify-center mb-2">

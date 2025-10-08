@@ -15,72 +15,85 @@ export interface GeminiResponse {
 }
 
 export class GeminiService {
-  private genAI: GoogleGenerativeAI;
-  private model: any;
+  private genAI: GoogleGenerativeAI | null = null;
+  private model: any | null = null;
+  private initialized = false;
 
-  constructor() {
+  constructor() {}
+
+  private initIfNeeded() {
+    if (this.initialized) return;
+    
     if (!GEMINI_CONFIG.apiKey || typeof GEMINI_CONFIG.apiKey !== 'string' || GEMINI_CONFIG.apiKey.trim().length < 10) {
       console.error('❌ Clé API Gemini manquante ou invalide. Définissez VITE_GEMINI_API_KEY.');
       throw new Error('Clé API Gemini manquante ou invalide');
     }
+    
     this.genAI = new GoogleGenerativeAI(GEMINI_CONFIG.apiKey);
     this.model = this.genAI.getGenerativeModel({
       model: GEMINI_CONFIG.modelName,
       generationConfig: GEMINI_CONFIG.generationConfig
-      // Note: safetySettings retirés pour compatibilité avec l'API utilisée
     });
-  }
-
-  private extractTextSafely(result: any): string {
-    try {
-      const text = result?.response?.text?.() ?? '';
-      if (text && typeof text === 'string' && text.trim().length > 0) return text;
-    } catch {}
-
-    try {
-      const candidates = result?.response?.candidates || result?.candidates;
-      const firstText = candidates?.[0]?.content?.parts?.[0]?.text;
-      if (firstText && typeof firstText === 'string' && firstText.trim().length > 0) return firstText;
-    } catch {}
-
-    return '';
+    this.initialized = true;
   }
 
   async generateContent(prompt: string): Promise<string> {
     try {
-      console.log(`🤖 Génération de contenu avec ${GEMINI_CONFIG.modelName}...`);
+      this.initIfNeeded();
+      console.log('🤖 Génération de contenu avec Gemini 1.5 Flash...');
       
       // Ajouter un timeout pour éviter les attentes trop longues
       const timeoutPromise = new Promise<never>((_, reject) => {
         setTimeout(() => reject(new Error('Timeout: La requête a pris trop de temps')), 30000); // 30 secondes
       });
       
-      const generatePromise = this.model.generateContent(prompt);
+      const generatePromise = this.model!.generateContent(prompt);
       const result = await Promise.race([generatePromise, timeoutPromise]);
-      const text = this.extractTextSafely(result);
-      if (!text) {
-        console.warn('⚠️ Réponse IA vide. Résultat brut:', JSON.stringify(result, null, 2));
-      }
+      
+      const response = await result.response;
+      console.log('🔍 Réponse brute de l\'API:', result);
+      console.log('🔍 Objet response:', response);
+      
+      const text = response.text();
+      console.log('🔍 Méthode text() appelée, résultat:', text);
       
       console.log('✅ Réponse générée avec succès');
-      return text && text.trim().length > 0
-        ? text
-        : 'Je suis désolé, je ne peux pas répondre à votre question pour le moment.';
+      console.log('📝 Texte de la réponse:', text);
+      console.log('📏 Longueur du texte:', text?.length || 0);
+      
+      // Vérifier si le texte est valide
+      if (!text || text.trim().length === 0) {
+        console.warn('⚠️ Texte de réponse vide détecté');
+        return 'Je suis désolé, je n\'ai pas pu générer de réponse. Veuillez réessayer.';
+      }
+      
+      return text;
     } catch (error) {
       console.error('❌ Erreur lors de la génération de contenu:', error);
       
-      // Retourner une réponse de fallback en cas d'erreur
-      if (error instanceof Error && error.message.includes('Timeout')) {
-        return "Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.";
+      // Gestion spécifique des erreurs Gemini
+      if (error instanceof Error) {
+        if (error.message.includes('Timeout')) {
+          return "Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.";
+        }
+        
+        if (error.message.includes('503') || error.message.includes('overloaded')) {
+          return "Le service est temporairement surchargé. Veuillez patienter quelques minutes et réessayer. En attendant, vous pouvez consulter vos informations de diabète dans le dashboard.";
+        }
+        
+        if (error.message.includes('API key') || error.message.includes('authentication')) {
+          return "Problème de configuration technique. Veuillez contacter le support.";
+        }
       }
       
-      return "Je suis désolé, je ne peux pas répondre à votre question pour le moment. Veuillez réessayer plus tard.";
+      return "Je suis désolé, je ne peux pas répondre à votre question pour le moment. Veuillez réessayer plus tard ou consulter votre médecin pour des questions urgentes.";
     }
   }
 
   async chatWithAI(messages: GeminiMessage[]): Promise<string> {
     try {
-      console.log(`💬 Chat avec ${GEMINI_CONFIG.modelName}...`);
+      this.initIfNeeded();
+      console.log('💬 Chat avec Gemini 1.5 Flash...');
       
       // Ajouter un timeout pour éviter les attentes trop longues
       const timeoutPromise = new Promise<never>((_, reject) => {
@@ -88,7 +101,7 @@ export class GeminiService {
       });
       
       // Convertir les messages au format attendu par la nouvelle API
-      const chat = this.model.startChat({
+      const chat = this.model!.startChat({
         history: messages.slice(0, -1).map(msg => ({
           role: msg.role === 'user' ? 'user' : 'model',
           parts: msg.parts
@@ -98,29 +111,37 @@ export class GeminiService {
       const lastMessage = messages[messages.length - 1];
       const chatPromise = chat.sendMessage(lastMessage.parts[0].text);
       const result = await Promise.race([chatPromise, timeoutPromise]);
-      const text = this.extractTextSafely(result);
-      if (!text) {
-        console.warn('⚠️ Réponse chat IA vide. Résultat brut:', JSON.stringify(result, null, 2));
-      }
+      
+      const response = await result.response;
+      const text = response.text();
       
       console.log('✅ Réponse de chat générée avec succès');
-      return text && text.trim().length > 0
-        ? text
-        : 'Je suis désolé, je ne peux pas répondre à votre question pour le moment.';
+      return text;
     } catch (error) {
       console.error('❌ Erreur lors du chat avec l\'IA:', error);
       
-      // Retourner une réponse de fallback en cas d'erreur
-      if (error instanceof Error && error.message.includes('Timeout')) {
-        return "Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.";
+      // Gestion spécifique des erreurs Gemini
+      if (error instanceof Error) {
+        if (error.message.includes('Timeout')) {
+          return "Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.";
+        }
+        
+        if (error.message.includes('503') || error.message.includes('overloaded')) {
+          return "Le service est temporairement surchargé. Veuillez patienter quelques minutes et réessayer. En attendant, vous pouvez consulter vos informations de diabète dans le dashboard.";
+        }
+        
+        if (error.message.includes('API key') || error.message.includes('authentication')) {
+          return "Problème de configuration technique. Veuillez contacter le support.";
+        }
       }
       
-      return "Je suis désolé, je ne peux pas répondre à votre question pour le moment. Veuillez réessayer plus tard.";
+      return "Je suis désolé, je ne peux pas répondre à votre question pour le moment. Veuillez réessayer plus tard ou consulter votre médecin pour des questions urgentes.";
     }
   }
 
   async generateContentWithImage(prompt: string, imageData: string): Promise<string> {
     try {
+      this.initIfNeeded();
       console.log('🖼️ Génération de contenu avec image...');
       
       // Ajouter un timeout pour éviter les attentes trop longues
@@ -128,7 +149,7 @@ export class GeminiService {
         setTimeout(() => reject(new Error('Timeout: La requête avec image a pris trop de temps')), 30000); // 30 secondes
       });
       
-      const imagePromise = this.model.generateContent([
+      const imagePromise = this.model!.generateContent([
         prompt,
         {
           inlineData: {
@@ -139,15 +160,11 @@ export class GeminiService {
       ]);
       
       const result = await Promise.race([imagePromise, timeoutPromise]);
-      const text = this.extractTextSafely(result);
-      if (!text) {
-        console.warn('⚠️ Réponse IA (image) vide. Résultat brut:', JSON.stringify(result, null, 2));
-      }
+      const response = await result.response;
+      const text = response.text();
       
       console.log('✅ Réponse avec image générée avec succès');
-      return text && text.trim().length > 0
-        ? text
-        : 'Je suis désolé, je ne peux pas analyser cette image pour le moment.';
+      return text;
     } catch (error) {
       console.error('❌ Erreur lors de la génération avec image:', error);
       

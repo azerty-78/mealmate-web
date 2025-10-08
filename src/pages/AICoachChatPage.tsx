@@ -49,6 +49,8 @@ const AICoachChatPage: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log('📋 Messages mis à jour, nombre total:', messages.length);
+    console.log('📋 Dernier message:', messages[messages.length - 1]);
     scrollToBottom();
   }, [messages]);
 
@@ -259,12 +261,28 @@ Conseil court et pratique sur la gestion du diabète.`;
       } else {
         // Utiliser la méthode standard sans image
         console.log('💬 Génération de texte simple...');
-        aiResponse = await geminiService.generateContent(
-          generatePrompt(newMessage, false)
-        );
+        try {
+          aiResponse = await geminiService.generateContent(
+            generatePrompt(newMessage, false)
+          );
+        } catch (apiError) {
+          console.error('❌ Erreur API Gemini:', apiError);
+          aiResponse = 'Je suis désolé, je rencontre des difficultés techniques. Veuillez réessayer.';
+        }
       }
       
       console.log('✅ Réponse IA générée avec succès');
+      console.log('📝 Contenu de la réponse:', aiResponse);
+      console.log('📏 Longueur de la réponse:', aiResponse?.length || 0);
+
+      // Vérifier si la réponse est valide
+      if (!aiResponse || aiResponse.trim().length === 0) {
+        console.warn('⚠️ Réponse vide ou invalide reçue');
+        aiResponse = 'Je suis désolé, je n\'ai pas pu générer de réponse. Veuillez réessayer.';
+      } else {
+        console.log('✅ Réponse valide reçue, longueur:', aiResponse.length);
+        console.log('✅ Contenu de la réponse:', aiResponse);
+      }
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -272,7 +290,25 @@ Conseil court et pratique sur la gestion du diabète.`;
         isUser: false,
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, aiMessage]);
+      console.log('💬 Message IA créé:', aiMessage);
+      
+      // Forcer la mise à jour de l'état
+      setMessages(prev => {
+        const newMessages = [...prev, aiMessage];
+        console.log('📋 Messages mis à jour:', newMessages.length);
+        console.log('📋 Tous les messages:', newMessages);
+        return newMessages;
+      });
+      
+      // Forcer un re-render
+      setTimeout(() => {
+        console.log('🔄 Vérification de l\'état après mise à jour');
+        setMessages(current => {
+          console.log('📋 État actuel des messages:', current.length);
+          console.log('📋 Dernier message:', current[current.length - 1]);
+          return current;
+        });
+      }, 100);
     } catch (error) {
       console.error('❌ Erreur lors de la génération de la réponse:', error);
       
