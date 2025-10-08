@@ -783,8 +783,8 @@ const ProfilePage: React.FC = memo(() => {
 
       {/* Bottom Sheet de modification */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end justify-center z-50 animate-in fade-in duration-200">
-          <div className="bg-white rounded-t-3xl w-full max-w-md max-h-[90vh] overflow-hidden animate-in slide-in-from-bottom duration-300">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 animate-in fade-in duration-200">
+          <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[90vh] sm:max-h-[85vh] overflow-hidden animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 duration-300">
             {/* Header du bottom sheet */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-800">Modifier le profil</h3>
@@ -797,7 +797,7 @@ const ProfilePage: React.FC = memo(() => {
             </div>
 
             {/* Contenu du formulaire */}
-            <div className="p-4 space-y-4 overflow-y-auto max-h-[60vh]">
+            <div className="p-4 sm:p-6 space-y-4 overflow-y-auto max-h-[60vh] sm:max-h-[65vh]">
               {/* Message d'erreur */}
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
@@ -1315,7 +1315,7 @@ const ProfilePage: React.FC = memo(() => {
             </div>
 
             {/* Boutons d'action */}
-            <div className="p-4 border-t border-gray-200 flex space-x-3">
+            <div className="p-4 sm:p-6 border-t border-gray-200 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
               <button
                 onClick={() => setIsEditModalOpen(false)}
                 className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"

@@ -15,7 +15,7 @@ interface Message {
 
 const AICoachChatPage: React.FC = () => {
   const { navigateTo } = useNavigation();
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -381,7 +381,7 @@ Conseil court et pratique sur la gestion du diabète.`;
             </div>
           </div>
           <div>
-            <h1 className="font-semibold text-lg">Coach IA Grossesse</h1>
+            <h1 className="font-semibold text-lg">Coach IA Diabète</h1>
             <p className="text-xs text-blue-100">Votre conseiller complet</p>
           </div>
         </div>
@@ -437,7 +437,7 @@ Conseil court et pratique sur la gestion du diabète.`;
 
             {/* Message de bienvenue */}
             <h2 className="text-2xl font-bold text-gray-800 mb-4" style={{ fontFamily: 'cursive' }}>
-              Bienvenue chez votre Coach AI !
+              Bienvenue chez votre Coach IA Diabète !
             </h2>
             <p className="text-gray-600 mb-8 text-sm" style={{ fontFamily: 'cursive' }}>
               Je suis votre coach IA spécialisé dans la gestion du diabète. 
